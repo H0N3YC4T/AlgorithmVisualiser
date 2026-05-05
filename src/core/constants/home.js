@@ -1,3 +1,18 @@
+import { 
+  Zap, 
+  Search, 
+  Route, 
+  Layers, 
+  Clock, 
+  Cpu, 
+  Activity, 
+  Box, 
+  Share2, 
+  Maximize2, 
+  ShieldCheck, 
+  ZapOff
+} from 'lucide-react';
+
 export const homeDefaults = {
   hero: {
     badge: 'Educational Lab',
@@ -6,7 +21,11 @@ export const homeDefaults = {
     description: 'Explore, visualize, and understand complex algorithms through interactive step-by-step animations. Master data structures and algorithms with precision.'
   },
   categoryMeta: {
-    default: () => null,
+    'Sorting Algorithms': Layers,
+    'Searching Algorithms': Search,
+    'Pathfinding Algorithms': Route,
+    'Pattern Matching Algorithms': Activity,
+    default: Box
   },
   difficultyColors: {
     'Easy': 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
@@ -35,7 +54,11 @@ export const homeDefaults = {
     space: 'Space',
     examples: 'Ex:'
   },
-  caseCards: [],
+  caseCards: [
+    { label: 'Best Case', desc: 'Optimal scenario where the algorithm performs minimum operations.', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', color: 'text-emerald-400', icon: Zap },
+    { label: 'Average Case', desc: 'Expected performance over all possible inputs. Most common.', bg: 'bg-blue-500/10', border: 'border-blue-500/20', color: 'text-blue-400', icon: Activity },
+    { label: 'Worst Case', desc: 'Scenario requiring maximum operations. Key metric for reliability.', bg: 'bg-rose-500/10', border: 'border-rose-500/20', color: 'text-rose-400', icon: ZapOff }
+  ],
   bigONotations: [
     { label: 'O(1)', type: 'constant', name: 'Constant', desc: 'Execution time remains unchanged regardless of input size.', color: 'stroke-emerald-400', bg: 'bg-emerald-500/5' },
     { label: 'O(log n)', type: 'log', name: 'Logarithmic', desc: 'Time grows slowly; common in balanced trees and binary search.', color: 'stroke-blue-400', bg: 'bg-blue-500/5' },
