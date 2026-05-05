@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
+import { memo } from 'react';
 import { Hash, Table as TableIcon } from 'lucide-react';
 import ShiftTable from './ShiftTable';
 import { classCategory } from '../../../styles/class-category';
 
-export default function AlgorithmSidebar({ algorithm, state, preprocessing, target, pattern, isArrayBased }) {
+const AlgorithmSidebar = memo(({ algorithm, state, preprocessing, target, pattern, isArrayBased }) => {
   const config = algorithm.sidebarConfig;
 
   return (
@@ -89,7 +90,7 @@ export default function AlgorithmSidebar({ algorithm, state, preprocessing, targ
                 <span className="text-[10px] font-black text-slate-500 uppercase">Pattern Hash</span>
                 <span className="text-emerald-400 font-mono font-bold">{state.patternHash}</span>
               </div>
-              <div className={`p-3 bg-slate-900 rounded-xl border flex justify-between items-center transition-all ${state.targetHash === state.patternHash ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-800'}`}>
+              <div className={`p-3 bg-slate-900 rounded-xl border flex justify-between items-center transition-all ${state.targetHash === state.patternHash ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'border-slate-800'}`}>
                 <span className="text-[10px] font-black text-slate-500 uppercase">Window Hash</span>
                 <span className={`font-mono font-bold ${state.targetHash === state.patternHash ? 'text-emerald-400' : 'text-rose-400'}`}>{state.targetHash}</span>
               </div>
@@ -139,7 +140,7 @@ export default function AlgorithmSidebar({ algorithm, state, preprocessing, targ
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {state.output.map((val, i) => ({ val, i, id: `output-${i}` })).map((item) => (
-                        <div key={item.id} className={`w-8 h-10 bg-slate-900 border ${state.swapIndices?.includes(item.i) ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-800'} rounded-xl flex flex-col items-center justify-center transition-all`}>
+                        <div key={item.id} className={`w-8 h-10 bg-slate-900 border ${state.swapIndices?.includes(item.i) ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'border-slate-800'} rounded-xl flex flex-col items-center justify-center transition-all`}>
                           <span className="text-[7px] text-slate-600 font-bold uppercase">{item.i}</span>
                           <span className="text-[10px] text-white font-mono font-black">{item.val ?? '-'}</span>
                         </div>
@@ -174,10 +175,9 @@ export default function AlgorithmSidebar({ algorithm, state, preprocessing, targ
           )}
         </div>
       )}
-
     </div>
   );
-}
+});
 
 AlgorithmSidebar.propTypes = {
   algorithm: PropTypes.object.isRequired,
@@ -187,3 +187,5 @@ AlgorithmSidebar.propTypes = {
   pattern: PropTypes.string,
   isArrayBased: PropTypes.bool.isRequired
 };
+
+export default AlgorithmSidebar;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useMemo } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import PropTypes from "prop-types";
@@ -6,7 +6,7 @@ import { Terminal, Copy, Check } from "lucide-react";
 import { uiDefaults } from "../../core/constants/ui";
 import { classCategory } from "../../styles/class-category";
 
-export default function CodePanel({ codeSnippets, lineHighlights, activeStep }) {
+const CodePanel = memo(({ codeSnippets, lineHighlights, activeStep }) => {
   const [activeTab, setActiveTab] = useState("javascript");
   const [copied, setCopied] = useState(false);
 
@@ -19,7 +19,7 @@ export default function CodePanel({ codeSnippets, lineHighlights, activeStep }) 
   if (!codeSnippets) return null;
 
   // Determine which line to highlight based on the current activeStep and active language
-  const activeLine = lineHighlights?.[activeStep]?.[activeTab];
+  const activeLine = useMemo(() => lineHighlights?.[activeStep]?.[activeTab], [lineHighlights, activeStep, activeTab]);
 
   return (
     <div className={classCategory.subPanel}>
@@ -88,10 +88,12 @@ export default function CodePanel({ codeSnippets, lineHighlights, activeStep }) 
       </div>
     </div>
   );
-}
+});
 
 CodePanel.propTypes = {
   codeSnippets: PropTypes.objectOf(PropTypes.string).isRequired,
   lineHighlights: PropTypes.object,
   activeStep: PropTypes.string,
 };
+
+export default CodePanel;

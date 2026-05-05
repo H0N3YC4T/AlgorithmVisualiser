@@ -27,16 +27,16 @@ export const quicklomuto = createAlgorithmCard({
     uiConfig: {
       statusLabel: 'Segment: [{l}..{r}]',
       startButton: 'Start Sorting',
-      playbackSpeed: 400
+      playbackSpeed: 200
     },
     extendedDescription: 'Quick Sort (Lomuto) is a highly efficient sorting algorithm and is based on partitioning of array of data into smaller arrays. The Lomuto partition scheme chooses a pivot that is typically the last element in the array. The algorithm maintains two pointers as it scans the array, one to track the boundary of the smaller elements and another to scan the array.',
-    legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
-      { label: 'Checking', color: 'bg-indigo-500' },
-      { label: 'Pivot', color: 'bg-amber-400' },
-      { label: 'Swap', color: 'bg-rose-500' },
-      { label: 'Sorted', color: 'bg-emerald-500' },
-    ],
+      legendItems: [
+        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+        { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+        { label: 'Pivot', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
+        { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+        { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      ],
   },
 
   // --- Visual Steps & Code ---

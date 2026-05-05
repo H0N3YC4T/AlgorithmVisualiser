@@ -13,17 +13,27 @@ import Background from "./components/common/Background";
  * 3. Consistent styling and background.
  */
 export default function App() {
-  const stateManager = useAlgorithmState(algorithms);
-
   return (
-    <BrowserRouter>
-      <div className="relative min-h-screen bg-[#050505] text-slate-200 overflow-hidden font-outfit">
+    <BrowserRouter basename="/algorithms">
+      <div className="relative min-h-screen text-slate-200 overflow-hidden font-outfit">
         {/* Persistent Background */}
         <Background />
 
         {/* Dynamic Content */}
-        <AppRouter categories={[...new Set(algorithms.map((a) => a.category).filter(Boolean))]} algorithms={algorithms} stateManager={stateManager} />
+        <AppContent />
       </div>
     </BrowserRouter>
+  );
+}
+
+function AppContent() {
+  const stateManager = useAlgorithmState(algorithms);
+  
+  return (
+    <AppRouter 
+      categories={[...new Set(algorithms.map((a) => a.category).filter(Boolean))]} 
+      algorithms={algorithms} 
+      stateManager={stateManager} 
+    />
   );
 }

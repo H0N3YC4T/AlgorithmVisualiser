@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
-import { motion } from 'framer-motion';
+import { memo } from 'react';
 
-export default function GridNode({ 
+const GridNode = memo(({ 
   isVisited, 
   isPath, 
   isActive, 
+  isMuted,
   isStart, 
   isEnd, 
   isWall,
@@ -12,9 +13,11 @@ export default function GridNode({
   cost,
   colors = {},
   onMouseDown,
-  onMouseEnter
-}) {
-  let cellClass = "aspect-square w-full rounded-sm border transition-colors duration-300 flex items-center justify-center text-[8px] font-bold select-none";
+  onMouseEnter,
+  r,
+  c
+}) => {
+  let cellClass = "aspect-square w-full rounded-sm border transition-all duration-300 flex items-center justify-center text-[8px] font-bold select-none cursor-pointer";
   let colorClass = colors.unvisited || "";
   
   if (isWall) colorClass = colors.wall || "";
@@ -25,45 +28,44 @@ export default function GridNode({
   else if (isVisited) colorClass = colors.visited || "";
   else if (isQueued) colorClass = colors.checked || colors.queue || "";
 
+  if (isMuted && !isStart && !isEnd && !isPath) {
+    colorClass = "bg-slate-900/40 border-slate-900/60 opacity-40 grayscale";
+  }
+
   // Add functional classes (layering and scale)
-  if (isStart || isEnd || isPath) colorClass += " z-10 shadow-lg";
-  if (isActive) colorClass += " z-20 scale-110 shadow-2xl ring-2 ring-white/20";
+  if (isStart || isEnd || isPath) colorClass += " z-10 shadow-lg scale-[1.05]";
+  if (isActive) colorClass += " z-20 scale-[1.15] shadow-2xl ring-2 ring-white/20";
   if (isWall) colorClass += " shadow-md";
   
   if (colorClass.trim() === "") colorClass = "bg-slate-800/20 border-slate-800/50";
 
-  let scale = 1;
-  if (isActive) scale = 1.15;
-  else if (isStart || isEnd) scale = 1.1;
-
-  // Calculate terrain brightness based on cost (0-9)
-  // Higher cost = darker background (more weight)
-  const costFilter = cost !== undefined ? `brightness(${1 - (cost / 20)})` : '';
+  // Calculate terrain opacity based on cost (1-9)
+  const costOpacity = cost !== undefined && !isStart && !isEnd && !isWall && !isPath ? 0.4 + (cost / 15) : 1;
 
   return (
-    <motion.div
-      className={`${cellClass} ${colorClass}`}
-      onMouseDown={onMouseDown}
-      onMouseEnter={onMouseEnter}
-      initial={false}
-      style={{ filter: costFilter }}
-      animate={{ 
-        scale: scale,
+    <div
+      className={`${cellClass} ${colorClass} hover:scale-[1.1] hover:brightness-[1.2] active:scale-[0.95]`}
+      onMouseDown={() => onMouseDown(r, c)}
+      onMouseEnter={() => onMouseEnter(r, c)}
+      style={{ 
+        opacity: costOpacity,
         borderRadius: isStart || isEnd ? '4px' : '2px'
       }}
-      whileHover={{ scale: 1.05, filter: 'brightness(1.4)' }}
     >
       {cost !== undefined && !isStart && !isEnd && !isWall && (
         <span className="text-white/40">{cost}</span>
       )}
-    </motion.div>
+    </div>
   );
-}
+});
+
+GridNode.displayName = 'GridNode';
 
 GridNode.propTypes = {
   isVisited: PropTypes.bool,
   isPath: PropTypes.bool,
   isActive: PropTypes.bool,
+  isMuted: PropTypes.bool,
   isStart: PropTypes.bool,
   isEnd: PropTypes.bool,
   isWall: PropTypes.bool,
@@ -71,5 +73,9 @@ GridNode.propTypes = {
   cost: PropTypes.number,
   colors: PropTypes.object,
   onMouseDown: PropTypes.func,
-  onMouseEnter: PropTypes.func
+  onMouseEnter: PropTypes.func,
+  r: PropTypes.number,
+  c: PropTypes.number
 };
+
+export default GridNode;

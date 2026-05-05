@@ -1,11 +1,122 @@
+import { createAlgorithmCard } from '../factory';
+
 /**
  * Exponential Search Algorithm Module
  */
-
-export const exponentialsearch = {
+export const exponentialsearch = createAlgorithmCard({
   id: 'exponentialsearch',
-  name: 'Exponential Search',
   
+  // --- Metadata ---
+  metadata: {
+    type: 'searching',
+    visualizerType: 'array',
+    category: 'Searching Algorithms',
+    defaultInputs: { target: '47', pattern: '3, 7, 11, 14, 19, 22, 26, 30, 35, 41, 47, 53' },
+  },
+
+  homeCard: {
+    name: 'Exponential Search',
+    difficulty: 'Medium',
+    description: 'Finds a range where the target may exist by doubling the index, then performs binary search.',
+    complexity: {
+      timeBest: 'Ω(1)',
+      timeAvg: 'Θ(log n)',
+      timeWorst: 'O(log n)',
+      space: 'O(1)'
+    },
+  },
+
+  algorithmPage: {
+    uiConfig: {
+      statusLabel: 'Index: {i}',
+      startButton: 'Start Exponential Search',
+      playbackSpeed: 300
+    },
+    extendedDescription: 'Exponential Search starts by checking index 0. If not found, it repeatedly doubles the index (1, 2, 4, 8...) until it finds an element greater than the target or hits the end. Finally, it runs Binary Search on the range between the last two indices.',
+      legendItems: [
+        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+        { label: 'Jump Point', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+        { label: 'Binary Search', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
+        { label: 'Found', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      ],
+    visualSteps: {
+      READY: {
+        title: 'Ready',
+        message: "Exponential Search initialized. Searching for {targetValue}.",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
+      },
+      FOUND_AT_0: {
+        title: 'Found at 0 ✓',
+        message: "Target value {targetValue} found at index 0!",
+        highlights: { pseudo: [2], javascript: [4], python: [4] }
+      },
+      STARTING_JUMPS: {
+        title: 'Starting Jumps',
+        message: "Index 0 is not the target. Starting exponential jumps.",
+        highlights: { pseudo: [3], javascript: [5], python: [5] }
+      },
+      DOUBLING_INDEX: {
+        title: 'Doubling Index',
+        message: "Checking index {i} ({val}). Still ≤ {targetValue}. Doubling to {nextI}.",
+        highlights: { pseudo: [4], javascript: [6, 7], python: [6, 7] }
+      },
+      BOUNDS_FOUND: {
+        title: 'Bounds Found',
+        message: "Range identified: [{left}, {right}]. Switching to binary search.",
+        highlights: { pseudo: [5], javascript: [9], python: [9] }
+      },
+      BS_CALC_MID: {
+        title: 'BS: Calc Mid',
+        message: "Binary search in range [{l}, {r}]. Midpoint at {mid} (value: {val}).",
+        highlights: { pseudo: [6], javascript: [11], python: [11] }
+      },
+      BS_MATCH_FOUND: {
+        title: 'Match Found ✓',
+        message: "Target value found at index {mid}!",
+        highlights: { pseudo: [7], javascript: [12], python: [12] }
+      },
+      BS_SEARCH_RIGHT: {
+        title: 'BS: Search Right',
+        message: "{val} < {targetValue}. Moving left boundary to {midPlusOne}.",
+        highlights: { pseudo: [8], javascript: [14], python: [14] }
+      },
+      BS_SEARCH_LEFT: {
+        title: 'BS: Search Left',
+        message: "{val} > {targetValue}. Moving right boundary to {midMinusOne}.",
+        highlights: { pseudo: [9], javascript: [16], python: [16] }
+      },
+      BS_NOT_FOUND: {
+        title: 'Not Found',
+        message: "Binary search range exhausted. Value {targetValue} not found.",
+        highlights: { pseudo: [10], javascript: [18], python: [18] }
+      }
+    }
+  },
+
+  codeSnippets: {
+    pseudo: `function exponentialSearch(arr, target):
+  if arr[0] == target: return 0
+  i = 1
+  while i < arr.length and arr[i] <= target:
+    i = i * 2
+  return binarySearch(arr, target, i/2, min(i, arr.length-1))`,
+    javascript: `function exponentialSearch(arr, target) {
+  if (arr[0] === target) return 0;
+  let i = 1;
+  while (i < arr.length && arr[i] <= target) {
+    i = i * 2;
+  }
+  return binarySearch(arr, target, i/2, Math.min(i, arr.length - 1));
+}`,
+    python: `def exponential_search(arr, target):
+    if arr[0] == target: return 0
+    i = 1
+    while i < len(arr) and arr[i] <= target:
+        i = i * 2
+    return binary_search(arr, target, i//2, min(i, len(arr)-1))`
+  },
+
+  // --- Logic ---
   getInitialState: (p, t) => {
     const rawArray = Array.isArray(t) ? t : [3, 7, 11, 14, 19, 22, 26, 30, 35, 41, 47, 53];
     const array = [...rawArray].sort((a, b) => a - b);
@@ -18,182 +129,111 @@ export const exponentialsearch = {
       mid: -1,
       targetValue: targetValue,
       array: array,
-    activeIndices: [],
-    sortedIndices: [],
-    pivotIndex: -1,
-    log: {
-      title: 'Ready',
-      type: 'info',
-      content: 'Exponential Search first doubles an index to bound the target range, then runs Binary Search within that range.'
-    }
+      activeIndices: [],
+      sortedIndices: [],
+      pivotIndex: -1,
+      comparisons: 0,
+      log: {
+        title: 'Ready',
+        type: 'info',
+        messageKey: 'READY',
+        params: { targetValue: targetValue }
+      }
     };
   },
 
-  getPreprocessing: () => ({}),
-
   nextStep: (state) => {
-    const { targetValue, phase, array } = state;
+    const { targetValue, phase, array, i, l, r, mid } = state;
     const n = array.length;
     const newState = { ...state, activeIndices: [], pivotIndex: -1 };
 
-    // Phase 0: Check index 0
-    if (phase === 0) {
-      return exponentialsearch.handleCheckZeroPhase(newState, targetValue);
+    if (phase === 0) { // CHECK ZERO
+      newState.activeIndices = [0];
+      newState.comparisons += 1;
+      if (array[0] === targetValue) {
+        return {
+          ...newState,
+          isFinished: true,
+          sortedIndices: [0],
+          log: { title: 'FOUND AT 0', type: 'success', messageKey: 'FOUND_AT_0' }
+        };
+      }
+      return {
+        ...newState,
+        phase: 1,
+        i: 1,
+        log: { title: 'STARTING EXPONENTIAL JUMPS', type: 'info', messageKey: 'STARTING_JUMPS', params: { targetValue } }
+      };
     }
 
-    // Phase 1: Exponential Jumps
-    if (phase === 1) {
-      return exponentialsearch.handleJumpPhase(newState, n, targetValue);
+    if (phase === 1) { // JUMPS
+      if (i < n && array[i] <= targetValue) {
+        newState.activeIndices = [i];
+        newState.comparisons += 1;
+        const nextI = i * 2;
+        return {
+          ...newState,
+          i: nextI,
+          log: { title: 'DOUBLING INDEX', type: 'info', messageKey: 'DOUBLING_INDEX', params: { i, val: array[i], targetValue, nextI } }
+        };
+      }
+      const left = i / 2;
+      const right = Math.min(i, n - 1);
+      return {
+        ...newState,
+        phase: 2,
+        l: left,
+        r: right,
+        log: { title: 'BOUNDS FOUND', type: 'match', messageKey: 'BOUNDS_FOUND', params: { left, right } }
+      };
     }
 
-    // Phase 2: Binary Search Logic
-    if (phase === 2) {
-      return exponentialsearch.handleBSCalcPhase(newState, targetValue);
+    if (phase === 2) { // BS CALC
+      if (l > r) {
+        return {
+          ...newState,
+          isFinished: true,
+          log: { title: 'NOT FOUND', type: 'mismatch', messageKey: 'BS_NOT_FOUND', params: { targetValue } }
+        };
+      }
+      const nextMid = Math.floor((l + r) / 2);
+      newState.pivotIndex = nextMid;
+      newState.activeIndices = [l, r];
+      return {
+        ...newState,
+        phase: 3,
+        mid: nextMid,
+        log: { title: 'BS: CALC MID', type: 'info', messageKey: 'BS_CALC_MID', params: { l, r, mid: nextMid, val: array[nextMid] } }
+      };
     }
 
-    // Phase 3: Binary Search Comparison
-    if (phase === 3) {
-      return exponentialsearch.handleBSComparePhase(newState, targetValue);
+    if (phase === 3) { // BS COMPARE
+      newState.comparisons += 1;
+      newState.pivotIndex = mid;
+      if (array[mid] === targetValue) {
+        return {
+          ...newState,
+          isFinished: true,
+          sortedIndices: [mid],
+          log: { title: 'MATCH FOUND!', type: 'success', messageKey: 'BS_MATCH_FOUND', params: { mid } }
+        };
+      }
+      if (array[mid] < targetValue) {
+        return {
+          ...newState,
+          phase: 2,
+          l: mid + 1,
+          log: { title: 'BS: SEARCH RIGHT', type: 'match', messageKey: 'BS_SEARCH_RIGHT', params: { val: array[mid], targetValue, midPlusOne: mid + 1, r } }
+        };
+      }
+      return {
+        ...newState,
+        phase: 2,
+        r: mid - 1,
+        log: { title: 'BS: SEARCH LEFT', type: 'mismatch', messageKey: 'BS_SEARCH_LEFT', params: { val: array[mid], targetValue, l, midMinusOne: mid - 1 } }
+      };
     }
 
     return newState;
-  },
-
-  handleCheckZeroPhase: (state, targetValue) => {
-    const { array } = state;
-    state.activeIndices = [0];
-    state.comparisons += 1;
-    if (array[0] === targetValue) {
-      return {
-        ...state,
-        isFinished: true,
-        sortedIndices: [0],
-        log: {
-          title: 'FOUND AT 0',
-          type: 'success',
-            messageKey: 'FOUND_AT_0'
-        }
-      };
-    }
-    return {
-      ...state,
-      phase: 1,
-      i: 1,
-      log: {
-        title: 'STARTING EXPONENTIAL JUMPS',
-        type: 'info',
-          messageKey: 'STARTING_JUMPS',
-          params: { targetValue: targetValue }
-      }
-    };
-  },
-
-  handleJumpPhase: (state, n, targetValue) => {
-    const { array, i } = state;
-    if (i < n && array[i] <= targetValue) {
-      state.activeIndices = [i];
-      state.comparisons += 1;
-      return {
-        ...state,
-        i: i * 2,
-        log: {
-          title: 'DOUBLING INDEX',
-          type: 'info',
-          messageKey: 'DOUBLING_INDEX',
-          params: { i: i, val: array[i], targetValue: targetValue, nextI: i * 2 }
-        }
-      };
-    }
-
-    const left = i / 2;
-    const right = Math.min(i, n - 1);
-    return {
-      ...state,
-      phase: 2,
-      l: left,
-      r: right,
-      log: {
-        title: 'BOUNDS FOUND',
-        type: 'match',
-          messageKey: 'BOUNDS_FOUND',
-          params: { left: left, right: right }
-      }
-    };
-  },
-
-  handleBSCalcPhase: (state, targetValue) => {
-    const { l, r, array } = state;
-    if (l > r) {
-      return {
-        ...state,
-        isFinished: true,
-        log: {
-          title: 'NOT FOUND',
-          type: 'mismatch',
-          messageKey: 'BS_NOT_FOUND',
-          params: { targetValue: targetValue }
-        }
-      };
-    }
-    const mid = Math.floor((l + r) / 2);
-    state.pivotIndex = mid;
-    state.activeIndices = [l, r];
-    return {
-      ...state,
-      phase: 3,
-      mid,
-      log: {
-        title: 'BS: CALC MID',
-        type: 'info',
-        messageKey: 'BS_CALC_MID',
-        params: { l: l, r: r, mid: mid, val: array[mid] }
-      }
-    };
-  },
-
-  handleBSComparePhase: (state, targetValue) => {
-    const { mid, array, r, l } = state;
-    state.comparisons += 1;
-    state.pivotIndex = mid;
-
-    if (array[mid] === targetValue) {
-      return {
-        ...state,
-        isFinished: true,
-        sortedIndices: [mid],
-        log: {
-          title: 'MATCH FOUND!',
-          type: 'success',
-          messageKey: 'BS_MATCH_FOUND',
-          params: { mid: mid }
-        }
-      };
-    }
-    
-    if (array[mid] < targetValue) {
-      return {
-        ...state,
-        phase: 2,
-        l: mid + 1,
-        log: {
-          title: 'BS: SEARCH RIGHT',
-          type: 'match',
-          messageKey: 'BS_SEARCH_RIGHT',
-          params: { val: array[mid], targetValue: targetValue, midPlusOne: mid + 1, r: r }
-        }
-      };
-    }
-
-    return {
-      ...state,
-      phase: 2,
-      r: mid - 1,
-      log: {
-        title: 'BS: SEARCH LEFT',
-        type: 'mismatch',
-        messageKey: 'BS_SEARCH_LEFT',
-        params: { val: array[mid], targetValue: targetValue, l: l, midMinusOne: mid - 1 }
-      }
-    };
   }
-};
+});

@@ -3,14 +3,16 @@
  * Enforces a consistent schema for all algorithms in the system.
  */
 export const createAlgorithmCard = (config) => {
+  const { metadata = {}, homeCard = {}, algorithmPage = {} } = config;
+  
   return {
     id: config.id,
-    name: config.name || config.metadata?.name,
-    type: config.type || config.metadata?.type,
-    category: config.category || config.metadata?.category,
-    difficulty: config.difficulty || config.metadata?.difficulty,
-    description: config.description || config.metadata?.description,
-    extendedDescription: config.extendedDescription || config.metadata?.extendedDescription,
+    name: config.name || metadata.name || homeCard.name,
+    type: config.type || metadata.type || homeCard.type,
+    category: config.category || metadata.category || homeCard.category,
+    difficulty: config.difficulty || metadata.difficulty || homeCard.difficulty,
+    description: config.description || metadata.description || homeCard.description,
+    extendedDescription: config.extendedDescription || metadata.extendedDescription || algorithmPage.extendedDescription,
     
     // Logic
     getInitialState: config.getInitialState,
@@ -18,14 +20,14 @@ export const createAlgorithmCard = (config) => {
     getPreprocessing: config.getPreprocessing,
     
     // UI Metadata
-    visualizerType: config.visualizerType || config.metadata?.visualizerType,
-    defaultInputs: config.defaultInputs || config.metadata?.defaultInputs || { target: '', pattern: '' },
-    complexity: config.complexity || config.metadata?.complexity,
-    legendItems: config.legendItems || config.metadata?.legendItems || [],
-    stepMessages: config.stepMessages || config.metadata?.stepMessages || {},
-    uiConfig: config.uiConfig || config.metadata?.uiConfig || {},
-    codeSnippets: config.codeSnippets || config.metadata?.codeSnippets || {},
-    lineHighlights: config.lineHighlights || config.metadata?.lineHighlights || {},
-    phaseNames: config.phaseNames || config.metadata?.phaseNames || []
+    visualizerType: config.visualizerType || metadata.visualizerType || algorithmPage.visualizerType,
+    defaultInputs: config.defaultInputs || metadata.defaultInputs || algorithmPage.defaultInputs || { target: '', pattern: '' },
+    complexity: config.complexity || metadata.complexity || homeCard.complexity,
+    legendItems: config.legendItems || metadata.legendItems || algorithmPage.legendItems || [],
+    visualSteps: config.visualSteps || metadata.visualSteps || algorithmPage.visualSteps || {},
+    uiConfig: config.uiConfig || metadata.uiConfig || algorithmPage.uiConfig || {},
+    codeSnippets: config.codeSnippets || metadata.codeSnippets || algorithmPage.codeSnippets || {},
+    lineHighlights: config.lineHighlights || metadata.lineHighlights || algorithmPage.lineHighlights || {},
+    phaseNames: config.phaseNames || metadata.phaseNames || algorithmPage.phaseNames || []
   };
 };

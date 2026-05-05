@@ -1,35 +1,148 @@
+import { createAlgorithmCard } from '../factory';
+
 /**
  * Jump Search Algorithm Module
  */
-
-export const jumpsearch = {
+export const jumpsearch = createAlgorithmCard({
   id: 'jumpsearch',
-  name: 'Jump Search',
   
+  // --- Metadata ---
+  metadata: {
+    type: 'searching',
+    visualizerType: 'array',
+    category: 'Searching Algorithms',
+    defaultInputs: { target: '30', pattern: '3, 7, 11, 14, 19, 22, 26, 30, 35, 41, 47, 53' },
+  },
+
+  homeCard: {
+    name: 'Jump Search',
+    difficulty: 'Easy',
+    description: 'An algorithm for sorted arrays that jumps ahead by fixed steps and then performs a linear search.',
+    complexity: {
+      timeBest: 'Ω(1)',
+      timeAvg: 'Θ(√n)',
+      timeWorst: 'O(√n)',
+      space: 'O(1)'
+    },
+  },
+
+  algorithmPage: {
+    uiConfig: {
+      statusLabel: 'Index: {prev}',
+      startButton: 'Start Jump Search',
+      playbackSpeed: 300
+    },
+    extendedDescription: 'Jump Search works on sorted arrays. It checks elements at fixed intervals (jumps) of size √n. Once it finds a block where the target might be, it performs a linear search within that block to find the exact position.',
+      legendItems: [
+        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+        { label: 'Jump Point', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+        { label: 'Linear Scan', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
+        { label: 'Found', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      ],
+    visualSteps: {
+      READY: {
+        title: 'Ready',
+        message: "Jump Search initialized. Optimal jump size is √n ≈ {step}.",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
+      },
+      JUMPING: {
+        title: 'Jumping',
+        message: "Checking jump point {currentJump} ({val}). Still smaller than target {targetValue}. Jumping to {nextI}.",
+        highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
+      },
+      BLOCK_IDENTIFIED: {
+        title: 'Block Identified',
+        message: "Target {targetValue} must be between index {prev} and {curr}. Switching to linear scan.",
+        highlights: { pseudo: [4], javascript: [7], python: [7] }
+      },
+      LINEAR_SCAN: {
+        title: 'Linear Scan',
+        message: "Scanning block... Checking index {prev}.",
+        highlights: { pseudo: [5], javascript: [8], python: [8] }
+      },
+      MATCH_FOUND: {
+        title: 'Match Found ✓',
+        message: "Target value found at index {prev}!",
+        highlights: { pseudo: [6], javascript: [9], python: [9] }
+      },
+      NOT_FOUND: {
+        title: 'Not Found',
+        message: "Value {targetValue} is not in the array.",
+        highlights: { pseudo: [7], javascript: [11], python: [11] }
+      }
+    }
+  },
+
+  codeSnippets: {
+    pseudo: `function jumpSearch(arr, target):
+  n = arr.length, step = sqrt(n)
+  prev = 0
+  while arr[min(step, n)-1] < target:
+    prev = step
+    step += sqrt(n)
+    if prev >= n: return -1
+  while arr[prev] < target:
+    prev += 1
+    if prev == min(step, n): return -1
+  if arr[prev] == target: return prev
+  return -1`,
+    javascript: `function jumpSearch(arr, target) {
+  let n = arr.length;
+  let step = Math.floor(Math.sqrt(n));
+  let prev = 0;
+  while (arr[Math.min(step, n) - 1] < target) {
+    prev = step;
+    step += Math.floor(Math.sqrt(n));
+    if (prev >= n) return -1;
+  }
+  while (arr[prev] < target) {
+    prev++;
+    if (prev === Math.min(step, n)) return -1;
+  }
+  if (arr[prev] === target) return prev;
+  return -1;
+}`,
+    python: `import math
+def jump_search(arr, target):
+    n = len(arr)
+    step = int(math.sqrt(n))
+    prev = 0
+    while arr[min(step, n)-1] < target:
+        prev = step
+        step += int(math.sqrt(n))
+        if prev >= n: return -1
+    while arr[prev] < target:
+        prev += 1
+        if prev == min(step, n): return -1
+    if arr[prev] == target: return prev
+    return -1`
+  },
+
+  // --- Logic ---
   getInitialState: (p, t) => {
     const rawArray = Array.isArray(t) ? t : [3, 7, 11, 14, 19, 22, 26, 30, 35, 41, 47, 53];
     const array = [...rawArray].sort((a, b) => a - b);
     const targetValue = typeof p === 'number' ? p : (Number.parseInt(p, 10) || 30);
+    const step = Math.floor(Math.sqrt(array.length));
     return {
       phase: 0,
       i: 0,
       prev: 0,
-      step: Math.floor(Math.sqrt(array.length)),
+      step,
       targetValue: targetValue,
       array,
       activeIndices: [],
       sortedIndices: [],
       pivotIndex: -1,
+      comparisons: 0,
       log: {
         title: 'Ready',
         type: 'info',
         messageKey: 'READY',
-        params: { step: Math.floor(Math.sqrt(array.length)) }
+        params: { step }
       }
     };
   },
-
-  getPreprocessing: () => ({}),
 
   nextStep: (state) => {
     const { array, i, prev, step, targetValue, phase } = state;
@@ -63,7 +176,7 @@ export const jumpsearch = {
             title: 'BLOCK IDENTIFIED',
             type: 'match',
             messageKey: 'BLOCK_IDENTIFIED',
-            params: { prev: prev, curr: Math.min(i, n - 1) }
+            params: { prev: prev, curr: Math.min(i, n - 1), targetValue }
           }
         };
       }
@@ -78,7 +191,8 @@ export const jumpsearch = {
           log: {
             title: 'NOT FOUND',
             type: 'mismatch',
-            messageKey: 'NOT_FOUND'
+            messageKey: 'NOT_FOUND',
+            params: { targetValue }
           }
         };
       }
@@ -114,4 +228,4 @@ export const jumpsearch = {
 
     return newState;
   }
-};
+});

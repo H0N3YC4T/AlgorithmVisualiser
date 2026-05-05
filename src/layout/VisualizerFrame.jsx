@@ -1,4 +1,5 @@
 import { LayoutGrid } from "lucide-react";
+import { memo } from "react";
 import PropTypes from "prop-types";
 import InputPanel from "../components/ui/InputPanel";
 import Legend from "../components/ui/Legend";
@@ -16,7 +17,7 @@ import useVisualizerPlayback from "../hooks/useVisualizerPlayback";
 import useVisualizerLabels from "../hooks/useVisualizerLabels";
 import { classCategory } from "../styles/class-category";
 
-function MainVisualization({
+const MainVisualization = memo(({
   algorithm,
   state,
   target,
@@ -25,7 +26,7 @@ function MainVisualization({
   toggleWall,
   gridTool,
   isEditingDisabled,
-}) {
+}) => {
   const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
 
   if (algorithm.visualizerType === "array" || isArrayBased) {
@@ -84,7 +85,7 @@ function MainVisualization({
       showShiftArrow={state.showShiftArrow}
     />
   );
-}
+});
 
 MainVisualization.propTypes = {
   algorithm: PropTypes.object.isRequired,
@@ -110,17 +111,25 @@ export default function VisualizerFrame({
   nextStep,
   updateState,
   toggleWall,
+  clearWalls,
   history,
   preprocessing,
   onBack,
   gridTool,
   setGridTool,
+  playbackRate,
+  setPlaybackRate,
+  gridSize,
+  setGridSize
 }) {
+  // Adjust speed based on playbackRate (inverse: higher rate means lower interval)
+  const adjustedSpeed = (algorithm.uiConfig?.playbackSpeed || 500) / playbackRate;
+
   const { isPlaying, togglePlay, stopPlay } = useVisualizerPlayback(
     nextStep,
     softReset,
     state.isFinished,
-    algorithm.uiConfig?.playbackSpeed,
+    adjustedSpeed,
   );
   const texts = useVisualizerLabels(algorithm, state);
 
@@ -175,6 +184,11 @@ export default function VisualizerFrame({
                 gridTool={gridTool}
                 setGridTool={setGridTool}
                 isEditingDisabled={isEditingDisabled}
+                playbackRate={playbackRate}
+                setPlaybackRate={setPlaybackRate}
+                clearWalls={clearWalls}
+                gridSize={gridSize}
+                setGridSize={setGridSize}
               />
             </div>
 
@@ -275,9 +289,14 @@ VisualizerFrame.propTypes = {
   nextStep: PropTypes.func.isRequired,
   updateState: PropTypes.func.isRequired,
   toggleWall: PropTypes.func,
+  clearWalls: PropTypes.func,
   history: PropTypes.array.isRequired,
   preprocessing: PropTypes.object.isRequired,
   onBack: PropTypes.func.isRequired,
   gridTool: PropTypes.string,
   setGridTool: PropTypes.func,
+  playbackRate: PropTypes.number,
+  setPlaybackRate: PropTypes.func,
+  gridSize: PropTypes.object,
+  setGridSize: PropTypes.func
 };

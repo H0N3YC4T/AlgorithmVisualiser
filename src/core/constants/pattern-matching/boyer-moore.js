@@ -1,22 +1,73 @@
-/**
- * Boyer-Moore (Horspool) Substring Search Algorithm Module
- */
+import { createAlgorithmCard } from '../factory';
 
-export const boyermoore = {
+export const boyermoore = createAlgorithmCard({
   id: 'boyermoore',
-  name: 'Boyer-Moore Search',
   
-  getInitialState: () => ({
-    phase: 1,
-    comparesRightToLeft: true,
-    lookAheadIndex: -1,
-    showShiftArrow: false,
-    log: {
-      title: 'INITIALIZING',
-      type: 'info',
-      messageKey: 'READY'
+  metadata: {
+    type: 'pattern-matching',
+    visualizerType: 'pattern-matching',
+    category: 'Pattern Matching Algorithms',
+    defaultInputs: { target: 'WHICH-FINALLY-FILLS-THE-BILL', pattern: 'FINALLY' },
+  },
+
+  homeCard: {
+    name: 'Boyer-Moore',
+    difficulty: 'Hard',
+    description: 'An efficient search that compares right-to-left and uses the Bad Character rule to skip text.',
+    complexity: {
+      timeBest: 'Ω(n/m)',
+      timeAvg: 'Θ(n)',
+      timeWorst: 'O(nm)',
+      space: 'O(k)'
+    },
+  },
+
+  algorithmPage: {
+    uiConfig: {
+      statusLabel: 'Index: {currentIndex}',
+      startButton: 'Start Search',
+      playbackSpeed: 300
+    },
+    extendedDescription: 'Boyer-Moore is one of the most efficient string-searching algorithms. It compares the pattern against the text from right to left. Upon a mismatch, it uses the "Bad Character Rule" to shift the pattern by the maximum possible distance, often skipping large sections of the text.',
+    legendItems: [
+      { label: 'Unvisited', color: 'bg-slate-800/40 border-slate-700/50' },
+      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Match', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      { label: 'Mismatch', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+    ],
+    visualSteps: {
+      READY: {
+        title: 'Ready',
+        message: "Boyer-Moore initialized. Bad Character table precomputed.",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
+      },
+      CHAR_MATCH: {
+        title: 'Right-to-Left Match',
+        message: "Match at pattern offset {compIdx}. Continuing right-to-left verification.",
+        highlights: { pseudo: [2], javascript: [3], python: [3] }
+      },
+      MISMATCH: {
+        title: 'Mismatch',
+        message: "Inconsistency detected at index {idx}. Consulting Bad Character table.",
+        highlights: { pseudo: [3], javascript: [4], python: [4] }
+      },
+      BAD_CHAR_RULE: {
+        title: 'Bad Character Rule',
+        message: "Character '{badChar}' {foundStatus}. Shift distance: {shiftValue}.",
+        highlights: { pseudo: [4], javascript: [5], python: [5] }
+      },
+      SHIFT_EXECUTED: {
+        title: 'Executing Shift',
+        message: "Window translation to {nextPos}. Jumping {shiftValue} units.",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
+      },
+      MATCH_FOUND: {
+        title: 'Match Found ✓',
+        message: "Pattern Instance Found at starting index {idx}!",
+        highlights: { pseudo: [4], javascript: [5], python: [5] }
+      }
     }
-  }),
+  },
 
   getPreprocessing: (pattern) => {
     const m = pattern.length;
@@ -30,52 +81,52 @@ export const boyermoore = {
     };
   },
 
+  getInitialState: (_target, pattern) => ({
+    currentIndex: 0,
+    compIdx: pattern.length - 1,
+    phase: 1,
+    mismatchFound: false,
+    activeIndices: [],
+    log: {
+      title: 'Ready',
+      type: 'info',
+      messageKey: 'READY'
+    }
+  }),
+
   nextStep: (state, target, pattern, preprocessing) => {
     const { currentIndex, phase, compIdx } = state;
     const { getShift, badCharTable } = preprocessing;
     const m = pattern.length;
     const n = target.length;
-    
-    // Initialize compIdx on first step if needed
-    const currentCompIdx = compIdx === undefined ? m - 1 : compIdx;
-    
-    const newState = { 
-      ...state, 
-      compIdx: currentCompIdx,
-      activeIndices: new Set(),
-      accessedIndices: state.accessedIndices || new Set()
-    };
+    const newState = { ...state, activeIndices: [] };
 
-    // Phase 1: Comparison (Right to Left)
-    if (phase === 1) {
-      const textIdx = currentIndex + currentCompIdx;
+    if (phase === 1) { // Right-to-Left Comparison
+      const textIdx = currentIndex + compIdx;
       const targetChar = target[textIdx];
-      const patternChar = pattern[currentCompIdx];
+      const patternChar = pattern[compIdx];
       
-      newState.comparisons += 1;
-      newState.accessedIndices.add(textIdx);
-      newState.activeIndices.add(textIdx);
+      newState.activeIndices = [textIdx];
 
       if (targetChar !== patternChar) {
         return {
           ...newState,
-          compIdx: currentCompIdx,
           mismatchFound: true,
           phase: 2,
-          lookAheadIndex: currentIndex + m - 1,
-          showShiftArrow: false,
           log: {
-            title: 'MISMATCH',
+            title: 'Mismatch',
             type: 'mismatch',
-            messageKey: 'MISMATCH'
+            messageKey: 'MISMATCH',
+            params: { idx: textIdx }
           }
         };
-      } else if (currentCompIdx === 0) {
+      } else if (compIdx === 0) {
         return {
           ...newState,
           isFinished: true,
+          activeIndices: [...new Array(m).keys()].map(k => currentIndex + k),
           log: {
-            title: 'MATCH FOUND ✓',
+            title: 'Match Found ✓',
             type: 'success',
             messageKey: 'MATCH_FOUND',
             params: { idx: currentIndex }
@@ -84,81 +135,68 @@ export const boyermoore = {
       } else {
         return {
           ...newState,
-          compIdx: currentCompIdx - 1,
+          compIdx: compIdx - 1,
           log: {
-            title: 'RIGHT-TO-LEFT MATCH',
+            title: 'Match',
             type: 'match',
             messageKey: 'CHAR_MATCH',
-            params: { targetChar, patternChar }
+            params: { compIdx: compIdx }
           }
         };
       }
     }
 
-    // Phase 2: Bad Character Rule
-    if (phase === 2) {
-      const badCharIdx = currentIndex + m - 1; 
+    if (phase === 2) { // Bad Character Rule
+      const badCharIdx = currentIndex + m - 1;
       const badChar = target[badCharIdx];
       const shiftValue = getShift(badChar);
       
-      newState.activeIndices.add(badCharIdx);
-
       return {
         ...newState,
         phase: 3,
-        lookAheadIndex: badCharIdx,
-        showShiftArrow: true,
+        activeIndices: [badCharIdx],
         log: {
-          title: 'BAD CHARACTER RULE',
+          title: 'Bad Character Rule',
           type: 'shift',
           messageKey: 'BAD_CHAR_RULE',
           params: { 
             badChar, 
             shiftValue,
-            foundStatus: badCharTable[badChar] ? "exists in the pattern" : "does not exist in the pattern"
+            foundStatus: badCharTable[badChar] ? "exists in the pattern" : "is not in pattern"
           }
         }
       };
     }
 
-    // Phase 3: Execute Shift
-    if (phase === 3) {
+    if (phase === 3) { // Execution
       const badChar = target[currentIndex + m - 1];
       const shiftValue = getShift(badChar);
       const nextPos = currentIndex + shiftValue;
-      newState.iterations += 1;
 
       if (nextPos + m > n) {
         return {
           ...newState,
-          currentIndex: nextPos,
           isFinished: true,
-          log: {
-            title: 'END OF TEXT',
-            type: 'info',
-            messageKey: 'END_OF_TEXT',
-            params: { nextPos }
-          }
-        };
-      } else {
-        return {
-          ...newState,
           currentIndex: nextPos,
-          phase: 1,
-          compIdx: m - 1,
-          mismatchFound: false,
-          lookAheadIndex: -1,
-          showShiftArrow: false,
-          log: {
-            title: 'SHIFT EXECUTED',
-            type: 'shift',
-            messageKey: 'SHIFT_EXECUTED',
-            params: { shiftValue, nextPos }
-          }
+          log: { title: 'End of Text', type: 'info', message: 'Boundary condition reached.' }
         };
       }
+
+      return {
+        ...newState,
+        currentIndex: nextPos,
+        compIdx: m - 1,
+        phase: 1,
+        mismatchFound: false,
+        log: {
+          title: 'Shift Executed',
+          type: 'shift',
+          messageKey: 'SHIFT_EXECUTED',
+          params: { shiftValue, nextPos }
+        }
+      };
     }
 
     return newState;
   }
-};
+});

@@ -1,153 +1,247 @@
-import { getGridConfig } from './grid-config';
+import { createAlgorithmCard } from '../factory';
+import { getGridConfig, generateMaze } from './grid-config';
 
-export const dfs = {
+/**
+ * Depth-First Search Algorithm Module
+ */
+export const dfs = createAlgorithmCard({
   id: 'dfs',
-  name: "Depth-First Search",
   
-  getInitialState: (p, t, algo, gridConfig) => {
-    const { rows, cols, startNode, endNode } = getGridConfig(gridConfig || algo);
-    const walls = gridConfig?.walls || [];
+  // --- Metadata ---
+  metadata: {
+    type: 'pathfinding',
+    visualizerType: 'grid',
+    category: 'Pathfinding Algorithms',
+    defaultInputs: { target: '', pattern: '' },
+  },
+
+  homeCard: {
+    name: 'Depth-First Search',
+    difficulty: 'Medium',
+    description: 'Explores as far as possible along each branch before backtracking. Not guaranteed to find the shortest path.',
+    complexity: {
+      timeBest: 'Ω(1)',
+      timeAvg: 'Θ(V + E)',
+      timeWorst: 'O(V + E)',
+      space: 'O(V)'
+    },
+  },
+
+  algorithmPage: {
+    uiConfig: {
+      statusLabel: 'Visited: {iterations}',
+      startButton: 'Start DFS',
+      playbackSpeed: 100
+    },
+    extendedDescription: 'Depth-First Search (DFS) is an algorithm for traversing or searching tree or graph data structures. The algorithm starts at the root node and explores as far as possible along each branch before backtracking. Unlike BFS, DFS does not guarantee the shortest path in an unweighted grid.',
+    legendItems: [
+      { label: 'Start', color: 'bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
+      { label: 'End', color: 'bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
+      { label: 'Wall', color: 'bg-slate-700' },
+      { label: 'Visited', color: 'bg-purple-500/30 border-purple-500/50' },
+      { label: 'Path', color: 'bg-sky-600/90 shadow-[0_0_15px_rgba(2,132,199,0.3)]' },
+    ],
+    visualSteps: {
+      READY: {
+        title: 'Ready',
+        message: "DFS initialized. Ready to explore from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
+      },
+      SEARCHING: {
+        title: 'Exploring Branch',
+        message: "Visiting node at ({r}, {c}). Exploring deeper into the current branch.",
+        highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
+      },
+      TARGET_REACHED: {
+        title: 'Target Found ✓',
+        message: "Reached the target node! Tracing the discovered path.",
+        highlights: { pseudo: [4], javascript: [7], python: [7] }
+      },
+      BACKTRACKING: {
+        title: 'Reconstructing Path',
+        message: "Tracing back from target to start using parent pointers.",
+        highlights: { pseudo: [5], javascript: [9], python: [9] }
+      },
+      DONE: {
+        title: 'Path Complete ✓',
+        message: "Path discovered and reconstructed.",
+        highlights: { pseudo: [6], javascript: [11], python: [11] }
+      },
+      NO_PATH: {
+        title: 'No Path Found',
+        message: "Stack exhausted. No reachable path exists to the target.",
+        highlights: { pseudo: [7], javascript: [13], python: [13] }
+      }
+    }
+  },
+
+  codeSnippets: {
+    pseudo: `function DFS(start, target):
+  stack = [start], visited = {start}
+  while stack is not empty:
+    node = stack.pop()
+    if node == target: return reconstructPath()
+    for neighbor in neighbors(node):
+      if neighbor not in visited:
+        visited.add(neighbor)
+        parent[neighbor] = node
+        stack.push(neighbor)`,
+    javascript: `function dfs(start, target) {
+  const stack = [start];
+  const visited = new Set();
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (visited.has(node.id)) continue;
+    visited.add(node.id);
+    if (node.id === target.id) return reconstruct(node);
+    for (const neighbor of getNeighbors(node)) {
+      if (!visited.has(neighbor.id)) {
+        neighbor.parent = node;
+        stack.push(neighbor);
+      }
+    }
+  }
+}`,
+    python: `def dfs(start, target):
+    stack = [start]
+    visited = set()
+    while stack:
+        node = stack.pop()
+        if node in visited: continue
+        visited.add(node)
+        if node == target: return reconstruct(node)
+        for neighbor in get_neighbors(node):
+            if neighbor not in visited:
+                neighbor.parent = node
+                stack.append(neighbor)`
+  },
+
+  // --- Logic ---
+  getInitialState: (p, t, algo, existingState) => {
+    const { rows, cols, startNode, endNode } = getGridConfig(existingState || algo);
+    
+    let walls;
+    if (existingState?.walls) {
+      walls = existingState.walls instanceof Set ? existingState.walls : new Set(existingState.walls.map(w => `${w.r},${w.c}`));
+    } else {
+      const mazeWalls = generateMaze(rows, cols, startNode, endNode);
+      walls = new Set(mazeWalls.map(w => `${w.r},${w.c}`));
+    }
     
     return {
       rows, cols,
-      startNode, endNode, walls,
-      visited: new Array(rows).fill().map(() => new Array(cols).fill(false)),
-      previous: new Array(rows).fill().map(() => new Array(cols).fill(null)),
+      startNode, endNode, 
+      walls,
+      visited: new Set(),
+      previous: {},
       stack: [startNode],
       activeBranch: [startNode],
       path: [],
       phase: 0, 
       activeNode: null,
       isFinished: false,
+      iterations: 0,
       log: {
         title: 'Ready',
         type: 'info',
-        messageKey: 'READY'
+        messageKey: 'READY',
+        params: { startNode, endNode }
       }
     };
   },
 
   nextStep: (state) => {
-    const { visited, previous, stack, phase } = state;
-    const newState = { 
-      ...state, 
-      activeNode: null,
-      visited: visited.map(row => [...row]),
-      previous: previous.map(row => [...row]),
-      stack: [...stack]
-    };
+    const { visited, previous, stack, phase, rows, cols, endNode, path, walls } = state;
 
-    if (phase === 0) {
-      return dfs.handleSearchPhase(newState);
-    }
+    if (phase === 0) { // handleSearchPhase
+      if (stack.length === 0) {
+        return { 
+          ...state, 
+          isFinished: true, 
+          log: { title: 'NO PATH', type: 'mismatch', messageKey: 'NO_PATH' } 
+        };
+      }
 
-    if (phase === 1) {
-      return dfs.handleBacktrackPhase(newState);
-    }
+      const current = stack[stack.length - 1];
+      const restStack = stack.slice(0, -1);
+      const key = `${current.r},${current.c}`;
 
-    return newState;
-  },
+      if (visited.has(key)) {
+        return { ...state, stack: restStack };
+      }
+      
+      const newVisited = new Set(visited);
+      newVisited.add(key);
 
-  handleSearchPhase: (state) => {
-    const { rows, cols, endNode } = state;
-    if (state.stack.length === 0) {
-      return { 
-        ...state, 
-        isFinished: true, 
-        log: { 
-          title: 'NO PATH', 
-          type: 'mismatch', 
-          messageKey: 'NO_PATH' 
-        } 
-      };
-    }
+      // Calculate active branch (path from start to current)
+      const activeBranch = [];
+      let curr = current;
+      while (curr) {
+        activeBranch.push(curr);
+        const pKey = `${curr.r},${curr.c}`;
+        curr = previous[pKey];
+      }
 
-    const current = state.stack.pop();
-    
-    // If already visited, just move to next
-    if (state.visited[current.r][current.c]) {
-        return dfs.handleSearchPhase(state);
-    }
+      if (current.r === endNode.r && current.c === endNode.c) {
+        return {
+          ...state,
+          visited: newVisited,
+          phase: 1,
+          activeNode: current,
+          activeBranch,
+          log: { title: 'TARGET REACHED', type: 'success', messageKey: 'TARGET_REACHED' }
+        };
+      }
 
-    state.visited[current.r][current.c] = true;
-    state.activeNode = current;
-    
-    // Calculate active branch (path from start to current)
-    const activeBranch = [];
-    let curr = current;
-    while (curr) {
-      activeBranch.push(curr);
-      curr = state.previous[curr.r][curr.c];
-    }
-    state.activeBranch = activeBranch;
-    
-    if (current.r === endNode.r && current.c === endNode.c) {
+      const neighbors = [
+        { r: current.r + 1, c: current.c },
+        { r: current.r, c: current.c + 1 },
+        { r: current.r - 1, c: current.c },
+        { r: current.r, c: current.c - 1 }
+      ];
+
+      const newStack = [...restStack];
+      const newPrevious = { ...previous };
+
+      for (const n of neighbors) {
+        const nKey = `${n.r},${n.c}`;
+        if (n.r >= 0 && n.r < rows && n.c >= 0 && n.c < cols && !visited.has(nKey) && !walls.has(nKey)) {
+          newPrevious[nKey] = current;
+          newStack.push(n);
+        }
+      }
+
       return {
         ...state,
-        phase: 1,
-        log: { 
-          title: 'TARGET REACHED', 
-          type: 'success', 
-          messageKey: 'TARGET_REACHED' 
-        }
+        visited: newVisited,
+        stack: newStack,
+        previous: newPrevious,
+        iterations: state.iterations + 1,
+        activeNode: current,
+        activeBranch,
+        log: { title: 'SEARCHING', type: 'info', messageKey: 'SEARCHING', params: { r: current.r, c: current.c } }
       };
     }
 
-    // Standard DFS neighbors: Up, Right, Down, Left (reversed for stack to process in order if desired, but DFS is usually arbitrary)
-    // To make it look "natural" we can pick an order
-    const neighbors = [
-      { r: current.r + 1, c: current.c },
-      { r: current.r, c: current.c + 1 },
-      { r: current.r - 1, c: current.c },
-      { r: current.r, c: current.c - 1 }
-    ];
-
-    for (const n of neighbors) {
-      const isWall = (state.walls || []).some(w => w.r === n.r && w.c === n.c);
-      if (n.r >= 0 && n.r < rows && n.c >= 0 && n.c < cols && !state.visited[n.r][n.c] && !isWall) {
-        state.previous[n.r][n.c] = current;
-        state.stack.push(n);
+    if (phase === 1) { // handleBacktrackPhase
+      const lastKey = path.length === 0 ? `${endNode.r},${endNode.c}` : `${path[0].r},${path[0].c}`;
+      const parent = previous[lastKey];
+      
+      if (!parent) {
+        return { 
+          ...state, 
+          isFinished: true, 
+          log: { title: 'DONE ✓', type: 'success', messageKey: 'DONE' } 
+        };
       }
-    }
-
-    return {
-      ...state,
-      log: {
-        title: 'SEARCHING',
-        type: 'info',
-        messageKey: 'SEARCHING',
-        params: { 
-          r: current.r, 
-          c: current.c 
-        }
-      }
-    };
-  },
-
-  handleBacktrackPhase: (state) => {
-    const { endNode, path } = state;
-    const last = path.length === 0 ? endNode : state.previous[path[0].r][path[0].c];
-    if (last === null) {
-      return { 
-        ...state, 
-        isFinished: true, 
-        log: { 
-          title: 'DONE ✓', 
-          type: 'success', 
-          messageKey: 'DONE' 
-        } 
+      return {
+        ...state,
+        path: [parent, ...path],
+        activeNode: parent,
+        log: { title: 'BACKTRACKING', type: 'shift', messageKey: 'BACKTRACKING', params: { r: parent.r, c: parent.c } }
       };
     }
-    return {
-      ...state,
-      path: [last, ...path],
-      activeNode: last,
-      log: { 
-        title: 'BACKTRACKING', 
-        type: 'shift', 
-        messageKey: 'BACKTRACKING', 
-        params: { r: last.r, c: last.c } 
-      }
-    };
+
+    return state;
   }
-};
+});

@@ -27,15 +27,15 @@ export const insertion = createAlgorithmCard({
     uiConfig: {
       statusLabel: 'Pass: {i}',
       startButton: 'Start Sorting',
-      playbackSpeed: 400
+      playbackSpeed: 200
     },
     extendedDescription: 'Insertion Sort is a simple sorting algorithm that builds the final sorted array (or list) one item at a time. It is much less efficient on large lists than more advanced algorithms such as quicksort, heapsort, or merge sort. However, it provides several advantages: it is simple to implement, efficient for small data sets, and stable.',
-    legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
-      { label: 'Checking', color: 'bg-indigo-500' },
-      { label: 'Swap', color: 'bg-rose-500' },
-      { label: 'Sorted', color: 'bg-emerald-500' },
-    ],
+      legendItems: [
+        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+        { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+        { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+        { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      ],
   },
 
   // --- Visual Steps & Code ---

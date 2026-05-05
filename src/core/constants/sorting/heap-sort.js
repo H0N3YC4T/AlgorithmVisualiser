@@ -27,15 +27,15 @@ export const heapsort = createAlgorithmCard({
     uiConfig: {
       statusLabel: 'Heap Size: {heapSize}',
       startButton: 'Start Sorting',
-      playbackSpeed: 400
+      playbackSpeed: 200
     },
-    extendedDescription: 'Heap Sort is a comparison-based sorting technique based on Binary Heap data structure. It is similar to selection sort where we first find the maximum element and place the maximum element at the end. We repeat the same process for the remaining elements.',
+    extendedDescription: 'Heap Sort is a comparison-based sorting technique based on Binary Heap data structure. It is similar to selection sort where we first find the maximum element and place the maximum element at the end.',
     legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
-      { label: 'Heapified', color: 'bg-indigo-500' },
-      { label: 'Checking', color: 'bg-amber-400' },
-      { label: 'Swap', color: 'bg-rose-500' },
-      { label: 'Sorted', color: 'bg-emerald-500' },
+      { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+      { label: 'Heapified', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Checking', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
+      { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+      { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
   },
 

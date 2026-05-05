@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
+import { memo } from "react";
 import { Info, CheckCircle2, AlertCircle, ArrowRightCircle } from "lucide-react";
 
-export default function ProcessLog({ log, algorithm }) {
+const ProcessLog = memo(({ log, algorithm }) => {
   const logStyles = {
     info: {
       text: "text-indigo-400",
@@ -37,18 +38,19 @@ export default function ProcessLog({ log, algorithm }) {
 
   const style = logStyles[log?.type] || logStyles.info;
 
-  const resolveContent = () => {
+  const resolvedContent = (() => {
     if (!log) return "";
-    if (!log.messageKey) return log.content || "";
-
-    const template = algorithm?.stepMessages?.[log.messageKey];
+    const msgKey = log.messageKey;
+    
+    // Check in standard stepMessages OR visualSteps[key].message
+    const template = algorithm?.stepMessages?.[msgKey] || algorithm?.visualSteps?.[msgKey]?.message;
     if (!template) return log.content || "";
 
     return template.replace(/{(\w+)}/g, (_, key) => {
       const val = log.params?.[key];
       return val !== undefined ? val : `{${key}}`;
     });
-  };
+  })();
 
   return (
     <div
@@ -58,12 +60,12 @@ export default function ProcessLog({ log, algorithm }) {
         {style.icon}
         <span className="text-xs font-black uppercase tracking-[0.2em]">{log?.title}</span>
       </div>
-      <div className="font-mono text-sm leading-relaxed whitespace-pre-line text-slate-100 font-medium flex-1">
-        {resolveContent()}
+      <div className="font-mono text-[13px] leading-relaxed whitespace-pre-line text-slate-100 font-medium flex-1">
+        {resolvedContent}
       </div>
     </div>
   );
-}
+});
 
 ProcessLog.propTypes = {
   log: PropTypes.shape({
@@ -75,3 +77,5 @@ ProcessLog.propTypes = {
   }),
   algorithm: PropTypes.object,
 };
+
+export default ProcessLog;

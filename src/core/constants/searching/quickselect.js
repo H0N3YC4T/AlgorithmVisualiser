@@ -1,22 +1,122 @@
+import { createAlgorithmCard } from '../factory';
+
 /**
  * Quickselect Algorithm Module
  * Used to find the k-th smallest element in an unordered list.
  */
-
-export const quickselect = {
+export const quickselect = createAlgorithmCard({
   id: 'quickselect',
-  name: 'Quickselect',
   
+  // --- Metadata ---
+  metadata: {
+    type: 'searching',
+    visualizerType: 'array',
+    category: 'Searching Algorithms',
+    defaultInputs: { target: '3', pattern: '5, 2, 8, 3, 9, 1, 7, 4' },
+  },
+
+  homeCard: {
+    name: 'Quickselect',
+    difficulty: 'Medium',
+    description: 'A selection algorithm to find the k-th smallest element in an unordered list.',
+    complexity: {
+      timeBest: 'Ω(n)',
+      timeAvg: 'Θ(n)',
+      timeWorst: 'O(n²)',
+      space: 'O(1)'
+    },
+  },
+
+  algorithmPage: {
+    uiConfig: {
+      statusLabel: 'K: {targetK}',
+      startButton: 'Start Quickselect',
+      playbackSpeed: 300
+    },
+    extendedDescription: 'Quickselect is a selection algorithm related to the QuickSort sorting algorithm. It has average-case linear time complexity. Like QuickSort, it is efficient in practice and has good cache performance.',
+      legendItems: [
+        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+        { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+        { label: 'Pivot', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
+        { label: 'Found', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      ],
+    visualSteps: {
+      INITIALIZING: {
+        title: 'Initializing',
+        message: "Searching for the {targetK}-th smallest element (index {k}).",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
+      },
+      START_PARTITION: {
+        title: 'Start Partition',
+        message: "Partitioning range [{l}, {r}] using pivot {pivot}.",
+        highlights: { pseudo: [2], javascript: [4], python: [4] }
+      },
+      SWAP_SMALLER: {
+        title: 'Swap Smaller',
+        message: "{val} < {pivot}. Swapping to index {i}.",
+        highlights: { pseudo: [3], javascript: [6], python: [6] }
+      },
+      CONTINUE_SCAN: {
+        title: 'Continue Scan',
+        message: "{val} ≥ {pivot}. Continuing scan.",
+        highlights: { pseudo: [3], javascript: [7], python: [7] }
+      },
+      PIVOT_PLACED: {
+        title: 'Pivot Placed',
+        message: "Pivot moved to its final sorted position {i}.",
+        highlights: { pseudo: [4], javascript: [9], python: [9] }
+      },
+      FOUND: {
+        title: 'Found ✓',
+        message: "Match! The {kPlusOne}-th smallest element is {val}.",
+        highlights: { pseudo: [5], javascript: [11], python: [11] }
+      },
+      SEARCH_LEFT: {
+        title: 'Search Left',
+        message: "Index {pivotIdx} > {k}. Searching left of pivot.",
+        highlights: { pseudo: [6], javascript: [13], python: [13] }
+      },
+      SEARCH_RIGHT: {
+        title: 'Search Right',
+        message: "Index {pivotIdx} < {k}. Searching right of pivot.",
+        highlights: { pseudo: [7], javascript: [15], python: [15] }
+      }
+    }
+  },
+
+  codeSnippets: {
+    pseudo: `function quickselect(list, left, right, k):
+  if left == right: return list[left]
+  pivotIndex = partition(list, left, right)
+  if k == pivotIndex: return list[k]
+  else if k < pivotIndex:
+    return quickselect(list, left, pivotIndex - 1, k)
+  else:
+    return quickselect(list, pivotIndex + 1, right, k)`,
+    javascript: `function quickselect(arr, left, right, k) {
+  if (left === right) return arr[left];
+  let pivotIndex = partition(arr, left, right);
+  if (k === pivotIndex) return arr[k];
+  else if (k < pivotIndex) return quickselect(arr, left, pivotIndex - 1, k);
+  else return quickselect(arr, pivotIndex + 1, right, k);
+}`,
+    python: `def quickselect(arr, left, right, k):
+    if left == right: return arr[left]
+    pivot_index = partition(arr, left, right)
+    if k == pivot_index: return arr[k]
+    elif k < pivot_index:
+        return quickselect(arr, left, pivot_index - 1, k)
+    else:
+        return quickselect(arr, pivot_index + 1, right, k)`
+  },
+
+  // --- Logic ---
   getInitialState: (p, t) => {
-    const array = Array.isArray(t) ? t : [5, 2, 8, 3, 9, 1, 7, 4];
-    
-    // Robust parsing of k
+    const array = Array.isArray(t) ? [...t] : [5, 2, 8, 3, 9, 1, 7, 4];
     let kInput = p;
     if (Array.isArray(p)) kInput = p[0];
     const parsedK = typeof kInput === 'number' ? kInput : Number.parseInt(kInput, 10);
     const targetK = Number.isNaN(parsedK) ? 3 : parsedK;
-    
-    // k is the 0-indexed target position
     const k = Math.max(0, targetK - 1); 
 
     return {
@@ -30,6 +130,7 @@ export const quickselect = {
       sortedIndices: [],
       pivotIndex: -1,
       isFinished: false,
+      comparisons: 0,
       log: {
         title: 'INITIALIZING',
         type: 'info',
@@ -47,7 +148,6 @@ export const quickselect = {
       return { ...newState, isFinished: true, log: { title: 'ERROR', type: 'mismatch', messageKey: 'ERROR' } };
     }
 
-    // Phase 0: Initialize partition
     if (phase === 0) {
       const pivot = array[r];
       return {
@@ -66,7 +166,6 @@ export const quickselect = {
       };
     }
 
-    // Phase 1: Partitioning Scan (Lomuto)
     if (phase === 1) {
       const { i, j, pivot } = state;
       if (j < r) {
@@ -99,7 +198,6 @@ export const quickselect = {
           };
         }
       } else {
-        // Final pivot swap
         const newArray = [...array];
         [newArray[i], newArray[r]] = [newArray[r], newArray[i]];
         return {
@@ -117,7 +215,6 @@ export const quickselect = {
       }
     }
 
-    // Phase 2: Check Pivot Position
     if (phase === 2) {
       const pivotIdx = state.pivotIndex;
       if (pivotIdx === k) {
@@ -163,4 +260,4 @@ export const quickselect = {
 
     return newState;
   }
-};
+});

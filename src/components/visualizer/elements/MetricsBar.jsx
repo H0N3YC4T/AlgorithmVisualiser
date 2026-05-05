@@ -21,7 +21,9 @@ export default function MetricsBar({
   const isPathfinding = state?.type === 'pathfinding' || !!state?.gridConfig || !!state?.rows;
   
   const pathLength = state?.path?.length || 0;
-  const visitedCount = (state?.visited || []).flat().filter(Boolean).length;
+  const visitedCount = state?.visited instanceof Set 
+    ? state.visited.size 
+    : (state?.visited || []).flat().filter(Boolean).length;
   const frontierCount = (state?.queue || state?.openSet || []).length;
   const totalChecked = visitedCount + frontierCount;
 
@@ -53,8 +55,13 @@ export default function MetricsBar({
           </div>
           <div className="w-px h-4 bg-slate-800" />
           <div className="flex items-center gap-2">
-            <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Checked Nodes:</div>
-            <div className="text-sm font-mono font-black text-indigo-400">{totalChecked}</div>
+            <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Checked:</div>
+            <div className="text-sm font-mono font-black text-indigo-400 flex items-baseline">
+              {totalChecked}
+              <span className="text-[10px] text-slate-500/60 font-bold ml-2">
+                / {Math.max(0, (state?.rows * state?.cols) - (state?.walls?.size ?? state?.walls?.length ?? 0) - 2)}
+              </span>
+            </div>
           </div>
         </div>
       )}

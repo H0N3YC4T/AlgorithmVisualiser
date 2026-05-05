@@ -27,16 +27,16 @@ export const merge = createAlgorithmCard({
     uiConfig: {
       statusLabel: 'Segment: [{l}..{r}]',
       startButton: 'Start Sorting',
-      playbackSpeed: 400
+      playbackSpeed: 200
     },
     extendedDescription: 'Merge Sort is a stable, comparison-based, divide and conquer sorting algorithm.',
-    legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
-      { label: 'Dividing', color: 'bg-indigo-500' },
-      { label: 'Comparing', color: 'bg-amber-400' },
-      { label: 'Writing', color: 'bg-rose-500' },
-      { label: 'Sorted', color: 'bg-emerald-500' },
-    ],
+      legendItems: [
+        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+        { label: 'Dividing', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+        { label: 'Comparing', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
+        { label: 'Writing', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+        { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      ],
   },
 
   // --- Visual Steps & Code ---

@@ -1,3 +1,4 @@
+/** Bubble Sort Module */
 import { createAlgorithmCard } from '../factory';
 
 export const bubble = createAlgorithmCard({
@@ -27,14 +28,14 @@ export const bubble = createAlgorithmCard({
     uiConfig: {
       statusLabel: 'Pass: {i}',
       startButton: 'Start Sorting',
-      playbackSpeed: 400
+      playbackSpeed: 200
     },
     extendedDescription: 'Bubble Sort is the simplest sorting algorithm that repeatedly swaps adjacent elements if they are in the wrong order.',
     legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
-      { label: 'Checking', color: 'bg-indigo-500' },
-      { label: 'Swap', color: 'bg-rose-500' },
-      { label: 'Sorted', color: 'bg-emerald-500' },
+      { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+      { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
   },
 
@@ -145,7 +146,7 @@ export const bubble = createAlgorithmCard({
         }
         return {
           ...newState, phase: 1, i: nextI, j: 0, swapped: false,
-          sortedIndices: newSorted, activeIndices: [0, 1], comparisons: newState.comparisons + 1,
+          sortedIndices: newSorted, activeIndices: [0, 1], comparisons: newState.comparisons,
           log: { 
             title: `PASS ${nextI + 1}`, type: 'info', messageKey: 'PASS_DONE',
             params: { val: array[n - 1 - i], idx: n - 1 - i, nextPass: nextI + 1, totalPasses: n - 1, remaining: n - 1 - nextI, val0: array[0], val1: array[1] } 
@@ -162,9 +163,8 @@ export const bubble = createAlgorithmCard({
         };
       }
       const nextJ = j + 1;
-      if (nextJ >= n - 1 - i) return bubble.nextStep({ ...newState, j: nextJ });
       return { 
-        ...newState, j: nextJ, activeIndices: [nextJ, nextJ + 1],
+        ...newState, j: nextJ, activeIndices: nextJ < n - 1 - i ? [nextJ, nextJ + 1] : [],
         log: { title: 'IN ORDER', type: 'match', messageKey: 'IN_ORDER', params: { j: j, valJ: array[j], jPlusOne: j + 1, valJPlusOne: array[j + 1] } } 
       };
     }
