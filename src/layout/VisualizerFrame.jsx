@@ -128,6 +128,52 @@ export default function VisualizerFrame({
   const isEditingDisabled = isPlaying || state.phase > 0 || (state.iterations || 0) > 0;
   const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
 
+  const renderInputsAndLegend = () => (
+    <div className="flex flex-col xl:flex-row gap-6 items-stretch">
+      <div className="flex-[0.7] w-full min-w-0">
+        <InputPanel
+          target={target}
+          setTarget={setTarget}
+          pattern={pattern}
+          setPattern={setPattern}
+          isPlaying={isPlaying}
+          type={algorithm.type}
+          label={texts.inputLabel1}
+          label2={texts.inputLabel2}
+          placeholder1={texts.inputPlaceholder1}
+          placeholder2={texts.inputPlaceholder2}
+          gridTool={gridTool}
+          setGridTool={setGridTool}
+          isEditingDisabled={isEditingDisabled}
+          playbackRate={playbackRate}
+          setPlaybackRate={setPlaybackRate}
+          clearWalls={clearWalls}
+          gridSize={gridSize}
+          setGridSize={setGridSize}
+        />
+      </div>
+
+      <div className="flex-[0.3] w-full min-w-0">
+        <Legend items={algorithm.legendItems || []} />
+      </div>
+    </div>
+  );
+
+  const renderVisualizer = () => (
+    <div className="w-full px-2">
+      <MainVisualization
+        algorithm={algorithm}
+        state={state}
+        target={target}
+        pattern={pattern}
+        updateState={updateState}
+        toggleWall={toggleWall}
+        gridTool={gridTool}
+        isEditingDisabled={isEditingDisabled}
+      />
+    </div>
+  );
+
   return (
     <div className={classCategories.pageWrapper}>
       <div className={classCategories.mainPanel}>
@@ -159,78 +205,43 @@ export default function VisualizerFrame({
         />
 
         <div className="p-6 space-y-8">
-          {/* Controls & Legend */}
-          <div className="flex flex-col xl:flex-row gap-6 items-stretch">
-            <div className="flex-[0.7] w-full min-w-0">
-              <InputPanel
-                target={target}
-                setTarget={setTarget}
-                pattern={pattern}
-                setPattern={setPattern}
-                isPlaying={isPlaying}
-                type={algorithm.type}
-                label={texts.inputLabel1}
-                label2={texts.inputLabel2}
-                placeholder1={texts.inputPlaceholder1}
-                placeholder2={texts.inputPlaceholder2}
-                gridTool={gridTool}
-                setGridTool={setGridTool}
-                isEditingDisabled={isEditingDisabled}
-                playbackRate={playbackRate}
-                setPlaybackRate={setPlaybackRate}
-                clearWalls={clearWalls}
-                gridSize={gridSize}
-                setGridSize={setGridSize}
-              />
-            </div>
-
-            <div className="flex-[0.3] w-full min-w-0">
-              <Legend items={algorithm.legendItems || []} />
-            </div>
-          </div>
-
-          {/* Main Display */}
-          <div className="w-full px-2">
-            <MainVisualization
-              algorithm={algorithm}
-              state={state}
-              target={target}
-              pattern={pattern}
-              updateState={updateState}
-              toggleWall={toggleWall}
-              gridTool={gridTool}
-              isEditingDisabled={isEditingDisabled}
-            />
-          </div>
+          {(algorithm.type === "pattern-matching" || algorithm.category?.toLowerCase().includes("pattern")) ? (
+            <>
+              {renderInputsAndLegend()}
+              {renderVisualizer()}
+            </>
+          ) : (
+            <>
+              {renderVisualizer()}
+              {renderInputsAndLegend()}
+            </>
+          )}
 
           <AuxiliaryArrays state={state} />
 
-          {/* Process & Details */}
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col xl:flex-row gap-6 items-stretch">
-              <div className="flex-1 w-full flex flex-col gap-6">
-                <ProcessLog log={state.log} algorithm={algorithm} />
+          {/* Bottom Info Section: 2-Column Split */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
+            <div className="flex flex-col gap-6">
+              <ProcessLog log={state.log} algorithm={algorithm} />
+              <AlgorithmSidebar
+                algorithm={algorithm}
+                state={state}
+                preprocessing={preprocessing}
+                target={target}
+                pattern={pattern}
+                texts={texts}
+                isArrayBased={isArrayBased}
+              />
+            </div>
 
-                <AlgorithmSidebar
-                  algorithm={algorithm}
-                  state={state}
-                  preprocessing={preprocessing}
-                  target={target}
-                  pattern={pattern}
-                  texts={texts}
-                  isArrayBased={isArrayBased}
+            <div className="h-full">
+              {algorithm.codeSnippets && (
+                <CodePanel
+                  codeSnippets={algorithm.codeSnippets}
+                  lineHighlights={algorithm.lineHighlights}
+                  activeStep={state.log?.codeStep || state.log?.title}
                 />
-              </div>
-
-              <div className="flex-1 w-full">
-                {algorithm.codeSnippets && (
-                  <CodePanel
-                    codeSnippets={algorithm.codeSnippets}
-                    lineHighlights={algorithm.lineHighlights}
-                    activeStep={state.log?.codeStep || state.log?.title}
-                  />
-                )}
-              </div>
+              )}
             </div>
           </div>
         </div>

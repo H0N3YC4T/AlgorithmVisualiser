@@ -14,20 +14,20 @@ export const classCategories = {
   // Home Page Specific
   homeTitle: `${typography.semantics.home.title} font-black text-${colors.textHigh} ${typography.tracking.tight} mb-4`,
   homeSubtitle: `${typography.semantics.home.subtitle} font-medium text-${colors.textMuted} max-w-2xl mx-auto mb-16`,
-  grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 pt-10 pb-20",
+  grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-6 pb-12",
   appCard:
-    `group relative flex flex-col p-12 bg-${colors.surface} border border-${colors.border} ${effects.roundness.full} hover:border-${colors.primary}/50 hover:bg-${colors.surfaceHover} ${effects.transition} duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-${colors.primary}/10 backdrop-blur-sm text-left overflow-hidden h-full`,
-  cardHeading: `${typography.semantics.card.title} font-black text-${colors.textHigh} group-hover:text-${colors.primary} ${effects.transition} leading-tight`,
-  cardDescription: `${typography.semantics.card.body} font-bold text-${colors.textMuted} leading-relaxed line-clamp-3`,
+    `group relative flex flex-col p-6 bg-${colors.surface} border border-${colors.border} ${effects.roundness.lg} hover:border-${colors.primary}/50 hover:bg-${colors.surfaceHover} ${effects.transition} duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-${colors.primary}/5 backdrop-blur-sm text-left overflow-hidden h-full`,
+  cardHeading: `text-[18px] font-black text-${colors.textHigh} group-hover:text-${colors.primary} ${effects.transition} leading-tight`,
+  cardDescription: `text-[13px] font-medium text-${colors.textMuted} leading-relaxed line-clamp-2`,
   infoCard:
-    `p-8 ${effects.roundness.lg} bg-${colors.surface} border border-${colors.border} space-y-6 group hover:border-slate-700 ${effects.transition}`,
+    `p-4 ${effects.roundness.base} bg-${colors.surface} border border-${colors.border} space-y-4 group hover:border-slate-700 ${effects.transition}`,
   sectionHeader: {
     container: "w-full group focus:outline-none",
     border: `flex items-center gap-6 py-8 border-b border-slate-900 group-hover:border-${colors.borderStrong} ${effects.transition}`,
     iconBox: (active) =>
       `p-3 ${effects.roundness.base} ${effects.transition} ${active ? `bg-${colors.primary} text-${colors.textHigh} shadow-[0_0_20px_rgba(99,102,241,0.4)]` : `bg-slate-900 text-${colors.textDisabled}`}`,
     title: (active) =>
-      `${typography.semantics.home.section} font-black uppercase ${typography.tracking.tracked} ${effects.transition} ${active ? `text-${colors.textHigh}` : `text-${colors.textDisabled}`}`,
+      `${typography.semantics.home.section} font-black uppercase tracking-normal ${effects.transition} ${active ? `text-${colors.textHigh}` : `text-${colors.textDisabled}`}`,
   },
 
   // Visualizer Components

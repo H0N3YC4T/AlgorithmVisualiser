@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, ChevronDown, Layers, Search, Map, Zap, HelpCircle } from "lucide-react";
 import { homeDefaults } from "@/constants/home";
@@ -71,8 +71,16 @@ export default function Home({ algorithms, categories, onSelect }) {
     return homeDefaults.difficultyColors[difficulty] || homeDefaults.difficultyColors.default;
   };
 
-  const [collapsedCategories, setCollapsedCategories] = useState(new Set(["cheatsheet", ...(categories || [])]));
+  const [collapsedCategories, setCollapsedCategories] = useState(new Set(["cheatsheet"]));
 
+  const groupedAlgorithms = useMemo(() => {
+    return (algorithms || []).reduce((acc, algo) => {
+      const cat = algo.category || "Other";
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(algo);
+      return acc;
+    }, {});
+  }, [algorithms]);
 
   const toggleCategory = (category) => {
     setCollapsedCategories((prev) => {
@@ -246,13 +254,7 @@ export default function Home({ algorithms, categories, onSelect }) {
                       transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
                       className="overflow-hidden"
                     >
-                      <div
-                        className={
-                          category === "Pathfinding Algorithms"
-                            ? "grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 pb-24"
-                            : classCategories.grid
-                        }
-                      >
+                      <div className={classCategories.grid}>
                         {categoryAlgorithms.map((algo) => (
                           <button
                             key={algo.id}
@@ -260,15 +262,15 @@ export default function Home({ algorithms, categories, onSelect }) {
                             onClick={() => onSelect(algo.id)}
                             className={classCategories.appCard}
                           >
-                            <div className="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px] group-hover:bg-indigo-500/20 transition-all duration-500" />
+                            <div className="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/5 rounded-full blur-[100px] group-hover:bg-indigo-500/10 transition-all duration-500" />
 
-                            <div className="space-y-8 relative z-10 flex-1">
+                            <div className="space-y-6 relative z-10 flex-1">
                               <div className="flex justify-between items-start">
                                 <h3 className={classCategories.cardHeading}>
                                   {algo.name}
                                 </h3>
                                 <span
-                                  className={`${classCategories.badgeBase} ${getDifficultyColor(algo.difficulty)}`}
+                                  className={`${classCategories.badgeBase} ${getDifficultyColor(algo.difficulty)} py-1 px-3 text-[10px]`}
                                 >
                                   {algo.difficulty}
                                 </span>
@@ -279,36 +281,36 @@ export default function Home({ algorithms, categories, onSelect }) {
                               </p>
 
                               {algo.complexity && (
-                                <div className="pt-6 flex flex-col gap-4">
-                                  <div className="flex items-center gap-3 overflow-x-auto pb-3 scrollbar-hide">
+                                <div className="pt-4 flex flex-col gap-3">
+                                  <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
                                     <div
-                                      className={classCategories.metricPill}
+                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
                                       title="Best Case"
                                     >
                                       <span className="text-slate-600 uppercase tracking-widest">
-                                        {homeDefaults.complexityLabels.best}
+                                        B:
                                       </span>
                                       <span className={getComplexityColor(algo.complexity.timeBest)}>
                                         {algo.complexity.timeBest}
                                       </span>
                                     </div>
                                     <div
-                                      className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-950/80 border border-slate-800/60 text-[12px] font-black shrink-0"
+                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
                                       title="Average Case"
                                     >
                                       <span className="text-slate-600 uppercase tracking-widest">
-                                        {homeDefaults.complexityLabels.avg}
+                                        A:
                                       </span>
                                       <span className={getComplexityColor(algo.complexity.timeAvg)}>
                                         {algo.complexity.timeAvg}
                                       </span>
                                     </div>
                                     <div
-                                      className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-950/80 border border-slate-800/60 text-[12px] font-black shrink-0"
+                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
                                       title="Worst Case"
                                     >
                                       <span className="text-slate-600 uppercase tracking-widest">
-                                        {homeDefaults.complexityLabels.worst}
+                                        W:
                                       </span>
                                       <span className={getComplexityColor(algo.complexity.timeWorst)}>
                                         {algo.complexity.timeWorst}
@@ -316,24 +318,24 @@ export default function Home({ algorithms, categories, onSelect }) {
                                     </div>
                                   </div>
 
-                                  <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
+                                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
                                     {algo.complexity.timePre && (
                                       <div
-                                        className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-950/80 border border-slate-800/60 text-[12px] font-black shrink-0"
+                                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
                                         title="Preprocessing Time"
                                       >
                                         <span className="text-slate-600 uppercase tracking-widest">
-                                          {homeDefaults.complexityLabels.prep}
+                                          PREP:
                                         </span>
                                         <span className="text-indigo-400">{algo.complexity.timePre}</span>
                                       </div>
                                     )}
                                     <div
-                                      className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-950/80 border border-slate-800/60 text-[12px] font-black shrink-0"
+                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
                                       title="Space Complexity"
                                     >
                                       <span className="text-slate-600 uppercase tracking-widest">
-                                        {homeDefaults.complexityLabels.space}
+                                        SPACE:
                                       </span>
                                       <span className="text-indigo-400">{algo.complexity.space}</span>
                                     </div>
