@@ -79,7 +79,7 @@ export const shellsort = createAlgorithmCard({
   },
 
   nextStep: (state) => {
-    const { array, gap, i, j, phase, sortedIndices } = state;
+    const { array, gap, i, j, phase } = state;
     const n = array.length;
     const newState = { ...state, activeIndices: [], swapIndices: [] };
 

@@ -1,36 +1,44 @@
 import { useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import GridNode from "../grid/GridNode";
-import { classCategory } from "../../../styles/class-category";
+import GridNode from "@/features/visualizer/components/GridNode";
+import { classCategories } from "@/styles/divClassCustom";
 
 export default function GridVisualizer({ state, updateState, toggleWall, gridTool, isEditingDisabled }) {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState(null); // 'adding' | 'removing' | null
 
+  const {
+    rows,
+    cols,
+    startNode,
+    endNode,
+    visited,
+    path,
+    activeNode,
+    walls,
+    costs,
+    legendItems,
+    activeBranch,
+    queue,
+    openSet,
+  } = state || {};
+
   const colorMapping = useMemo(
     () =>
-      (state?.legendItems || []).reduce((acc, item) => {
+      (legendItems || []).reduce((acc, item) => {
         acc[item.label.toLowerCase()] = item.color;
         return acc;
       }, {}),
-    [state?.legendItems],
+    [legendItems],
   );
-
-  const { rows, cols, startNode, endNode, visited, path, activeNode, walls, costs } = state || {};
 
   const pathSet = useMemo(() => new Set((path || []).map((n) => `${n.r},${n.c}`)), [path]);
-  const activeBranchSet = useMemo(
-    () => new Set((state?.activeBranch || []).map((n) => `${n.r},${n.c}`)),
-    [state?.activeBranch],
-  );
+  const activeBranchSet = useMemo(() => new Set((activeBranch || []).map((n) => `${n.r},${n.c}`)), [activeBranch]);
   const wallsSet = useMemo(() => {
     if (walls instanceof Set) return walls;
     return new Set((walls || []).map((n) => `${n.r},${n.c}`));
   }, [walls]);
-  const queuedSet = useMemo(
-    () => new Set((state?.queue || state?.openSet || []).map((n) => `${n.r},${n.c}`)),
-    [state?.queue, state?.openSet],
-  );
+  const queuedSet = useMemo(() => new Set((queue || openSet || []).map((n) => `${n.r},${n.c}`)), [queue, openSet]);
 
   // Convert visited 2D array to Set for O(1) lookup
   const visitedSet = useMemo(() => {
@@ -45,77 +53,91 @@ export default function GridVisualizer({ state, updateState, toggleWall, gridToo
     return s;
   }, [visited]);
 
-  const handleWallTool = useCallback((r, c, modeOverride) => {
-    if ((startNode?.r === r && startNode?.c === c) || (endNode?.r === r && endNode?.c === c)) return;
-    const key = `${r},${c}`;
-    const exists = wallsSet.has(key);
-    const mode = modeOverride || (exists ? "removing" : "adding");
+  const handleWallTool = useCallback(
+    (r, c, modeOverride) => {
+      if ((startNode?.r === r && startNode?.c === c) || (endNode?.r === r && endNode?.c === c)) return;
+      const key = `${r},${c}`;
+      const exists = wallsSet.has(key);
+      const mode = modeOverride || (exists ? "removing" : "adding");
 
-    if ((mode === "adding" && !exists) || (mode === "removing" && exists)) {
-      toggleWall(r, c);
-    }
-    return mode;
-  }, [startNode, endNode, wallsSet, toggleWall]);
-
-  const handleCellAction = useCallback((r, c, modeOverride = null) => {
-    if (isEditingDisabled) return;
-
-    const isS = startNode?.r === r && startNode?.c === c;
-    const isE = endNode?.r === r && endNode?.c === c;
-
-    const filterWalls = (walls) => {
-      if (walls instanceof Set) {
-        const next = new Set(walls);
-        next.delete(`${r},${c}`);
-        return next;
+      if ((mode === "adding" && !exists) || (mode === "removing" && exists)) {
+        toggleWall(r, c);
       }
-      return (walls || []).filter((w) => w.r !== r || w.c !== c);
-    };
+      return mode;
+    },
+    [startNode, endNode, wallsSet, toggleWall],
+  );
 
-    if (gridTool === "start") {
-      if (isE) return;
-      updateState((prev) => ({
-        ...prev,
-        startNode: { r, c },
-        walls: filterWalls(prev.walls),
-      }));
-    } else if (gridTool === "end") {
-      if (isS) return;
-      updateState((prev) => ({
-        ...prev,
-        endNode: { r, c },
-        walls: filterWalls(prev.walls),
-      }));
-    } else if (gridTool === "wall") {
-      return handleWallTool(r, c, modeOverride);
-    }
-  }, [isEditingDisabled, gridTool, startNode, endNode, handleWallTool, updateState]);
+  const handleCellAction = useCallback(
+    (r, c, modeOverride = null) => {
+      if (isEditingDisabled) return;
 
-  const handleMouseDown = useCallback((r, c) => {
-    setIsMouseDown(true);
-    const mode = handleCellAction(r, c);
-    if (gridTool === "wall") setDragMode(mode);
-  }, [handleCellAction, gridTool]);
+      const isS = startNode?.r === r && startNode?.c === c;
+      const isE = endNode?.r === r && endNode?.c === c;
 
-  const handleMouseEnter = useCallback((r, c) => {
-    if (!isMouseDown) return;
-    handleCellAction(r, c, dragMode);
-  }, [handleCellAction, isMouseDown, dragMode]);
+      const filterWalls = (walls) => {
+        if (walls instanceof Set) {
+          const next = new Set(walls);
+          next.delete(`${r},${c}`);
+          return next;
+        }
+        return (walls || []).filter((w) => w.r !== r || w.c !== c);
+      };
+
+      if (gridTool === "start") {
+        if (isE) return;
+        updateState((prev) => ({
+          ...prev,
+          startNode: { r, c },
+          walls: filterWalls(prev.walls),
+        }));
+      } else if (gridTool === "end") {
+        if (isS) return;
+        updateState((prev) => ({
+          ...prev,
+          endNode: { r, c },
+          walls: filterWalls(prev.walls),
+        }));
+      } else if (gridTool === "wall") {
+        return handleWallTool(r, c, modeOverride);
+      }
+    },
+    [isEditingDisabled, gridTool, startNode, endNode, handleWallTool, updateState],
+  );
+
+  const handleMouseDown = useCallback(
+    (r, c) => {
+      setIsMouseDown(true);
+      const mode = handleCellAction(r, c);
+      if (gridTool === "wall") setDragMode(mode);
+    },
+    [handleCellAction, gridTool],
+  );
+
+  const handleMouseEnter = useCallback(
+    (r, c) => {
+      if (!isMouseDown) return;
+      handleCellAction(r, c, dragMode);
+    },
+    [handleCellAction, isMouseDown, dragMode],
+  );
 
   const handleMouseUp = useCallback(() => {
     setIsMouseDown(false);
     setDragMode(null);
   }, []);
 
-
-  const gridStyle = useMemo(() => ({
-    gridTemplateColumns: `repeat(${cols}, 1fr)`,
-    aspectRatio: `${cols} / ${rows}`,
-    width: "100%",
-    maxWidth: `calc((450px - 64px) * ${cols} / ${rows})`,
-    maxHeight: "100%",
-    margin: "0 auto",
-  }), [cols, rows]);
+  const gridStyle = useMemo(
+    () => ({
+      gridTemplateColumns: `repeat(${cols}, 1fr)`,
+      aspectRatio: `${cols} / ${rows}`,
+      width: "100%",
+      maxWidth: `calc((450px - 64px) * ${cols} / ${rows})`,
+      maxHeight: "100%",
+      margin: "0 auto",
+    }),
+    [cols, rows],
+  );
 
   const totalCells = rows * cols;
   const nodes = useMemo(() => {
@@ -128,7 +150,7 @@ export default function GridVisualizer({ state, updateState, toggleWall, gridToo
       const isV = visitedSet.has(coord);
       const isP = pathSet.has(coord);
       const isA = activeNode?.r === r && activeNode?.c === c;
-      
+
       return (
         <GridNode
           key={coord}
@@ -137,14 +159,7 @@ export default function GridVisualizer({ state, updateState, toggleWall, gridToo
           isVisited={isV}
           isPath={isP}
           isActive={isA}
-          isMuted={
-            state.activeBranch?.length > 0 &&
-            isV &&
-            !activeBranchSet.has(coord) &&
-            !isP &&
-            !isS &&
-            !isE
-          }
+          isMuted={state.activeBranch?.length > 0 && isV && !activeBranchSet.has(coord) && !isP && !isS && !isE}
           isStart={isS}
           isEnd={isE}
           isWall={wallsSet.has(coord)}
@@ -157,14 +172,26 @@ export default function GridVisualizer({ state, updateState, toggleWall, gridToo
       );
     });
   }, [
-    totalCells, cols, startNode, endNode, visitedSet, pathSet, activeNode, 
-    state.activeBranch, activeBranchSet, wallsSet, queuedSet, costs, 
-    colorMapping, handleMouseDown, handleMouseEnter
+    totalCells,
+    cols,
+    startNode,
+    endNode,
+    visitedSet,
+    pathSet,
+    activeNode,
+    state.activeBranch,
+    activeBranchSet,
+    wallsSet,
+    queuedSet,
+    costs,
+    colorMapping,
+    handleMouseDown,
+    handleMouseEnter,
   ]);
 
   return (
     <div
-      className={`${classCategory.vizContainer} h-[450px] p-8 shadow-inner select-none bg-slate-900/20 rounded-3xl border-slate-800/40`}
+      className={`${classCategories.vizContainer} h-[450px] p-8 shadow-inner select-none bg-slate-900/20 rounded-3xl border-slate-800/40`}
     >
       <div
         role="grid"
@@ -179,7 +206,9 @@ export default function GridVisualizer({ state, updateState, toggleWall, gridToo
           <div className="absolute inset-0 flex items-center justify-center text-slate-500 font-black text-xs uppercase tracking-widest bg-slate-950/40 rounded-xl">
             Initializing Grid...
           </div>
-        ) : nodes}
+        ) : (
+          nodes
+        )}
       </div>
     </div>
   );

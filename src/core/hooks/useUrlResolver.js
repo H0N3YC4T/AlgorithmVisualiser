@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 /**
@@ -6,20 +6,18 @@ import { useNavigate, useLocation } from "react-router-dom";
  * Manages all algorithm-related states, preprocessing, and step-by-step logic.
  * Synchronizes selected algorithm with the URL path.
  */
-export const useAlgorithmState = (algorithms) => {
+export const useUrlResolver = (algorithms) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Parse initial algoId from URL path
-  const initialAlgoId = useMemo(() => {
-    const pathParts = location.pathname.split('/').filter(Boolean);
+  const selectedAlgoId = useMemo(() => {
+    const pathParts = location.pathname.split("/").filter(Boolean);
     const id = pathParts[pathParts.length - 1];
-    return algorithms.some(a => a.id === id) ? id : algorithms[0].id;
+    return algorithms.some((a) => a.id === id) ? id : algorithms[0].id;
   }, [location.pathname, algorithms]);
 
-  const [selectedAlgoId, setSelectedAlgoId] = useState(initialAlgoId);
-  const [target, setTarget] = useState(algorithms.find(a => a.id === initialAlgoId).defaultInputs.target);
-  const [pattern, setPattern] = useState(algorithms.find(a => a.id === initialAlgoId).defaultInputs.pattern);
+  const [target, setTarget] = useState(algorithms.find((a) => a.id === selectedAlgoId)?.defaultInputs.target || "");
+  const [pattern, setPattern] = useState(algorithms.find((a) => a.id === selectedAlgoId)?.defaultInputs.pattern || "");
   const [gridTool, setGridTool] = useState("wall");
   const [playbackRate, setPlaybackRate] = useState(1);
   const [gridSize, setGridSize] = useState({ rows: 18, cols: 30 });
@@ -27,15 +25,6 @@ export const useAlgorithmState = (algorithms) => {
   const algorithm = useMemo(() => {
     return algorithms.find((a) => a.id === selectedAlgoId) || algorithms[0];
   }, [selectedAlgoId, algorithms]);
-
-  // Sync algorithm FROM URL path
-  useEffect(() => {
-    const pathParts = location.pathname.split('/').filter(Boolean);
-    const id = pathParts[pathParts.length - 1];
-    if (id && algorithms.some(a => a.id === id) && id !== selectedAlgoId) {
-      setSelectedAlgoId(id);
-    }
-  }, [location.pathname, algorithms, selectedAlgoId]);
 
   const parseInput = (val, type) => {
     if (!val) return null;
@@ -51,43 +40,46 @@ export const useAlgorithmState = (algorithms) => {
     return val;
   };
 
-  const getInitialAlgoState = useCallback((algo, p, t, existingState = null) => {
-    if (!algo.getInitialState) return {};
+  const getUrlState = useCallback(
+    (algo, p, t, existingState = null) => {
+      if (!algo.getInitialState) return {};
 
-    const customTarget = parseInput(t, algo.type || algo.category?.toLowerCase());
-    const customPattern = parseInput(p, algo.type || algo.category?.toLowerCase());
+      const customTarget = parseInput(t, algo.type || algo.category?.toLowerCase());
+      const customPattern = parseInput(p, algo.type || algo.category?.toLowerCase());
 
-    // Merge grid size into config for initialization
-    const configWithGrid = {
-      ...algo,
-      gridConfig: {
-        ...(algo.gridConfig || {}),
-        rows: gridSize.rows,
-        cols: gridSize.cols
-      }
-    };
-
-    const baseState = algo.getInitialState(customPattern, customTarget, configWithGrid, existingState);
-
-    // Maintain grid state for pathfinding if preserving
-    if (algo.type === "pathfinding" && existingState?.walls && !baseState.walls) {
-      baseState.walls = existingState.walls;
-    }
-
-    if (baseState.log) {
-      baseState.log = {
-        ...baseState.log,
-        content: algo.extendedDescription || algo.description || baseState.log.content,
+      // Merge grid size into config for initialization
+      const configWithGrid = {
+        ...algo,
+        gridConfig: {
+          ...(algo.gridConfig || {}),
+          rows: gridSize.rows,
+          cols: gridSize.cols,
+        },
       };
-    }
 
-    baseState.legendItems = algo.legendItems || [];
-    return baseState;
-  }, [gridSize]);
+      const baseState = algo.getInitialState(customPattern, customTarget, configWithGrid, existingState);
+
+      // Maintain grid state for pathfinding if preserving
+      if (algo.type === "pathfinding" && existingState?.walls && !baseState.walls) {
+        baseState.walls = existingState.walls;
+      }
+
+      if (baseState.log) {
+        baseState.log = {
+          ...baseState.log,
+          content: algo.extendedDescription || algo.description || baseState.log.content,
+        };
+      }
+
+      baseState.legendItems = algo.legendItems || [];
+      return baseState;
+    },
+    [gridSize],
+  );
 
   const [state, setState] = useState(() => {
-    const initialAlgo = algorithms.find((a) => a.id === initialAlgoId);
-    const initialAlgoState = getInitialAlgoState(initialAlgo, pattern, target);
+    const initialAlgo = algorithms.find((a) => a.id === selectedAlgoId);
+    const initialAlgoState = getUrlState(initialAlgo, pattern, target);
     return {
       currentIndex: 0,
       isFinished: false,
@@ -112,21 +104,27 @@ export const useAlgorithmState = (algorithms) => {
         iterations: 0,
         comparisons: 0,
         accessedIndices: new Set(),
-        ...getInitialAlgoState(algo, p, t, preserveGrid ? prevState : null),
+        ...getUrlState(algo, p, t, preserveGrid ? prevState : null),
       }));
       setHistory([]);
     },
-    [algorithm, pattern, target, getInitialAlgoState],
+    [algorithm, pattern, target, getUrlState],
   );
 
   // Sync state when algorithm changes (Reset to defaults)
+  const lastAlgoId = useRef(selectedAlgoId);
   useEffect(() => {
-    const algo = algorithms.find((a) => a.id === selectedAlgoId);
-    if (algo) {
-      const defaults = algo.defaultInputs;
-      setTarget(defaults.target);
-      setPattern(defaults.pattern);
-      softReset(algo, defaults.pattern, defaults.target, true);
+    if (lastAlgoId.current !== selectedAlgoId) {
+      lastAlgoId.current = selectedAlgoId;
+      setTimeout(() => {
+        const algo = algorithms.find((a) => a.id === selectedAlgoId);
+        if (algo) {
+          const defaults = algo.defaultInputs;
+          setTarget(defaults.target);
+          setPattern(defaults.pattern);
+          softReset(algo, defaults.pattern, defaults.target, true);
+        }
+      }, 0);
     }
   }, [selectedAlgoId, algorithms, softReset]);
 
@@ -137,10 +135,9 @@ export const useAlgorithmState = (algorithms) => {
     softReset(algorithm, defaults.pattern, defaults.target, false);
   }, [algorithm, softReset]);
 
-  const handleSelectAlgorithm = useCallback(
+  const handleSelectPage = useCallback(
     (id) => {
       if (id === selectedAlgoId) return;
-      setSelectedAlgoId(id);
       navigate(`/${id}`);
     },
     [selectedAlgoId, navigate],
@@ -155,11 +152,11 @@ export const useAlgorithmState = (algorithms) => {
         iterations: 0,
         comparisons: 0,
         accessedIndices: new Set(),
-        ...getInitialAlgoState(algorithm, pattern, val, prevState),
+        ...getUrlState(algorithm, pattern, val, prevState),
       }));
       setHistory([]);
     },
-    [algorithm, pattern, getInitialAlgoState],
+    [algorithm, pattern, getUrlState],
   );
 
   const handleSetPattern = useCallback(
@@ -171,11 +168,11 @@ export const useAlgorithmState = (algorithms) => {
         iterations: 0,
         comparisons: 0,
         accessedIndices: new Set(),
-        ...getInitialAlgoState(algorithm, val, target, prevState),
+        ...getUrlState(algorithm, val, target, prevState),
       }));
       setHistory([]);
     },
-    [algorithm, target, getInitialAlgoState],
+    [algorithm, target, getUrlState],
   );
 
   const nextStep = useCallback(() => {
@@ -216,7 +213,7 @@ export const useAlgorithmState = (algorithms) => {
         let next = { ...prev, ...updates };
 
         if (updates.startNode || updates.endNode || updates.rows || updates.cols) {
-          const freshState = getInitialAlgoState(algorithm, pattern, target, next);
+          const freshState = getUrlState(algorithm, pattern, target, next);
           next = { ...next, ...freshState };
           next.isFinished = false;
           next.iterations = 0;
@@ -226,21 +223,21 @@ export const useAlgorithmState = (algorithms) => {
         return next;
       });
     },
-    [algorithm, pattern, target, getInitialAlgoState],
+    [algorithm, pattern, target, getUrlState],
   );
 
   const handleWallToggle = useCallback((r, c) => {
     setState((prev) => {
       if (prev.isFinished || prev.phase !== 0) return prev;
       const key = `${r},${c}`;
-      
+
       if (prev.walls instanceof Set) {
         const newWalls = new Set(prev.walls);
         if (newWalls.has(key)) newWalls.delete(key);
         else newWalls.add(key);
         return { ...prev, walls: newWalls };
       }
-      
+
       const walls = prev.walls || [];
       const exists = walls.some((w) => w.r === r && w.c === c);
       const newWalls = exists ? walls.filter((w) => !(w.r === r && w.c === c)) : [...walls, { r, c }];
@@ -248,7 +245,7 @@ export const useAlgorithmState = (algorithms) => {
     });
   }, []);
 
-  const handleClearWalls = useCallback(() => {
+  const handleWallClear = useCallback(() => {
     setState((prev) => ({
       ...prev,
       walls: prev.walls instanceof Set ? new Set() : [],
@@ -266,15 +263,18 @@ export const useAlgorithmState = (algorithms) => {
     setHistory([]);
   }, []);
 
-  const handleSetGridSize = useCallback((rows, cols) => {
-    setGridSize({ rows, cols });
-    // Trigger a soft reset with new dimensions
-    softReset(algorithm, pattern, target, false);
-  }, [algorithm, pattern, target, softReset]);
+  const handleSetGridSize = useCallback(
+    (rows, cols) => {
+      setGridSize({ rows, cols });
+      // Trigger a soft reset with new dimensions
+      softReset(algorithm, pattern, target, false);
+    },
+    [algorithm, pattern, target, softReset],
+  );
 
   return {
     selectedAlgoId,
-    setSelectedAlgoId: handleSelectAlgorithm,
+    setSelectedAlgoId: handleSelectPage,
     algorithm,
     target,
     setTarget: handleSetTarget,
@@ -288,7 +288,7 @@ export const useAlgorithmState = (algorithms) => {
     factoryReset,
     updateState: handleUpdateState,
     toggleWall: handleWallToggle,
-    clearWalls: handleClearWalls,
+    clearWalls: handleWallClear,
     gridTool,
     setGridTool,
     gridSize,

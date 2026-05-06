@@ -1,7 +1,9 @@
 import { Routes, Route, useParams, useNavigate, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import Home from "../layout/Home";
-import VisualizerFrame from "../layout/VisualizerFrame";
+import { motion, AnimatePresence } from "framer-motion";
+import { Home } from "@/features/dashboard";
+import { VisualizerFrame } from "@/features/visualizer";
+
 
 /**
  * ScrollToTop Component
@@ -17,38 +19,59 @@ const ScrollToTop = () => {
   return null;
 };
 
+const PageTransition = ({ children }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -10 }}
+    transition={{ duration: 0.4, ease: "easeOut" }}
+    className="flex-1 flex flex-col"
+  >
+    {children}
+  </motion.div>
+);
+
 /**
  * AppRouter Component
  * Uses react-router-dom to manage navigation between algorithms.
  */
 export const AppRouter = ({ categories, algorithms, stateManager }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
       <ScrollToTop />
-      <Routes>
-      <Route
-        path="/"
-        element={
-          <Home
-            categories={categories}
-            algorithms={algorithms}
-            onSelect={(id) => {
-              stateManager.setSelectedAlgoId(id);
-              navigate(`/${id}`);
-            }}
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <PageTransition>
+                <Home
+                  categories={categories}
+                  algorithms={algorithms}
+                  onSelect={(id) => {
+                    stateManager.setSelectedAlgoId(id);
+                    navigate(`/${id}`);
+                  }}
+                />
+              </PageTransition>
+            }
           />
-        }
-      />
 
-      <Route
-        path="/:algoId"
-        element={<VisualizerWrapper stateManager={stateManager} algorithms={algorithms} />}
-      />
+          <Route
+            path="/:algoId"
+            element={
+              <PageTransition>
+                <VisualizerWrapper stateManager={stateManager} algorithms={algorithms} />
+              </PageTransition>
+            }
+          />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
     </>
   );
 };

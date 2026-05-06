@@ -2,67 +2,71 @@ import PropTypes from "prop-types";
 import { memo } from "react";
 import { Trash2 } from "lucide-react";
 import GridEditor from "../visualizer/grid/GridEditor";
-import { classCategory } from "../../styles/class-category";
+import { classCategories } from "../../styles/divClassCustom";
 
-const InputPanel = memo(({
-  target,
-  setTarget,
-  pattern,
-  setPattern,
-  isPlaying,
-  type,
-  label,
-  label2,
-  placeholder1,
-  placeholder2,
-  gridTool,
-  setGridTool,
-  isEditingDisabled,
-  playbackRate,
-  setPlaybackRate,
-  clearWalls,
-  gridSize,
-  setGridSize,
-}) => {
-  const isPathfinding = type === "pathfinding";
-  const isArrayBased = type === "sorting" || type === "searching";
+const InputPanel = memo(
+  ({
+    target,
+    setTarget,
+    pattern,
+    setPattern,
+    isPlaying,
+    type,
+    label,
+    label2,
+    placeholder1,
+    placeholder2,
+    gridTool,
+    setGridTool,
+    isEditingDisabled,
+    playbackRate,
+    setPlaybackRate,
+    clearWalls,
+    gridSize,
+    setGridSize,
+  }) => {
+    const isPathfinding = type === "pathfinding";
+    const isArrayBased = type === "sorting" || type === "searching";
 
-  return (
-    <div className="w-full bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4">
-      <div className={`flex flex-wrap items-center ${isPathfinding ? 'justify-center lg:flex-nowrap' : 'justify-between'} gap-10`}>
-        
-        {/* Playback Speed */}
-        <div className="flex flex-col items-center gap-3 min-w-[160px]">
-          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 text-center">
-            Playback Speed
-          </label>
-          <div className="flex items-center gap-3 w-full">
-            <input
-              type="range"
-              min="0.25"
-              max="3"
-              step="0.05"
-              value={playbackRate}
-              onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-              className="flex-1 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500"
-            />
+    return (
+      <div className="w-full bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4">
+        <div
+          className={`flex flex-wrap items-center ${isPathfinding ? "justify-center lg:flex-nowrap" : "justify-between"} gap-10`}
+        >
+          {/* Playback Speed */}
+          <div className="flex flex-col items-center gap-3 min-w-[160px]">
+            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 text-center">
+              Playback Speed
+            </label>
+            <div className="flex items-center gap-3 w-full">
+              <input
+                type="range"
+                min="0.25"
+                max="3"
+                step="0.05"
+                value={playbackRate}
+                onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
+                className="flex-1 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Pathfinding Controls */}
-        {isPathfinding && (
-          <>
-            <div className="h-10 w-px bg-slate-800 hidden lg:block" />
-            
-            {/* Grid Size Inputs */}
-            <div className="flex flex-col items-center gap-3">
-               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 text-center">Grid Size</label>
-               <div className="flex items-center gap-4">
+          {/* Pathfinding Controls */}
+          {isPathfinding && (
+            <>
+              <div className="h-10 w-px bg-slate-800 hidden lg:block" />
+
+              {/* Grid Size Inputs */}
+              <div className="flex flex-col items-center gap-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 text-center">
+                  Grid Size
+                </label>
+                <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-bold text-slate-600 uppercase">H</span>
-                    <input 
-                      type="number" 
-                      value={gridSize.rows} 
+                    <input
+                      type="number"
+                      value={gridSize.rows}
                       onChange={(e) => setGridSize(parseInt(e.target.value) || 5, gridSize.cols)}
                       disabled={isEditingDisabled}
                       className="w-12 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-[12px] font-mono text-sky-400 focus:border-sky-500 outline-none text-center"
@@ -70,43 +74,74 @@ const InputPanel = memo(({
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-bold text-slate-600 uppercase">W</span>
-                    <input 
-                      type="number" 
-                      value={gridSize.cols} 
+                    <input
+                      type="number"
+                      value={gridSize.cols}
                       onChange={(e) => setGridSize(gridSize.rows, parseInt(e.target.value) || 5)}
                       disabled={isEditingDisabled}
                       className="w-12 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-[12px] font-mono text-sky-400 focus:border-sky-500 outline-none text-center"
                     />
                   </div>
-               </div>
-            </div>
-
-            <div className="h-10 w-px bg-slate-800 hidden lg:block" />
-
-            <div className="flex flex-col items-center gap-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 text-center">Grid Tools</label>
-              <div className="flex items-center gap-6">
-                <GridEditor selectedTool={gridTool} setTool={setGridTool} disabled={isEditingDisabled} />
-                
-                <button
-                  onClick={clearWalls}
-                  disabled={isEditingDisabled}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all disabled:opacity-30 whitespace-nowrap active:scale-95"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Clear Walls
-                </button>
+                </div>
               </div>
-            </div>
-          </>
-        )}
 
-        {/* Array-based Inputs */}
-        {isArrayBased && (
-          <div className="flex-1 flex flex-wrap gap-8 items-center justify-end">
-            {type === "searching" && (
-              <>
-                <div className="flex-1 min-w-[240px]">
+              <div className="h-10 w-px bg-slate-800 hidden lg:block" />
+
+              <div className="flex flex-col items-center gap-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 text-center">
+                  Grid Tools
+                </label>
+                <div className="flex items-center gap-6">
+                  <GridEditor selectedTool={gridTool} setTool={setGridTool} disabled={isEditingDisabled} />
+
+                  <button
+                    onClick={clearWalls}
+                    disabled={isEditingDisabled}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all disabled:opacity-30 whitespace-nowrap active:scale-95"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Clear Walls
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Array-based Inputs */}
+          {isArrayBased && (
+            <div className="flex-1 flex flex-wrap gap-8 items-center justify-end">
+              {type === "searching" && (
+                <>
+                  <div className="flex-1 min-w-[240px]">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block ml-2">
+                      {label || "Array Input"}
+                    </label>
+                    <input
+                      type="text"
+                      value={target}
+                      onChange={(e) => setTarget(e.target.value)}
+                      placeholder={placeholder1 || "e.g. 10, 20, 30, 40, 50"}
+                      className={classCategories.inputBase}
+                      disabled={isPlaying}
+                    />
+                  </div>
+                  <div className="w-28 text-center">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block">
+                      {label2 || "Target"}
+                    </label>
+                    <input
+                      type="text"
+                      value={pattern}
+                      onChange={(e) => setPattern(e.target.value)}
+                      placeholder="X"
+                      className={`${classCategories.inputBase} text-center`}
+                      disabled={isPlaying}
+                    />
+                  </div>
+                </>
+              )}
+              {type === "sorting" && (
+                <div className="flex-1 max-w-md">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block ml-2">
                     {label || "Array Input"}
                   </label>
@@ -114,79 +149,51 @@ const InputPanel = memo(({
                     type="text"
                     value={target}
                     onChange={(e) => setTarget(e.target.value)}
-                    placeholder={placeholder1 || "e.g. 10, 20, 30, 40, 50"}
-                    className={classCategory.inputBase}
+                    placeholder={placeholder1 || "e.g. 5, 2, 8, 1, 9"}
+                    className={classCategories.inputBase}
                     disabled={isPlaying}
                   />
                 </div>
-                <div className="w-28 text-center">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block">
-                    {label2 || "Target"}
-                  </label>
-                  <input
-                    type="text"
-                    value={pattern}
-                    onChange={(e) => setPattern(e.target.value)}
-                    placeholder="X"
-                    className={`${classCategory.inputBase} text-center`}
-                    disabled={isPlaying}
-                  />
-                </div>
-              </>
-            )}
-            {type === "sorting" && (
-              <div className="flex-1 max-w-md">
+              )}
+            </div>
+          )}
+
+          {/* String Matching Inputs */}
+          {!isPathfinding && !isArrayBased && (
+            <div className="flex-1 flex flex-wrap gap-8 items-center justify-end">
+              <div className="flex-1 min-w-[240px]">
                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block ml-2">
-                  {label || "Array Input"}
+                  {label || "Target Text"}
                 </label>
                 <input
                   type="text"
                   value={target}
-                  onChange={(e) => setTarget(e.target.value)}
-                  placeholder={placeholder1 || "e.g. 5, 2, 8, 1, 9"}
-                  className={classCategory.inputBase}
+                  onChange={(e) => setTarget(e.target.value.toUpperCase())}
+                  className={classCategories.inputBase}
                   disabled={isPlaying}
+                  placeholder={placeholder1}
                 />
               </div>
-            )}
-          </div>
-        )}
-
-        {/* String Matching Inputs */}
-        {!isPathfinding && !isArrayBased && (
-          <div className="flex-1 flex flex-wrap gap-8 items-center justify-end">
-            <div className="flex-1 min-w-[240px]">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block ml-2">
-                {label || "Target Text"}
-              </label>
-              <input
-                type="text"
-                value={target}
-                onChange={(e) => setTarget(e.target.value.toUpperCase())}
-                className={classCategory.inputBase}
-                disabled={isPlaying}
-                placeholder={placeholder1}
-              />
+              <div className="w-56 text-center">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block">
+                  {label2 || "Pattern"}
+                </label>
+                <input
+                  type="text"
+                  value={pattern}
+                  onChange={(e) => setPattern(e.target.value.toUpperCase())}
+                  className={classCategories.inputBase}
+                  disabled={isPlaying}
+                  placeholder={placeholder2}
+                />
+              </div>
             </div>
-            <div className="w-56 text-center">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 block">
-                {label2 || "Pattern"}
-              </label>
-              <input
-                type="text"
-                value={pattern}
-                onChange={(e) => setPattern(e.target.value.toUpperCase())}
-                className={classCategory.inputBase}
-                disabled={isPlaying}
-                placeholder={placeholder2}
-              />
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 InputPanel.propTypes = {
   target: PropTypes.string,

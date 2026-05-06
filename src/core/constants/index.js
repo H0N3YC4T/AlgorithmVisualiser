@@ -1,6 +1,6 @@
 /**
- * IAV Platform: Algorithm Registry (Public API)
- * This file serves as the single source of truth for all algorithm logic and metadata.
+ * IAV Platform: Algorithm Registry — Single Source of Truth
+ * Exports three canonical shapes for dashboard & routing consumption.
  */
 
 import * as Sorting from "./sorting";
@@ -8,21 +8,24 @@ import * as Searching from "./searching";
 import * as Pathfinding from "./pathfinding";
 import * as PatternMatching from "./pattern-matching";
 
-// Grouped exports for the Visualizer Factory and Dashboard
-export const categories = {
-  SORTING: Object.values(Sorting),
-  SEARCHING: Object.values(Searching),
-  PATHFINDING: Object.values(Pathfinding),
-  PATTERN_MATCHING: Object.values(PatternMatching),
+// Grouped by category — used by Dashboard's sectioned rendering
+export const groupedAlgorithms = {
+  "Sorting Algorithms": Object.values(Sorting),
+  "Searching Algorithms": Object.values(Searching),
+  "Pathfinding Algorithms": Object.values(Pathfinding),
+  "Pattern Matching Algorithms": Object.values(PatternMatching),
 };
 
-// Flattened list for the App Router to map IDs to logic
+// Flattened list — used by Router for ID-to-logic mapping
 export const algorithms = [
-  ...categories.SORTING,
-  ...categories.SEARCHING,
-  ...categories.PATHFINDING,
-  ...categories.PATTERN_MATCHING,
+  ...groupedAlgorithms["Sorting Algorithms"],
+  ...groupedAlgorithms["Searching Algorithms"],
+  ...groupedAlgorithms["Pathfinding Algorithms"],
+  ...groupedAlgorithms["Pattern Matching Algorithms"],
 ];
 
-// Individual exports for specific hook access if needed
+// Derived Array of category strings — prevents iteration errors in the UI
+export const categories = Object.keys(groupedAlgorithms);
+
+// Individual namespace exports for specific hook access
 export { Sorting, Searching, Pathfinding, PatternMatching };

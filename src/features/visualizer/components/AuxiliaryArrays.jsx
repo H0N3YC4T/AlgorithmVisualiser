@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Layers } from 'lucide-react';
-import ArrayVisualizer from '../types/ArrayVisualizer';
+import ArrayVisualizer from '@/features/visualizer/renderers/ArrayVisualizer';
+
 
 export default function AuxiliaryArrays({ state }) {
   if (!state.countArray && !state.temp && !state.output && !state.buckets) return null;

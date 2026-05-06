@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
-import { classCategory } from "../../../styles/class-category";
+import { classCategories } from "@/styles/divClassCustom";
+
 
 export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referenceIndex }) {
   const active = activeIndices instanceof Set ? activeIndices : new Set(activeIndices || []);
@@ -33,7 +34,7 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
             const isPattern = slot.pos < sepIdx;
             const isSeparator = slot.char === "$";
 
-            let cellClass = `${classCategory.cellBase} `;
+            let cellClass = `${classCategories.cellBase} `;
 
             if (isSeparator) {
               cellClass += "bg-slate-900 border-slate-800 text-rose-500 shadow-none";
@@ -69,7 +70,7 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
               const isFullMatch = hasValue && val === sepIdx && !isPatternPart;
               const isPartialMatch = hasValue && val > 0 && val !== sepIdx && !isPatternPart;
 
-              let cellClass = `${classCategory.cellValueBase} `;
+              let cellClass = `${classCategories.cellValueBase} `;
 
               if (isCurrent) {
                 cellClass += "bg-indigo-500/10 border-indigo-500 ring-2 ring-indigo-500/20";

@@ -1,90 +1,83 @@
 import { LayoutGrid } from "lucide-react";
+import { memo } from "react";
 import PropTypes from "prop-types";
-import InputPanel from "./InputPanel";
-import Legend from "./Legend";
-import ArrayVisualizer from "../visualizer/types/ArrayVisualizer";
-import TextVisualizer from "../visualizer/types/TextVisualizer";
-import ZVisualizer from "../visualizer/types/ZVisualizer";
-import GridVisualizer from "../visualizer/types/GridVisualizer";
-import ProcessLog from "../visualizer/elements/ProcessLog";
-import CodePanel from "./CodePanel";
-import MetricsBar from "../visualizer/elements/MetricsBar";
-import AlgorithmSidebar from "../visualizer/elements/AlgorithmSidebar";
-import AuxiliaryArrays from "../visualizer/elements/AuxiliaryArrays";
+import InputPanel from "@/components/ui/InputPanel";
+import Legend from "@/components/ui/Legend";
+import ArrayVisualizer from "@/features/visualizer/renderers/ArrayVisualizer";
+import TextVisualizer from "@/features/visualizer/renderers/TextVisualizer";
+import ZVisualizer from "@/features/visualizer/renderers/ZVisualizer";
+import GridVisualizer from "@/features/visualizer/renderers/GridVisualizer";
+import ProcessLog from "@/features/visualizer/components/ProcessLog";
+import { CodePanel } from "@/features/educational";
+import MetricsBar from "@/features/visualizer/components/MetricsBar";
+import AlgorithmSidebar from "@/features/visualizer/components/AlgorithmSidebar";
+import AuxiliaryArrays from "@/features/visualizer/components/AuxiliaryArrays";
+import usePlayback from "@/features/visualizer/hooks/usePlayback";
+import useVisualizerLabels from "@/core/hooks/useVisualizerLabels";
+import { classCategories } from "@/styles/divClassCustom";
 
-import useVisualizerPlayback from "../../hooks/useVisualizerPlayback";
-import useVisualizerLabels from "../../hooks/useVisualizerLabels";
-import { classCategory } from "../../styles/class-category";
+const MainVisualization = memo(
+  ({ algorithm, state, target, pattern, updateState, toggleWall, gridTool, isEditingDisabled }) => {
+    const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
 
-function MainVisualization({
-  algorithm,
-  state,
-  target,
-  pattern,
-  updateState,
-  toggleWall,
-  gridTool,
-  isEditingDisabled,
-}) {
-  const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
-
-  if (algorithm.visualizerType === "array" || isArrayBased) {
-    return (
-      <ArrayVisualizer
-        array={state.array || state.nodes || state.table || state.tree || []}
-        activeIndices={state.activeIndices}
-        sortedIndices={state.sortedIndices}
-        pivotIndex={state.pivotIndex || state.curIdx || state.hashValue}
-        swapIndices={state.swapIndices}
-      />
-    );
-  }
-
-  if (algorithm.visualizerType === "z") {
-    return (
-      <ZVisualizer
-        concat={state.concat}
-        z={state.z || []}
-        i={state.i}
-        l={state.l || 0}
-        r={state.r || 0}
-        activeIndices={state.activeIndices}
-        referenceIndex={state.referenceIndex}
-      />
-    );
-  }
-
-  if (algorithm.visualizerType === "grid" || algorithm.type === "pathfinding") {
-    return (
-      <div className="space-y-6">
-        <GridVisualizer
-          state={state}
-          updateState={updateState}
-          toggleWall={toggleWall}
-          gridTool={gridTool}
-          isEditingDisabled={isEditingDisabled}
+    if (algorithm.visualizerType === "array" || isArrayBased) {
+      return (
+        <ArrayVisualizer
+          array={state.array || state.nodes || state.table || state.tree || []}
+          activeIndices={state.activeIndices}
+          sortedIndices={state.sortedIndices}
+          pivotIndex={state.pivotIndex || state.curIdx || state.hashValue}
+          swapIndices={state.swapIndices}
         />
-      </div>
-    );
-  }
+      );
+    }
 
-  return (
-    <TextVisualizer
-      target={target}
-      pattern={pattern}
-      currentIndex={state.currentIndex}
-      phase={state.phase}
-      compIdx={state.compIdx}
-      mismatchFound={state.mismatchFound}
-      isFinished={state.isFinished}
-      accessedIndices={state.accessedIndices}
-      activeIndices={state.activeIndices}
-      lookAheadIndex={state.lookAheadIndex}
-      comparesRightToLeft={state.comparesRightToLeft}
-      showShiftArrow={state.showShiftArrow}
-    />
-  );
-}
+    if (algorithm.visualizerType === "z") {
+      return (
+        <ZVisualizer
+          concat={state.concat}
+          z={state.z || []}
+          i={state.i}
+          l={state.l || 0}
+          r={state.r || 0}
+          activeIndices={state.activeIndices}
+          referenceIndex={state.referenceIndex}
+        />
+      );
+    }
+
+    if (algorithm.visualizerType === "grid" || algorithm.type === "pathfinding") {
+      return (
+        <div className="space-y-6">
+          <GridVisualizer
+            state={state}
+            updateState={updateState}
+            toggleWall={toggleWall}
+            gridTool={gridTool}
+            isEditingDisabled={isEditingDisabled}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <TextVisualizer
+        target={target}
+        pattern={pattern}
+        currentIndex={state.currentIndex}
+        phase={state.phase}
+        compIdx={state.compIdx}
+        mismatchFound={state.mismatchFound}
+        isFinished={state.isFinished}
+        accessedIndices={state.accessedIndices}
+        activeIndices={state.activeIndices}
+        lookAheadIndex={state.lookAheadIndex}
+        comparesRightToLeft={state.comparesRightToLeft}
+        showShiftArrow={state.showShiftArrow}
+      />
+    );
+  },
+);
 
 MainVisualization.propTypes = {
   algorithm: PropTypes.object.isRequired,
@@ -110,17 +103,25 @@ export default function VisualizerFrame({
   nextStep,
   updateState,
   toggleWall,
+  clearWalls,
   history,
   preprocessing,
   onBack,
   gridTool,
   setGridTool,
+  playbackRate,
+  setPlaybackRate,
+  gridSize,
+  setGridSize,
 }) {
-  const { isPlaying, togglePlay, stopPlay } = useVisualizerPlayback(
+  // Adjust speed based on playbackRate (inverse: higher rate means lower interval)
+  const adjustedSpeed = (algorithm.uiConfig?.playbackSpeed || 500) / playbackRate;
+
+  const { isPlaying, togglePlay, stopPlay } = usePlayback(
     nextStep,
     softReset,
     state.isFinished,
-    algorithm.uiConfig?.playbackSpeed,
+    adjustedSpeed,
   );
   const texts = useVisualizerLabels(algorithm, state);
 
@@ -128,8 +129,8 @@ export default function VisualizerFrame({
   const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
 
   return (
-    <div className={classCategory.pageWrapper}>
-      <div className={classCategory.mainPanel}>
+    <div className={classCategories.pageWrapper}>
+      <div className={classCategories.mainPanel}>
         <MetricsBar
           name={algorithm.name}
           phase={state.phase}
@@ -175,6 +176,11 @@ export default function VisualizerFrame({
                 gridTool={gridTool}
                 setGridTool={setGridTool}
                 isEditingDisabled={isEditingDisabled}
+                playbackRate={playbackRate}
+                setPlaybackRate={setPlaybackRate}
+                clearWalls={clearWalls}
+                gridSize={gridSize}
+                setGridSize={setGridSize}
               />
             </div>
 
@@ -230,7 +236,7 @@ export default function VisualizerFrame({
         </div>
 
         {/* Footer */}
-        <div className={classCategory.panelFooter}>
+        <div className={classCategories.panelFooter}>
           <div className="flex items-center gap-2">
             <LayoutGrid className="w-3 h-3" /> {algorithm.category}
           </div>
@@ -275,9 +281,14 @@ VisualizerFrame.propTypes = {
   nextStep: PropTypes.func.isRequired,
   updateState: PropTypes.func.isRequired,
   toggleWall: PropTypes.func,
+  clearWalls: PropTypes.func,
   history: PropTypes.array.isRequired,
   preprocessing: PropTypes.object.isRequired,
   onBack: PropTypes.func.isRequired,
   gridTool: PropTypes.string,
   setGridTool: PropTypes.func,
+  playbackRate: PropTypes.number,
+  setPlaybackRate: PropTypes.func,
+  gridSize: PropTypes.object,
+  setGridSize: PropTypes.func,
 };

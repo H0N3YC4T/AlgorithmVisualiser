@@ -1,10 +1,17 @@
 import { useState, memo, useMemo } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import js from "react-syntax-highlighter/dist/esm/languages/prism/javascript";
+import python from "react-syntax-highlighter/dist/esm/languages/prism/python";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+SyntaxHighlighter.registerLanguage("javascript", js);
+SyntaxHighlighter.registerLanguage("python", python);
+SyntaxHighlighter.registerLanguage("pseudo", js); // Use JS for pseudo
 import PropTypes from "prop-types";
 import { Terminal, Copy, Check } from "lucide-react";
-import { uiDefaults } from "../../core/constants/ui";
-import { classCategory } from "../../styles/class-category";
+import { uiDefaults } from "@/core/constants/ui";
+import { classCategories } from "@/styles/divClassCustom";
+
 
 const CodePanel = memo(({ codeSnippets, lineHighlights, activeStep }) => {
   const [activeTab, setActiveTab] = useState("javascript");
@@ -16,19 +23,19 @@ const CodePanel = memo(({ codeSnippets, lineHighlights, activeStep }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!codeSnippets) return null;
-
   // Determine which line to highlight based on the current activeStep and active language
   const activeLine = useMemo(() => lineHighlights?.[activeStep]?.[activeTab], [lineHighlights, activeStep, activeTab]);
 
+  if (!codeSnippets) return null;
+
   return (
-    <div className={classCategory.subPanel}>
-      <div className={classCategory.subPanelHeader}>
-        <h3 className={classCategory.smallHeading}>
+    <div className={classCategories.subPanel}>
+      <div className={classCategories.subPanelHeader}>
+        <h3 className={classCategories.smallHeading}>
           <Terminal className="w-4 h-4" /> {uiDefaults.codePanel.title}
         </h3>
         <div className="flex items-center gap-4">
-          <div className={classCategory.controlGroup}>
+          <div className={classCategories.controlGroup}>
             {Object.keys(uiDefaults.codePanel.languages).map((lang) => (
               <button
                 key={lang}

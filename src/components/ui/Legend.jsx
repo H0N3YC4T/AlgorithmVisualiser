@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { memo } from 'react';
+import { classCategories } from '../../styles/divClassCustom';
 
 /**
  * Legend Component
@@ -13,20 +14,20 @@ const Legend = memo(({ items }) => {
 
   if (isPathfindingLegend) {
     return (
-      <div className="bg-slate-900/40 border border-slate-800/60 rounded-3xl p-6 h-full flex flex-col justify-center items-center gap-6 shadow-2xl">
-        <div className="flex justify-center gap-8">
+      <div className={`${classCategories.glassPanel} rounded-[2rem] p-8 h-full flex flex-col justify-center items-center gap-8`}>
+        <div className="flex justify-center gap-10">
           {items.slice(0, 3).map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3">
-              <div className={`w-4 h-4 rounded-sm border border-white/5 ${item.color} shadow-lg`} />
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
+            <div key={idx} className="flex items-center gap-4">
+              <div className={`w-5 h-5 rounded-md border border-white/5 ${item.color} shadow-xl`} />
+              <span className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{item.label}</span>
             </div>
           ))}
         </div>
-        <div className="flex justify-center gap-8">
+        <div className="flex justify-center gap-10">
           {items.slice(3, 5).map((item, idx) => (
-            <div key={idx + 3} className="flex items-center gap-3">
-              <div className={`w-4 h-4 rounded-sm border border-white/5 ${item.color} shadow-lg`} />
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
+            <div key={idx + 3} className="flex items-center gap-4">
+              <div className={`w-5 h-5 rounded-md border border-white/5 ${item.color} shadow-xl`} />
+              <span className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{item.label}</span>
             </div>
           ))}
         </div>
@@ -35,12 +36,12 @@ const Legend = memo(({ items }) => {
   }
 
   return (
-    <div className="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 h-full">
-      <div className="flex flex-wrap gap-4 items-center justify-center h-full">
+    <div className={`${classCategories.glassPanel} rounded-[2rem] p-6 h-full flex items-center justify-center`}>
+      <div className="flex flex-wrap gap-6 items-center justify-center">
         {items.map((item, idx) => (
-          <div key={idx} className="flex items-center gap-2">
-            <div className={`w-4 h-4 rounded border border-white/5 ${item.color} shadow-md`} />
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
+          <div key={idx} className="flex items-center gap-3">
+            <div className={`w-5 h-5 rounded-md border border-white/5 ${item.color} shadow-lg`} />
+            <span className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{item.label}</span>
           </div>
         ))}
       </div>
