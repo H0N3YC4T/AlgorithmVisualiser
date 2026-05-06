@@ -44,9 +44,13 @@ export const useGridControls = (initialRows = 20, initialCols = 40) => {
     }));
   }, []);
 
+  const updateGridSize = useCallback((rows, cols) => {
+    setGridSize({ rows, cols });
+  }, []);
+
   return {
     gridSize,
-    setGridSize,
+    setGridSize: updateGridSize,
     gridTool,
     setGridTool,
     toggleWall,

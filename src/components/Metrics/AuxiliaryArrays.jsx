@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Layers } from 'lucide-react';
-import ArrayVisualizer from '@/features/visualizer/renderers/ArrayVisualizer';
+import { ArrayVisualizer } from "@/components/ArrayVisualiser";
 
 
 export default function AuxiliaryArrays({ state }) {

@@ -38,8 +38,8 @@ export const astar = createAlgorithmCard({
       { label: 'Start', color: 'bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
       { label: 'End', color: 'bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
       { label: 'Wall', color: 'bg-slate-700' },
-      { label: 'Visited', color: 'bg-purple-500/30 border-purple-500/50' },
-      { label: 'Path', color: 'bg-sky-600/90 shadow-[0_0_15px_rgba(2,132,199,0.3)]' },
+      { label: 'Visited', color: 'bg-indigo-500/15 border-indigo-500/30' },
+      { label: 'Path', color: 'bg-sky-500/60 shadow-[0_0_10px_rgba(14,165,233,0.2)]' },
     ],
     visualSteps: {
       READY: {

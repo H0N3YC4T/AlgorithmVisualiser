@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, ChevronDown, Layers, Search, Map, Zap, HelpCircle } from "lucide-react";
-import { homeDefaults } from "@/core/constants/home";
+import { homeDefaults } from "@/constants/home";
 import { classCategories } from "@/styles/divClassCustom";
 
 
@@ -91,10 +91,10 @@ export default function Home({ algorithms, categories, onSelect }) {
           <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[14px] font-black uppercase tracking-[0.3em]">
             <Zap className="w-5 h-5" /> {homeDefaults.hero.badge}
           </div>
-          <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter leading-tight">
+          <h1 className={classCategories.homeTitle}>
             {homeDefaults.hero.title} <span className="text-indigo-500">{homeDefaults.hero.titleAccent}</span>
           </h1>
-          <p className="text-slate-500 max-w-4xl mx-auto font-bold text-2xl tracking-wide leading-relaxed">
+          <p className={classCategories.homeSubtitle}>
             {homeDefaults.hero.description}
           </p>
         </div>
@@ -264,7 +264,7 @@ export default function Home({ algorithms, categories, onSelect }) {
 
                             <div className="space-y-8 relative z-10 flex-1">
                               <div className="flex justify-between items-start">
-                                <h3 className="text-3xl font-black text-white group-hover:text-indigo-400 transition-colors leading-tight">
+                                <h3 className={classCategories.cardHeading}>
                                   {algo.name}
                                 </h3>
                                 <span
@@ -274,7 +274,7 @@ export default function Home({ algorithms, categories, onSelect }) {
                                 </span>
                               </div>
 
-                              <p className="text-slate-500 text-[18px] font-bold leading-relaxed line-clamp-3">
+                              <p className={classCategories.cardDescription}>
                                 {algo.description}
                               </p>
 

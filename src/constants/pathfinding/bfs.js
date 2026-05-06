@@ -2,10 +2,10 @@ import { createAlgorithmCard } from '../factory';
 import { getGridConfig, generateMaze } from './grid-config';
 
 /**
- * Dijkstra's Algorithm Module
+ * Breadth-First Search Algorithm Module
  */
-export const dijkstra = createAlgorithmCard({
-  id: 'dijkstra',
+export const bfs = createAlgorithmCard({
+  id: 'bfs',
   
   // --- Metadata ---
   metadata: {
@@ -16,13 +16,13 @@ export const dijkstra = createAlgorithmCard({
   },
 
   homeCard: {
-    name: "Dijkstra's Algorithm",
-    difficulty: 'Hard',
-    description: 'Finds the absolute shortest path in a weighted grid by always exploring the node with the lowest cost.',
+    name: 'Breadth-First Search',
+    difficulty: 'Easy',
+    description: 'Explores neighbors layer by layer to find the shortest path in an unweighted grid.',
     complexity: {
-      timeBest: 'Ω(V log V)',
-      timeAvg: 'Θ(E + V log V)',
-      timeWorst: 'O(E + V log V)',
+      timeBest: 'Ω(1)',
+      timeAvg: 'Θ(V + E)',
+      timeWorst: 'O(V + E)',
       space: 'O(V)'
     },
   },
@@ -30,31 +30,31 @@ export const dijkstra = createAlgorithmCard({
   algorithmPage: {
     uiConfig: {
       statusLabel: 'Visited: {iterations}',
-      startButton: 'Start Dijkstra',
+      startButton: 'Start BFS',
       playbackSpeed: 100
     },
-    extendedDescription: "Dijkstra's algorithm finds the shortest path between nodes in a graph. In a grid, it explores the nodes closest to the start first. When costs (weights) are involved, Dijkstra is the standard for guaranteed shortest paths.",
+    extendedDescription: 'Breadth-First Search (BFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the source node and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level. In an unweighted grid, BFS is guaranteed to find the shortest path.',
     legendItems: [
       { label: 'Start', color: 'bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
       { label: 'End', color: 'bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
       { label: 'Wall', color: 'bg-slate-700' },
-      { label: 'Visited', color: 'bg-purple-500/30 border-purple-500/50' },
-      { label: 'Path', color: 'bg-sky-600/90 shadow-[0_0_15px_rgba(2,132,199,0.3)]' },
+      { label: 'Visited', color: 'bg-indigo-500/15 border-indigo-500/30' },
+      { label: 'Path', color: 'bg-sky-500/60 shadow-[0_0_10px_rgba(14,165,233,0.2)]' },
     ],
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Dijkstra initialized. Ready to find the shortest path from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
+        message: "BFS initialized. Ready to explore from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
         highlights: { pseudo: [1], javascript: [1], python: [1] }
       },
-      EXPLORING: {
-        title: 'Exploring',
-        message: "Visiting node at ({r}, {c}) with cumulative distance {dist}.",
+      SEARCHING: {
+        title: 'Exploring Neighbors',
+        message: "Visiting node at ({r}, {c}). Expanding search layer.",
         highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
       },
-      TARGET_FOUND: {
+      TARGET_REACHED: {
         title: 'Target Found ✓',
-        message: "Shortest path to target found! Reconstructing path.",
+        message: "Reached the target node! Preparing to reconstruct the path.",
         highlights: { pseudo: [4], javascript: [7], python: [7] }
       },
       BACKTRACKING: {
@@ -62,60 +62,56 @@ export const dijkstra = createAlgorithmCard({
         message: "Tracing back from target to start using parent pointers.",
         highlights: { pseudo: [5], javascript: [9], python: [9] }
       },
-      PATH_COMPLETE: {
+      DONE: {
         title: 'Path Complete ✓',
-        message: "Absolute shortest path reconstructed successfully.",
+        message: "Shortest path reconstructed successfully.",
         highlights: { pseudo: [6], javascript: [11], python: [11] }
       },
       NO_PATH: {
         title: 'No Path Found',
-        message: "Queue exhausted. Target is unreachable.",
+        message: "Queue exhausted. No reachable path exists to the target.",
         highlights: { pseudo: [7], javascript: [13], python: [13] }
       }
     }
   },
 
   codeSnippets: {
-    pseudo: `function Dijkstra(start, target):
-  dist[start] = 0, queue = [all nodes]
+    pseudo: `function BFS(start, target):
+  queue = [start], visited = {start}
   while queue is not empty:
-    u = node in queue with min dist[u]
-    if u == target: return reconstruct()
-    for neighbor v of u:
-      alt = dist[u] + weight(u, v)
-      if alt < dist[v]:
-        dist[v] = alt, prev[v] = u`,
-    javascript: `function dijkstra(start, target) {
-  const dist = {}, prev = {};
-  const queue = new PriorityQueue();
-  dist[start.id] = 0;
-  queue.push(start, 0);
-  while (!queue.isEmpty()) {
-    const u = queue.pop();
-    if (u.id === target.id) return reconstruct(u);
-    for (const v of getNeighbors(u)) {
-      const alt = dist[u.id] + v.weight;
-      if (alt < (dist[v.id] || Infinity)) {
-        dist[v.id] = alt;
-        prev[v.id] = u;
-        queue.push(v, alt);
+    node = queue.shift()
+    if node == target: return reconstructPath()
+    for neighbor in neighbors(node):
+      if neighbor not in visited:
+        visited.add(neighbor)
+        parent[neighbor] = node
+        queue.push(neighbor)`,
+    javascript: `function bfs(start, target) {
+  const queue = [start];
+  const visited = new Set([start.id]);
+  while (queue.length > 0) {
+    const node = queue.shift();
+    if (node.id === target.id) return reconstruct(node);
+    for (const neighbor of getNeighbors(node)) {
+      if (!visited.has(neighbor.id)) {
+        visited.add(neighbor.id);
+        neighbor.parent = node;
+        queue.push(neighbor);
       }
     }
   }
 }`,
-    python: `def dijkstra(start, target):
-    dist = {node: float('inf') for node in graph}
-    dist[start] = 0
-    pq = [(0, start)]
-    while pq:
-        d, u = heapq.heappop(pq)
-        if u == target: return reconstruct(u)
-        for v, weight in graph[u].items():
-            alt = d + weight
-            if alt < dist[v]:
-                dist[v] = alt
-                prev[v] = u
-                heapq.heappush(pq, (alt, v))`
+    python: `def bfs(start, target):
+    queue = deque([start])
+    visited = {start}
+    while queue:
+        node = queue.popleft()
+        if node == target: return reconstruct(node)
+        for neighbor in get_neighbors(node):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                neighbor.parent = node
+                queue.append(neighbor)`
   },
 
   // --- Logic ---
@@ -130,19 +126,12 @@ export const dijkstra = createAlgorithmCard({
       walls = new Set(mazeWalls.map(w => `${w.r},${w.c}`));
     }
     
-    const costs = existingState?.costs || new Array(rows).fill().map(() => 
-      new Array(cols).fill().map(() => Math.floor(Math.random() * 9) + 1)
-    );
-    
-    const distances = {}; // Map key to distance
-    const startKey = `${startNode.r},${startNode.c}`;
-    distances[startKey] = 0;
-    
     return {
-      rows, cols, startNode, endNode, walls, costs, 
-      distances,
+      rows, cols,
+      startNode, endNode, 
+      walls, // Store as Set for O(1) lookup
       visited: new Set(),
-      previous: {}, // Map key to {r, c}
+      previous: {}, // Map key string to {r, c}
       queue: [startNode],
       path: [],
       phase: 0, 
@@ -159,8 +148,8 @@ export const dijkstra = createAlgorithmCard({
   },
 
   nextStep: (state) => {
-    const { distances, visited, previous, queue, phase, rows, cols, endNode, path, walls, costs } = state;
-
+    const { visited, previous, queue, phase, rows, cols, endNode, path, walls } = state;
+    
     if (phase === 0) { // handleSearchPhase
       if (queue.length === 0) {
         return { 
@@ -170,14 +159,8 @@ export const dijkstra = createAlgorithmCard({
         };
       }
 
-      // Priority Queue logic (find min distance)
-      const current = queue.reduce((min, node) => {
-        const dNode = distances[`${node.r},${node.c}`] ?? Infinity;
-        const dMin = distances[`${min.r},${min.c}`] ?? Infinity;
-        return dNode < dMin ? node : min;
-      }, queue[0]);
-      
-      const restQueue = queue.filter(n => n !== current);
+      const current = queue[0];
+      const restQueue = queue.slice(1);
       const key = `${current.r},${current.c}`;
 
       if (visited.has(key)) {
@@ -193,7 +176,7 @@ export const dijkstra = createAlgorithmCard({
           visited: newVisited,
           phase: 1,
           activeNode: current,
-          log: { title: 'TARGET FOUND', type: 'success', messageKey: 'TARGET_FOUND' }
+          log: { title: 'TARGET REACHED', type: 'success', messageKey: 'TARGET_REACHED' }
         };
       }
 
@@ -204,39 +187,27 @@ export const dijkstra = createAlgorithmCard({
         { r: current.r, c: current.c + 1 }
       ];
 
-      const newDistances = { ...distances };
-      const newPrevious = { ...previous };
       const newQueue = [...restQueue];
+      const newPrevious = { ...previous };
 
       for (const n of neighbors) {
         const nKey = `${n.r},${n.c}`;
         if (n.r >= 0 && n.r < rows && n.c >= 0 && n.c < cols && !visited.has(nKey) && !walls.has(nKey)) {
-          const weight = (costs[n.r][n.c] || 1);
-          const alt = (distances[key] ?? 0) + weight;
-          if (alt < (distances[nKey] ?? Infinity)) {
-            newDistances[nKey] = alt;
+          if (!newPrevious[nKey]) {
             newPrevious[nKey] = current;
-            if (!queue.some(q => q.r === n.r && q.c === n.c)) {
-              newQueue.push(n);
-            }
+            newQueue.push(n);
           }
         }
       }
 
       return {
         ...state,
-        distances: newDistances,
         visited: newVisited,
-        previous: newPrevious,
         queue: newQueue,
+        previous: newPrevious,
         iterations: state.iterations + 1,
         activeNode: current,
-        log: { 
-          title: 'EXPLORING', 
-          type: 'info', 
-          messageKey: 'EXPLORING', 
-          params: { r: current.r, c: current.c, dist: newDistances[key] } 
-        }
+        log: { title: 'SEARCHING', type: 'info', messageKey: 'SEARCHING', params: { r: current.r, c: current.c } }
       };
     }
 
@@ -248,7 +219,7 @@ export const dijkstra = createAlgorithmCard({
         return { 
           ...state, 
           isFinished: true, 
-          log: { title: 'PATH COMPLETE ✓', type: 'success', messageKey: 'PATH_COMPLETE' } 
+          log: { title: 'DONE ✓', type: 'success', messageKey: 'DONE' } 
         };
       }
       return {

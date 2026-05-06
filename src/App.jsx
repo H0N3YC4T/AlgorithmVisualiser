@@ -1,8 +1,8 @@
 import { BrowserRouter } from "react-router-dom";
-import { algorithms } from "@/core/constants/index";
+import { algorithms } from "@/constants/index";
 import { AppRouter } from "@/router";
 import { useUrlResolver } from "@/hooks/useUrlResolver";
-import Background from "@/components/common/Background";
+import { Background } from "@/components/UI";
 
 export default function App() {
   return (

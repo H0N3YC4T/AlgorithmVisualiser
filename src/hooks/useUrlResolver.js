@@ -103,10 +103,10 @@ export const useUrlResolver = (algorithms) => {
     softReset(algorithm, defaults.pattern, defaults.target, false);
   }, [algorithm, softReset]);
 
-  // Sync state when algorithm changes
-  const lastAlgoId = useRef(selectedAlgoId);
+  // Sync state when algorithm changes or on initial mount
+  const lastAlgoId = useRef(null);
   useEffect(() => {
-    if (lastAlgoId.current !== selectedAlgoId) {
+    if (selectedAlgoId && lastAlgoId.current !== selectedAlgoId) {
       lastAlgoId.current = selectedAlgoId;
       const algo = algorithms.find((a) => a.id === selectedAlgoId);
       if (algo) {
@@ -118,7 +118,7 @@ export const useUrlResolver = (algorithms) => {
         }, 0);
       }
     }
-  }, [selectedAlgoId, algorithms, softReset]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedAlgoId, algorithms, softReset]);
 
   const handleSetTarget = useCallback(
     (val) => {

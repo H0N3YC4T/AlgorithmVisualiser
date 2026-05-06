@@ -2,10 +2,10 @@ import { createAlgorithmCard } from '../factory';
 import { getGridConfig, generateMaze } from './grid-config';
 
 /**
- * Breadth-First Search Algorithm Module
+ * Depth-First Search Algorithm Module
  */
-export const bfs = createAlgorithmCard({
-  id: 'bfs',
+export const dfs = createAlgorithmCard({
+  id: 'dfs',
   
   // --- Metadata ---
   metadata: {
@@ -16,9 +16,9 @@ export const bfs = createAlgorithmCard({
   },
 
   homeCard: {
-    name: 'Breadth-First Search',
-    difficulty: 'Easy',
-    description: 'Explores neighbors layer by layer to find the shortest path in an unweighted grid.',
+    name: 'Depth-First Search',
+    difficulty: 'Medium',
+    description: 'Explores as far as possible along each branch before backtracking. Not guaranteed to find the shortest path.',
     complexity: {
       timeBest: 'Ω(1)',
       timeAvg: 'Θ(V + E)',
@@ -30,31 +30,31 @@ export const bfs = createAlgorithmCard({
   algorithmPage: {
     uiConfig: {
       statusLabel: 'Visited: {iterations}',
-      startButton: 'Start BFS',
+      startButton: 'Start DFS',
       playbackSpeed: 100
     },
-    extendedDescription: 'Breadth-First Search (BFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the source node and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level. In an unweighted grid, BFS is guaranteed to find the shortest path.',
+    extendedDescription: 'Depth-First Search (DFS) is an algorithm for traversing or searching tree or graph data structures. The algorithm starts at the root node and explores as far as possible along each branch before backtracking. Unlike BFS, DFS does not guarantee the shortest path in an unweighted grid.',
     legendItems: [
       { label: 'Start', color: 'bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
       { label: 'End', color: 'bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
       { label: 'Wall', color: 'bg-slate-700' },
-      { label: 'Visited', color: 'bg-purple-500/30 border-purple-500/50' },
-      { label: 'Path', color: 'bg-sky-600/90 shadow-[0_0_15px_rgba(2,132,199,0.3)]' },
+      { label: 'Visited', color: 'bg-indigo-500/15 border-indigo-500/30' },
+      { label: 'Path', color: 'bg-sky-500/60 shadow-[0_0_10px_rgba(14,165,233,0.2)]' },
     ],
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "BFS initialized. Ready to explore from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
+        message: "DFS initialized. Ready to explore from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
         highlights: { pseudo: [1], javascript: [1], python: [1] }
       },
       SEARCHING: {
-        title: 'Exploring Neighbors',
-        message: "Visiting node at ({r}, {c}). Expanding search layer.",
+        title: 'Exploring Branch',
+        message: "Visiting node at ({r}, {c}). Exploring deeper into the current branch.",
         highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
       },
       TARGET_REACHED: {
         title: 'Target Found ✓',
-        message: "Reached the target node! Preparing to reconstruct the path.",
+        message: "Reached the target node! Tracing the discovered path.",
         highlights: { pseudo: [4], javascript: [7], python: [7] }
       },
       BACKTRACKING: {
@@ -64,54 +64,56 @@ export const bfs = createAlgorithmCard({
       },
       DONE: {
         title: 'Path Complete ✓',
-        message: "Shortest path reconstructed successfully.",
+        message: "Path discovered and reconstructed.",
         highlights: { pseudo: [6], javascript: [11], python: [11] }
       },
       NO_PATH: {
         title: 'No Path Found',
-        message: "Queue exhausted. No reachable path exists to the target.",
+        message: "Stack exhausted. No reachable path exists to the target.",
         highlights: { pseudo: [7], javascript: [13], python: [13] }
       }
     }
   },
 
   codeSnippets: {
-    pseudo: `function BFS(start, target):
-  queue = [start], visited = {start}
-  while queue is not empty:
-    node = queue.shift()
+    pseudo: `function DFS(start, target):
+  stack = [start], visited = {start}
+  while stack is not empty:
+    node = stack.pop()
     if node == target: return reconstructPath()
     for neighbor in neighbors(node):
       if neighbor not in visited:
         visited.add(neighbor)
         parent[neighbor] = node
-        queue.push(neighbor)`,
-    javascript: `function bfs(start, target) {
-  const queue = [start];
-  const visited = new Set([start.id]);
-  while (queue.length > 0) {
-    const node = queue.shift();
+        stack.push(neighbor)`,
+    javascript: `function dfs(start, target) {
+  const stack = [start];
+  const visited = new Set();
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (visited.has(node.id)) continue;
+    visited.add(node.id);
     if (node.id === target.id) return reconstruct(node);
     for (const neighbor of getNeighbors(node)) {
       if (!visited.has(neighbor.id)) {
-        visited.add(neighbor.id);
         neighbor.parent = node;
-        queue.push(neighbor);
+        stack.push(neighbor);
       }
     }
   }
 }`,
-    python: `def bfs(start, target):
-    queue = deque([start])
-    visited = {start}
-    while queue:
-        node = queue.popleft()
+    python: `def dfs(start, target):
+    stack = [start]
+    visited = set()
+    while stack:
+        node = stack.pop()
+        if node in visited: continue
+        visited.add(node)
         if node == target: return reconstruct(node)
         for neighbor in get_neighbors(node):
             if neighbor not in visited:
-                visited.add(neighbor)
                 neighbor.parent = node
-                queue.append(neighbor)`
+                stack.append(neighbor)`
   },
 
   // --- Logic ---
@@ -129,10 +131,11 @@ export const bfs = createAlgorithmCard({
     return {
       rows, cols,
       startNode, endNode, 
-      walls, // Store as Set for O(1) lookup
+      walls,
       visited: new Set(),
-      previous: {}, // Map key string to {r, c}
-      queue: [startNode],
+      previous: {},
+      stack: [startNode],
+      activeBranch: [startNode],
       path: [],
       phase: 0, 
       activeNode: null,
@@ -148,10 +151,10 @@ export const bfs = createAlgorithmCard({
   },
 
   nextStep: (state) => {
-    const { visited, previous, queue, phase, rows, cols, endNode, path, walls } = state;
-    
+    const { visited, previous, stack, phase, rows, cols, endNode, path, walls } = state;
+
     if (phase === 0) { // handleSearchPhase
-      if (queue.length === 0) {
+      if (stack.length === 0) {
         return { 
           ...state, 
           isFinished: true, 
@@ -159,16 +162,25 @@ export const bfs = createAlgorithmCard({
         };
       }
 
-      const current = queue[0];
-      const restQueue = queue.slice(1);
+      const current = stack[stack.length - 1];
+      const restStack = stack.slice(0, -1);
       const key = `${current.r},${current.c}`;
 
       if (visited.has(key)) {
-        return { ...state, queue: restQueue };
+        return { ...state, stack: restStack };
       }
       
       const newVisited = new Set(visited);
       newVisited.add(key);
+
+      // Calculate active branch (path from start to current)
+      const activeBranch = [];
+      let curr = current;
+      while (curr) {
+        activeBranch.push(curr);
+        const pKey = `${curr.r},${curr.c}`;
+        curr = previous[pKey];
+      }
 
       if (current.r === endNode.r && current.c === endNode.c) {
         return {
@@ -176,37 +188,37 @@ export const bfs = createAlgorithmCard({
           visited: newVisited,
           phase: 1,
           activeNode: current,
+          activeBranch,
           log: { title: 'TARGET REACHED', type: 'success', messageKey: 'TARGET_REACHED' }
         };
       }
 
       const neighbors = [
-        { r: current.r - 1, c: current.c },
         { r: current.r + 1, c: current.c },
-        { r: current.r, c: current.c - 1 },
-        { r: current.r, c: current.c + 1 }
+        { r: current.r, c: current.c + 1 },
+        { r: current.r - 1, c: current.c },
+        { r: current.r, c: current.c - 1 }
       ];
 
-      const newQueue = [...restQueue];
+      const newStack = [...restStack];
       const newPrevious = { ...previous };
 
       for (const n of neighbors) {
         const nKey = `${n.r},${n.c}`;
         if (n.r >= 0 && n.r < rows && n.c >= 0 && n.c < cols && !visited.has(nKey) && !walls.has(nKey)) {
-          if (!newPrevious[nKey]) {
-            newPrevious[nKey] = current;
-            newQueue.push(n);
-          }
+          newPrevious[nKey] = current;
+          newStack.push(n);
         }
       }
 
       return {
         ...state,
         visited: newVisited,
-        queue: newQueue,
+        stack: newStack,
         previous: newPrevious,
         iterations: state.iterations + 1,
         activeNode: current,
+        activeBranch,
         log: { title: 'SEARCHING', type: 'info', messageKey: 'SEARCHING', params: { r: current.r, c: current.c } }
       };
     }

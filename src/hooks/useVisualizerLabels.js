@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { uiDefaults } from "@/core/constants/ui";
+import { uiDefaults } from "@/constants/ui";
 
 
 export default function useVisualizerLabels(algorithm, state) {

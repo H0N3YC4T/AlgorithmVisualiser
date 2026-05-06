@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import GridNode from "@/features/visualizer/components/GridNode";
+import GridNode from "./GridNode";
 import { classCategories } from "@/styles/divClassCustom";
 
-export default function GridVisualizer({ state, updateState, toggleWall, gridTool, isEditingDisabled }) {
+export default function GridVisualizer({ algorithm, state, updateState, toggleWall, gridTool, isEditingDisabled }) {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState(null); // 'adding' | 'removing' | null
 
@@ -17,11 +17,12 @@ export default function GridVisualizer({ state, updateState, toggleWall, gridToo
     activeNode,
     walls,
     costs,
-    legendItems,
     activeBranch,
     queue,
     openSet,
   } = state || {};
+
+  const legendItems = algorithm?.legendItems || [];
 
   const colorMapping = useMemo(
     () =>
@@ -191,7 +192,7 @@ export default function GridVisualizer({ state, updateState, toggleWall, gridToo
 
   return (
     <div
-      className={`${classCategories.vizContainer} h-[450px] p-8 shadow-inner select-none bg-slate-900/20 rounded-3xl border-slate-800/40`}
+      className={`${classCategories.vizContainer} h-[450px] p-4 shadow-inner select-none bg-slate-900/20 rounded-3xl border-slate-800/40`}
     >
       <div
         role="grid"

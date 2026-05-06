@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { memo } from 'react';
-import { classCategories } from '../../styles/divClassCustom';
+import { classCategories } from '@/styles/divClassCustom';
 
 /**
  * Legend Component

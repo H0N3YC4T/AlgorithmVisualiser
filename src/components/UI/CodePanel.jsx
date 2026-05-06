@@ -9,7 +9,7 @@ SyntaxHighlighter.registerLanguage("python", python);
 SyntaxHighlighter.registerLanguage("pseudo", js); // Use JS for pseudo
 import PropTypes from "prop-types";
 import { Terminal, Copy, Check } from "lucide-react";
-import { uiDefaults } from "@/core/constants/ui";
+import { uiDefaults } from "@/constants/ui";
 import { classCategories } from "@/styles/divClassCustom";
 
 

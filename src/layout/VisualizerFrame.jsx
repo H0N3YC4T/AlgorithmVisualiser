@@ -1,17 +1,16 @@
 import { LayoutGrid } from "lucide-react";
 import { memo } from "react";
 import PropTypes from "prop-types";
-import InputPanel from "@/components/ui/InputPanel";
-import Legend from "@/components/ui/Legend";
-import ArrayVisualizer from "@/features/visualizer/renderers/ArrayVisualizer";
-import TextVisualizer from "@/features/visualizer/renderers/TextVisualizer";
-import ZVisualizer from "@/features/visualizer/renderers/ZVisualizer";
-import GridVisualizer from "@/features/visualizer/renderers/GridVisualizer";
-import ProcessLog from "@/features/visualizer/components/ProcessLog";
-import { CodePanel } from "@/features/educational";
-import MetricsBar from "@/features/visualizer/components/MetricsBar";
-import AlgorithmSidebar from "@/features/visualizer/components/AlgorithmSidebar";
-import AuxiliaryArrays from "@/features/visualizer/components/AuxiliaryArrays";
+import { InputPanel, Legend, CodePanel } from "@/components/UI";
+import { ArrayVisualizer } from "@/components/ArrayVisualiser";
+import { GridVisualizer } from "@/components/GridVisualiser";
+import { TextVisualizer, ZVisualizer } from "@/components/TextVisualiser";
+import {
+  ProcessLog,
+  MetricsBar,
+  AlgorithmSidebar,
+  AuxiliaryArrays,
+} from "@/components/Metrics";
 import usePlayback from "@/hooks/usePlayback";
 import useVisualizerLabels from "@/hooks/useVisualizerLabels";
 import { classCategories } from "@/styles/divClassCustom";
@@ -50,6 +49,7 @@ const MainVisualization = memo(
       return (
         <div className="space-y-6">
           <GridVisualizer
+            algorithm={algorithm}
             state={state}
             updateState={updateState}
             toggleWall={toggleWall}
@@ -161,7 +161,7 @@ export default function VisualizerFrame({
         <div className="p-6 space-y-8">
           {/* Controls & Legend */}
           <div className="flex flex-col xl:flex-row gap-6 items-stretch">
-            <div className="flex-[0.7] w-full">
+            <div className="flex-[0.7] w-full min-w-0">
               <InputPanel
                 target={target}
                 setTarget={setTarget}
@@ -184,7 +184,7 @@ export default function VisualizerFrame({
               />
             </div>
 
-            <div className="flex-[0.3] w-full">
+            <div className="flex-[0.3] w-full min-w-0">
               <Legend items={algorithm.legendItems || []} />
             </div>
           </div>
