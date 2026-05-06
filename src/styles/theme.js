@@ -1,89 +1,66 @@
 /**
  * Design System Theme Tokens
- * Centralized source of truth for colors, typography, and effects.
+ * Fully restored from the 'algorithms-old' build DNA.
  */
 
 export const theme = {
   colors: {
     background: "slate-950",
-    surface: "slate-900/40",
-    surfaceHover: "slate-900/60",
-    border: "slate-800/60",
-    borderStrong: "slate-700/80",
+    surface: "slate-900/60",
+    surfaceHover: "slate-900/80",
+    border: "slate-800/50",
+    borderStrong: "slate-700/50",
     
-    // Accents
     primary: "indigo-500",
-    primaryMuted: "indigo-500/20",
-    secondary: "sky-500",
+    primaryLight: "indigo-400",
+    primaryDark: "indigo-600",
     
-    // Semantics
-    success: "emerald-400",
-    danger: "rose-500",
-    warning: "amber-400",
-    info: "sky-400",
+    textHigh: "slate-100",
+    textMuted: "slate-400",
+    textDisabled: "slate-600",
     
-    // Text
-    textHigh: "white",
-    textBody: "slate-100",
-    textMuted: "slate-500",
-    textDisabled: "slate-700",
+    accent: "indigo-500",
+    accentGlass: "indigo-500/10",
   },
   
   typography: {
-    fontHeading: "font-sans",
-    fontBody: "font-sans",
-    fontMono: "font-mono",
-    
+    fonts: {
+      heading: "'Outfit', system-ui, sans-serif",
+      body: "'Inter', system-ui, sans-serif",
+      mono: "'JetBrains Mono', monospace",
+    },
     sizes: {
-      xs: "text-[10px]",
-      sm: "text-xs",
-      base: "text-base",
-      lg: "text-lg",
-      xl: "text-xl",
-      "2xl": "text-2xl",
-      "3xl": "text-3xl",
-      "4xl": "text-4xl",
-      "5xl": "text-5xl",
-      "6xl": "text-6xl",
+      xs: "text-[11px]",
+      sm: "text-[13px]",
+      base: "text-[15px]",
+      lg: "text-[17px]",
+      xl: "text-[20px]",
     },
-
-    semantics: {
-      home: {
-        title: "text-6xl",
-        subtitle: "text-xl",
-        section: "text-3xl",
-      },
-      card: {
-        title: "text-2xl",
-        body: "text-[14px]",
-      },
-      viz: {
-        heading: "text-lg",
-        label: "text-[10px]",
-      }
-    },
-    
     tracking: {
       tight: "tracking-tight",
-      normal: "tracking-normal",
-      wide: "tracking-wide",
+      tighter: "tracking-tighter",
       wider: "tracking-wider",
-      widest: "tracking-widest",
-      tracked: "tracking-[0.35em]",
     },
-  },
-  
-  effects: {
-    glass: "backdrop-blur-xl",
-    glassMuted: "backdrop-blur-md",
-    shadow: "shadow-2xl",
-    transition: "transition-all duration-300",
-    roundness: {
-      sm: "rounded-lg",
-      base: "rounded-2xl",
-      lg: "rounded-3xl",
-      xl: "rounded-[2.5rem]",
-      full: "rounded-[3rem]",
+    semantics: {
+      home: {
+        title: "text-4xl md:text-5xl lg:text-6xl",
+        subtitle: "text-sm md:text-base",
+        section: "text-[13px]",
+      },
+      viz: {
+        title: "text-xl md:text-2xl",
+      }
     }
+  },
+
+  effects: {
+    roundness: {
+      sm: "rounded-md",
+      base: "rounded-xl",
+      lg: "rounded-2xl",
+      xl: "rounded-3xl",
+    },
+    transition: "transition-all duration-300 ease-in-out",
+    glass: "backdrop-blur-xl border border-slate-800/50 shadow-2xl shadow-black/50",
   }
 };

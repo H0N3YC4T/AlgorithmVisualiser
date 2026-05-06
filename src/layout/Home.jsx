@@ -71,7 +71,7 @@ export default function Home({ algorithms, categories, onSelect }) {
     return homeDefaults.difficultyColors[difficulty] || homeDefaults.difficultyColors.default;
   };
 
-  const [collapsedCategories, setCollapsedCategories] = useState(new Set(["cheatsheet"]));
+  const [collapsedCategories, setCollapsedCategories] = useState(new Set(["cheatsheet", ...(categories || [])]));
 
   const groupedAlgorithms = useMemo(() => {
     return (algorithms || []).reduce((acc, algo) => {
@@ -92,12 +92,12 @@ export default function Home({ algorithms, categories, onSelect }) {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-200 p-12 md:p-16 font-sans relative">
-      <div className="max-w-[1400px] mx-auto space-y-24 relative z-10">
+    <div className="min-h-screen bg-transparent text-slate-200 p-8 md:p-12 font-sans relative">
+      <div className="max-w-[1400px] mx-auto space-y-6 relative z-10">
         {/* Header */}
-        <div className="text-center space-y-8 pt-20">
-          <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[14px] font-black uppercase tracking-[0.3em]">
-            <Zap className="w-5 h-5" /> {homeDefaults.hero.badge}
+        <div className="text-center space-y-6 pt-12">
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[12px] font-black uppercase tracking-[0.2em]">
+            <Zap className="w-4 h-4" /> {homeDefaults.hero.badge}
           </div>
           <h1 className={classCategories.homeTitle}>
             {homeDefaults.hero.title} <span className="text-indigo-500">{homeDefaults.hero.titleAccent}</span>
@@ -112,17 +112,17 @@ export default function Home({ algorithms, categories, onSelect }) {
           <button onClick={() => toggleCategory("cheatsheet")} className={classCategories.sectionHeader.container}>
             <div className={classCategories.sectionHeader.border}>
               <div className={classCategories.sectionHeader.iconBox(!collapsedCategories.has("cheatsheet"))}>
-                <FileText className="w-8 h-8" />
+                <FileText className="w-5 h-5" />
               </div>
               <h2 className={classCategories.sectionHeader.title(!collapsedCategories.has("cheatsheet"))}>
                 Big O Cheatsheet{" "}
-                <span className="ml-6 text-[16px] text-slate-700 font-black tracking-[0.2em]">
+                <span className="ml-4 text-[13px] text-slate-700 font-black tracking-[0.1em]">
                   ({homeDefaults.caseCards.length})
                 </span>
               </h2>
               <div className="flex-1" />
               <ChevronDown
-                className={`w-10 h-10 text-slate-600 group-hover:text-indigo-500 transition-all duration-500 ${collapsedCategories.has("cheatsheet") ? "-rotate-90 opacity-40" : "rotate-0 opacity-100"}`}
+                className={`w-8 h-8 text-slate-600 group-hover:text-indigo-500 transition-all duration-500 ${collapsedCategories.has("cheatsheet") ? "-rotate-90 opacity-40" : "rotate-0 opacity-100"}`}
               />
             </div>
           </button>
@@ -136,70 +136,69 @@ export default function Home({ algorithms, categories, onSelect }) {
                 transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
                 className="overflow-hidden"
               >
-                <div className="space-y-20 pt-16 pb-24">
+                <div className="space-y-12 pt-8 pb-12">
                   {/* Concept Cards - 3 Columns */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {homeDefaults.caseCards.map((card) => (
                       <div
                         key={card.label}
-                        className="p-12 bg-slate-900/40 border border-slate-800/60 rounded-[3rem] space-y-8 hover:border-slate-700 transition-colors shadow-2xl"
+                        className="p-5 bg-slate-900/40 border border-slate-800/60 rounded-2xl space-y-4 hover:border-slate-700 transition-colors shadow-xl"
                       >
-                        <div className="flex items-center gap-6">
-                          <div className={`${classCategories.iconContainer} ${card.bg} ${card.border}`}>
-                            <card.icon className={`w-8 h-8 ${card.color}`} />
+                        <div className="flex items-center gap-4">
+                          <div className={`p-2 rounded-xl bg-slate-950 border border-slate-800 ${card.color}`}>
+                            <card.icon className="w-5 h-5" />
                           </div>
-                          <h3 className="font-black text-white text-[18px] uppercase tracking-[0.25em]">
+                          <h3 className="font-black text-white text-[13px] uppercase tracking-[0.1em]">
                             {card.label}
                           </h3>
                         </div>
-                        <p className="text-slate-500 text-[18px] font-bold leading-relaxed">{card.desc}</p>
+                        <p className="text-slate-500 text-[12px] font-medium leading-relaxed">{card.desc}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Big O Notation Cards - 6 Columns */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     {homeDefaults.bigONotations.map((item) => (
                       <div
                         key={item.label}
-                        className={`p-10 rounded-[2rem] border border-slate-800/60 ${item.bg} space-y-8 group hover:border-slate-700 transition-colors shadow-xl`}
+                        className={`p-4 rounded-xl border border-slate-800/60 ${item.bg} space-y-3 flex flex-col justify-between`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className={`text-[32px] font-black ${item.color.replace("stroke-", "text-")}`}>
+                          <span className={`text-[18px] font-black ${item.color.replace("stroke-", "text-")}`}>
                             {item.label}
                           </span>
-                          <BigOChart type={item.type} color={item.color} />
                         </div>
                         <div>
-                          <div className="text-[16px] font-black text-white uppercase tracking-[0.2em] mb-4">
+                          <div className="text-[11px] font-black text-white uppercase tracking-[0.1em] mb-1">
                             {item.name}
                           </div>
-                          <p className="text-[16px] text-slate-400 font-bold leading-snug">{item.desc}</p>
+                          <p className="text-[10px] text-slate-500 font-medium leading-snug line-clamp-2">{item.desc}</p>
                         </div>
                       </div>
                     ))}
                   </div>
 
                   {/* Space Complexity Cards - 3 Columns */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {homeDefaults.spaceComplexities.map((item) => (
                       <div
                         key={item.label}
-                        className="p-10 rounded-[3rem] border border-slate-800/60 bg-indigo-500/5 space-y-8 group hover:border-slate-700 transition-colors shadow-xl"
+                        className="p-4 rounded-2xl border border-slate-800/60 bg-indigo-500/5 space-y-3 group hover:border-slate-700 transition-colors shadow-xl"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-[28px] font-black text-indigo-400">{item.label}</span>
-                          <div className="text-[14px] font-black text-white/30 uppercase tracking-[0.3em]">
+                          <span className="text-[16px] font-black text-indigo-400">{item.label}</span>
+                          <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">
                             {item.name}
                           </div>
                         </div>
                         <div>
-                          <p className="text-[18px] text-slate-500 font-bold leading-relaxed mb-8">{item.desc}</p>
-                          <div className="flex flex-wrap items-center gap-4">
-                            <span className="text-[14px] font-black text-indigo-500 uppercase tracking-[0.2em]">
-                              {homeDefaults.complexityLabels.examples}
+                          <p className="text-[11px] text-slate-500 font-medium leading-relaxed mb-4">{item.desc}</p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black text-indigo-500/50 uppercase">
+                              EX:
                             </span>
-                            <span className="text-[16px] text-slate-400 font-mono italic">{item.examples}</span>
+                            <span className="text-[10px] text-slate-600 font-mono italic truncate">{item.examples}</span>
                           </div>
                         </div>
                       </div>
@@ -212,18 +211,10 @@ export default function Home({ algorithms, categories, onSelect }) {
         </div>
 
         {/* Algorithm Explorer */}
-        {["Pattern Matching Algorithms", "Sorting Algorithms", "Searching Algorithms", "Pathfinding Algorithms"].map(
-          (category) => {
-            const categoryAlgorithms = algorithms
-              .filter((a) => a.category === category)
-              .sort(
-                (a, b) =>
-                  (homeDefaults.difficultyMap[a.difficulty] || 0) - (homeDefaults.difficultyMap[b.difficulty] || 0),
-              );
-
-            if (categoryAlgorithms.length === 0) return null;
-
-            const isCollapsed = collapsedCategories.has(category);
+        {Object.keys(groupedAlgorithms).map((category) => {
+          const categoryAlgorithms = groupedAlgorithms[category] || [];
+          if (categoryAlgorithms.length === 0) return null;
+          const isCollapsed = collapsedCategories.has(category);
 
             return (
               <div key={category} className="space-y-0">

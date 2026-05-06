@@ -118,8 +118,8 @@ const InputPanel = memo(
                     </label>
                     <input
                       type="text"
-                      value={target}
-                      onChange={(e) => setTarget(e.target.value)}
+                      value={pattern}
+                      onChange={(e) => setPattern(e.target.value)}
                       placeholder={placeholder1 || "e.g. 10, 20, 30, 40, 50"}
                       className={classCategories.inputBase}
                       disabled={isPlaying}
@@ -131,8 +131,8 @@ const InputPanel = memo(
                     </label>
                     <input
                       type="text"
-                      value={pattern}
-                      onChange={(e) => setPattern(e.target.value)}
+                      value={target}
+                      onChange={(e) => setTarget(e.target.value)}
                       placeholder="X"
                       className={`${classCategories.inputBase} text-center`}
                       disabled={isPlaying}

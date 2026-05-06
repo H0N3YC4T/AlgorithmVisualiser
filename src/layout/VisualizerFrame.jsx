@@ -176,7 +176,7 @@ export default function VisualizerFrame({
 
   return (
     <div className={classCategories.pageWrapper}>
-      <div className={classCategories.mainPanel}>
+      <div className={classCategories.vizPanel}>
         <MetricsBar
           name={algorithm.name}
           phase={state.phase}
@@ -204,24 +204,20 @@ export default function VisualizerFrame({
           state={state}
         />
 
-        <div className="p-6 space-y-8">
-          {(algorithm.type === "pattern-matching" || algorithm.category?.toLowerCase().includes("pattern")) ? (
-            <>
-              {renderInputsAndLegend()}
-              {renderVisualizer()}
-            </>
-          ) : (
-            <>
-              {renderVisualizer()}
-              {renderInputsAndLegend()}
-            </>
-          )}
+        <div className="space-y-6 p-6">
+          {/* Toolbar & Legend - Controls first */}
+          {renderInputsAndLegend()}
+
+          {/* Main Visualizer Area */}
+          <div className="relative glass-panel rounded-2xl p-6 min-h-[300px] flex items-center justify-center">
+            {renderVisualizer()}
+          </div>
 
           <AuxiliaryArrays state={state} />
 
           {/* Bottom Info Section: 2-Column Split */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
-            <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+            <div className="space-y-6">
               <ProcessLog log={state.log} algorithm={algorithm} />
               <AlgorithmSidebar
                 algorithm={algorithm}
@@ -249,9 +245,9 @@ export default function VisualizerFrame({
         {/* Footer */}
         <div className={classCategories.panelFooter}>
           <div className="flex items-center gap-2">
-            <LayoutGrid className="w-3 h-3" /> {algorithm.category}
+            <LayoutGrid className="w-3 h-3 text-indigo-400" /> {algorithm.category}
           </div>
-          <div className="font-mono">Interactive Tool</div>
+          <div className="font-mono text-slate-500">Interactive Tool</div>
         </div>
       </div>
     </div>
