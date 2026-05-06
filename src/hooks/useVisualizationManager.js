@@ -2,12 +2,13 @@ import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useNavigationState } from "./useNavigationState";
 import { useGridControls } from "./useGridControls";
 import { usePlaybackSettings } from "./usePlaybackSettings";
+import { parseInput } from "@/utils/inputParser";
 
 /**
- * useUrlResolver Hook (Architectural Upgrade)
+ * useVisualizationManager Hook
  * Orchestrates navigation, grid, and playback settings into a unified algorithm engine.
  */
-export const useUrlResolver = (algorithms) => {
+export const useVisualizationManager = (algorithms) => {
   const { selectedAlgoId, setSelectedAlgoId, algorithm, onBack } = useNavigationState(algorithms);
   const { gridSize, setGridSize, gridTool, setGridTool, toggleWall, clearWalls } = useGridControls();
   const { playbackRate, setPlaybackRate } = usePlaybackSettings();
@@ -22,25 +23,6 @@ export const useUrlResolver = (algorithms) => {
     accessedIndices: new Set(),
   });
   const [history, setHistory] = useState([]);
-
-  /**
-   * Universal Input Parser
-   */
-  const parseInput = useCallback((val, type) => {
-    if (!val) return null;
-    const isArrayType = type === "sorting" || type === "searching";
-    
-    if (isArrayType) {
-      const arr = val
-        .split(",")
-        .map((s) => Number.parseInt(s.trim(), 10))
-        .filter((n) => !Number.isNaN(n));
-      if (arr.length > 0) return arr;
-      const single = Number.parseInt(val.trim(), 10);
-      return Number.isNaN(single) ? val : single;
-    }
-    return val;
-  }, []);
 
   /**
    * Internal State Calculator
@@ -74,7 +56,7 @@ export const useUrlResolver = (algorithms) => {
         }
       };
     },
-    [gridSize, parseInput],
+    [gridSize],
   );
 
   /**

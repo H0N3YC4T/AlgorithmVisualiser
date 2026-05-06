@@ -1,78 +1,80 @@
-import { createAlgorithmCard } from '../factory';
-import { getGridConfig, generateMaze } from './grid-config';
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
+import { getGridConfig, generateMaze } from "./grid-config";
 
 /**
  * Depth-First Search Algorithm Module
  */
-export const dfs = createAlgorithmCard({
-  id: 'dfs',
+export const dfs = createAlgorithmPage({
+  id: "dfs",
 
   // --- Metadata ---
   metadata: {
-    type: 'pathfinding',
-    visualizerType: 'grid',
-    category: 'Pathfinding Algorithms',
-    defaultInputs: { target: '', pattern: '' },
+    type: "pathfinding",
+    VisualiserType: "grid",
+    category: "Pathfinding Algorithms",
+    defaultInputs: { target: "", pattern: "" },
   },
 
   homeCard: {
-    name: 'Depth-First Search',
-    difficulty: 'Medium',
-    description: 'Explores as far as possible along each branch before backtracking. Not guaranteed to find the shortest path.',
+    name: "Depth-First Search",
+    difficulty: "Medium",
+    description:
+      "Explores as far as possible along each branch before backtracking. Not guaranteed to find the shortest path.",
     complexity: {
-      timeBest: 'Ω(1)',
-      timeAvg: 'Θ(V + E)',
-      timeWorst: 'O(V + E)',
-      space: 'O(V)'
+      timeBest: "Ω(1)",
+      timeAvg: "Θ(V + E)",
+      timeWorst: "O(V + E)",
+      space: "O(V)",
     },
   },
 
   algorithmPage: {
     uiConfig: {
-      statusLabel: 'Visited: {iterations}',
-      startButton: 'Start DFS',
-      playbackSpeed: 100
+      statusLabel: "Visited: {iterations}",
+      startButton: "Start DFS",
+      playbackSpeed: 100,
     },
-    extendedDescription: 'Depth-First Search (DFS) is an algorithm for traversing or searching tree or graph data structures. The algorithm starts at the root node and explores as far as possible along each branch before backtracking. Unlike BFS, DFS does not guarantee the shortest path in an unweighted grid.',
+    extendedDescription:
+      "Depth-First Search (DFS) is an algorithm for traversing or searching tree or graph data structures. The algorithm starts at the root node and explores as far as possible along each branch before backtracking. Unlike BFS, DFS does not guarantee the shortest path in an unweighted grid.",
     legendItems: [
-      { label: 'Start', color: 'bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
-      { label: 'End', color: 'bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
-      { label: 'Wall', color: 'bg-slate-700' },
-      { label: 'Visited', color: 'bg-indigo-500/15 border-indigo-500/30' },
-      { label: 'Path', color: 'bg-sky-500/60 shadow-[0_0_10px_rgba(14,165,233,0.2)]' },
+      { label: "Start", color: "bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]" },
+      { label: "End", color: "bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]" },
+      { label: "Wall", color: "bg-slate-700" },
+      { label: "Visited", color: "bg-indigo-500/15 border-indigo-500/30" },
+      { label: "Path", color: "bg-sky-500/60 shadow-[0_0_10px_rgba(14,165,233,0.2)]" },
     ],
     visualSteps: {
       READY: {
-        title: 'Ready',
+        title: "Ready",
         message: "DFS initialized. Ready to explore from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
-        highlights: { pseudo: [1, 2], javascript: [1, 2, 3], python: [1, 2, 3] }
+        highlights: { pseudo: [1, 2], javascript: [1, 2, 3], python: [1, 2, 3] },
       },
       SEARCHING: {
-        title: 'Exploring Branch',
+        title: "Exploring Branch",
         message: "Visiting node at ({r}, {c}). Exploring deeper into the current branch.",
-        highlights: { pseudo: [3, 4], javascript: [4, 5, 6], python: [4, 5, 6] }
+        highlights: { pseudo: [3, 4], javascript: [4, 5, 6], python: [4, 5, 6] },
       },
       TARGET_REACHED: {
-        title: 'Target Found ✓',
+        title: "Target Found ✓",
         message: "Reached the target node! Tracing the discovered path.",
-        highlights: { pseudo: [5], javascript: [7], python: [7] }
+        highlights: { pseudo: [5], javascript: [7], python: [7] },
       },
       BACKTRACKING: {
-        title: 'Reconstructing Path',
+        title: "Reconstructing Path",
         message: "Tracing back from target to start using parent pointers.",
-        highlights: { pseudo: [5], javascript: [7], python: [7] }
+        highlights: { pseudo: [5], javascript: [7], python: [7] },
       },
       DONE: {
-        title: 'Path Complete ✓',
+        title: "Path Complete ✓",
         message: "Path discovered and reconstructed.",
-        highlights: { pseudo: [5], javascript: [7], python: [7] }
+        highlights: { pseudo: [5], javascript: [7], python: [7] },
       },
       NO_PATH: {
-        title: 'No Path Found',
+        title: "No Path Found",
         message: "Stack exhausted. No reachable path exists to the target.",
-        highlights: { pseudo: [3], javascript: [4], python: [4] }
-      }
-    }
+        highlights: { pseudo: [3], javascript: [4], python: [4] },
+      },
+    },
   },
 
   codeSnippets: {
@@ -113,7 +115,7 @@ export const dfs = createAlgorithmCard({
         for neighbor in get_neighbors(node):
             if neighbor not in visited:
                 neighbor.parent = node
-                stack.append(neighbor)`
+                stack.append(neighbor)`,
   },
 
   // --- Logic ---
@@ -122,15 +124,20 @@ export const dfs = createAlgorithmCard({
 
     let walls;
     if (existingState?.walls) {
-      walls = existingState.walls instanceof Set ? existingState.walls : new Set(existingState.walls.map(w => `${w.r},${w.c}`));
+      walls =
+        existingState.walls instanceof Set
+          ? existingState.walls
+          : new Set(existingState.walls.map((w) => `${w.r},${w.c}`));
     } else {
       const mazeWalls = generateMaze(rows, cols, startNode, endNode);
-      walls = new Set(mazeWalls.map(w => `${w.r},${w.c}`));
+      walls = new Set(mazeWalls.map((w) => `${w.r},${w.c}`));
     }
 
     return {
-      rows, cols,
-      startNode, endNode,
+      rows,
+      cols,
+      startNode,
+      endNode,
       walls,
       visited: new Set(),
       previous: {},
@@ -142,23 +149,24 @@ export const dfs = createAlgorithmCard({
       isFinished: false,
       iterations: 0,
       log: {
-        title: 'Ready',
-        type: 'info',
-        messageKey: 'READY',
-        params: { startNode, endNode }
-      }
+        title: "Ready",
+        type: "info",
+        messageKey: "READY",
+        params: { startNode, endNode },
+      },
     };
   },
 
   nextStep: (state) => {
     const { visited, previous, stack, phase, rows, cols, endNode, path, walls } = state;
 
-    if (phase === 0) { // handleSearchPhase
+    if (phase === 0) {
+      // handleSearchPhase
       if (stack.length === 0) {
         return {
           ...state,
           isFinished: true,
-          log: { title: 'NO PATH', type: 'mismatch', messageKey: 'NO_PATH' }
+          log: { title: "NO PATH", type: "mismatch", messageKey: "NO_PATH" },
         };
       }
 
@@ -189,7 +197,7 @@ export const dfs = createAlgorithmCard({
           phase: 1,
           activeNode: current,
           activeBranch,
-          log: { title: 'TARGET REACHED', type: 'success', messageKey: 'TARGET_REACHED' }
+          log: { title: "TARGET REACHED", type: "success", messageKey: "TARGET_REACHED" },
         };
       }
 
@@ -197,7 +205,7 @@ export const dfs = createAlgorithmCard({
         { r: current.r + 1, c: current.c },
         { r: current.r, c: current.c + 1 },
         { r: current.r - 1, c: current.c },
-        { r: current.r, c: current.c - 1 }
+        { r: current.r, c: current.c - 1 },
       ];
 
       const newStack = [...restStack];
@@ -219,11 +227,12 @@ export const dfs = createAlgorithmCard({
         iterations: state.iterations + 1,
         activeNode: current,
         activeBranch,
-        log: { title: 'SEARCHING', type: 'info', messageKey: 'SEARCHING', params: { r: current.r, c: current.c } }
+        log: { title: "SEARCHING", type: "info", messageKey: "SEARCHING", params: { r: current.r, c: current.c } },
       };
     }
 
-    if (phase === 1) { // handleBacktrackPhase
+    if (phase === 1) {
+      // handleBacktrackPhase
       const lastKey = path.length === 0 ? `${endNode.r},${endNode.c}` : `${path[0].r},${path[0].c}`;
       const parent = previous[lastKey];
 
@@ -231,17 +240,17 @@ export const dfs = createAlgorithmCard({
         return {
           ...state,
           isFinished: true,
-          log: { title: 'DONE ✓', type: 'success', messageKey: 'DONE' }
+          log: { title: "DONE ✓", type: "success", messageKey: "DONE" },
         };
       }
       return {
         ...state,
         path: [parent, ...path],
         activeNode: parent,
-        log: { title: 'BACKTRACKING', type: 'shift', messageKey: 'BACKTRACKING', params: { r: parent.r, c: parent.c } }
+        log: { title: "BACKTRACKING", type: "shift", messageKey: "BACKTRACKING", params: { r: parent.r, c: parent.c } },
       };
     }
 
     return state;
-  }
+  },
 });

@@ -1,9 +1,9 @@
 /**
- * Design System Theme Tokens
+ * Design System globalTheme Tokens
  * Fully restored from the 'algorithms-old' build DNA.
  */
 
-export const theme = {
+export const globalTheme = {
   colors: {
     background: "slate-950",
     surface: "slate-900/60",

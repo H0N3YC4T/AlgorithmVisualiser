@@ -1,6 +1,11 @@
 import PropTypes from "prop-types";
 import { Layers, Zap, MousePointer2 } from "lucide-react";
-import { classCategories } from "@/styles/divClassCustom";
+import { globalTheme } from "@/styles/globalTheme";
+
+const localTheme = {
+  label: `${globalTheme.typography.sizes.subtext} font-black text-slate-500 uppercase tracking-widest leading-none mb-1`,
+  value: `${globalTheme.typography.semantics.home.title} font-mono font-black leading-none`,
+};
 
 export default function AlgorithmMetrics({ iterations, comparisons, accesses }) {
   const items = [
@@ -20,10 +25,8 @@ export default function AlgorithmMetrics({ iterations, comparisons, accesses }) 
             <item.icon className={`w-4 h-4 ${item.color}`} />
           </div>
           <div>
-            <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest leading-none mb-1`}>
-              {item.label}
-            </div>
-            <div className={`${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-mono font-black ${item.color} leading-none`}>{item.value || 0}</div>
+            <div className={localTheme.label}>{item.label}</div>
+            <div className={`${localTheme.value} ${item.color}`}>{item.value || 0}</div>
           </div>
         </div>
       ))}

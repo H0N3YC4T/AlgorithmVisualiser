@@ -1,78 +1,80 @@
-import { createAlgorithmCard } from '../factory';
-import { getGridConfig, generateMaze } from './grid-config';
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
+import { getGridConfig, generateMaze } from "./grid-config";
 
 /**
  * A* Search Algorithm Module
  */
-export const astar = createAlgorithmCard({
-  id: 'astar',
+export const astar = createAlgorithmPage({
+  id: "astar",
 
   // --- Metadata ---
   metadata: {
-    type: 'pathfinding',
-    visualizerType: 'grid',
-    category: 'Pathfinding Algorithms',
-    defaultInputs: { target: '', pattern: '' },
+    type: "pathfinding",
+    VisualiserType: "grid",
+    category: "Pathfinding Algorithms",
+    defaultInputs: { target: "", pattern: "" },
   },
 
   homeCard: {
-    name: 'A* Search',
-    difficulty: 'Hard',
-    description: 'An informed search algorithm that uses heuristics to find the shortest path more efficiently than Dijkstra.',
+    name: "A* Search",
+    difficulty: "Hard",
+    description:
+      "An informed search algorithm that uses heuristics to find the shortest path more efficiently than Dijkstra.",
     complexity: {
-      timeBest: 'Ω(E)',
-      timeAvg: 'Θ(E)',
-      timeWorst: 'O(E)',
-      space: 'O(V)'
+      timeBest: "Ω(E)",
+      timeAvg: "Θ(E)",
+      timeWorst: "O(E)",
+      space: "O(V)",
     },
   },
 
   algorithmPage: {
     uiConfig: {
-      statusLabel: 'Visited: {iterations}',
-      startButton: 'Start A*',
-      playbackSpeed: 100
+      statusLabel: "Visited: {iterations}",
+      startButton: "Start A*",
+      playbackSpeed: 100,
     },
-    extendedDescription: 'A* is one of the most successful search algorithms to find the shortest path between nodes or graphs. It uses a heuristic function to estimate the cost from the current node to the target, prioritizing nodes that appear to be on the shortest path.',
+    extendedDescription:
+      "A* is one of the most successful search algorithms to find the shortest path between nodes or graphs. It uses a heuristic function to estimate the cost from the current node to the target, prioritizing nodes that appear to be on the shortest path.",
     legendItems: [
-      { label: 'Start', color: 'bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
-      { label: 'End', color: 'bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
-      { label: 'Wall', color: 'bg-slate-700' },
-      { label: 'Visited', color: 'bg-indigo-500/15 border-indigo-500/30' },
-      { label: 'Path', color: 'bg-sky-500/60 shadow-[0_0_10px_rgba(14,165,233,0.2)]' },
+      { label: "Start", color: "bg-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.4)]" },
+      { label: "End", color: "bg-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]" },
+      { label: "Wall", color: "bg-slate-700" },
+      { label: "Visited", color: "bg-indigo-500/15 border-indigo-500/30" },
+      { label: "Path", color: "bg-sky-500/60 shadow-[0_0_10px_rgba(14,165,233,0.2)]" },
     ],
     visualSteps: {
       READY: {
-        title: 'Ready',
+        title: "Ready",
         message: "A* initialized. Using Manhattan distance heuristic to find the path to ({endNode.r}, {endNode.c}).",
-        highlights: { pseudo: [1, 2, 3, 4], javascript: [1, 2, 3], python: [1, 2] }
+        highlights: { pseudo: [1, 2, 3, 4], javascript: [1, 2, 3], python: [1, 2] },
       },
       SEARCHING: {
-        title: 'Exploring',
+        title: "Exploring",
         message: "Visiting node ({r}, {c}). g={gScore}, h={hScore}, f={fScore}.",
-        highlights: { pseudo: [5, 6], javascript: [4, 5], python: [4, 5] }
+        highlights: { pseudo: [5, 6], javascript: [4, 5], python: [4, 5] },
       },
       TARGET_REACHED: {
-        title: 'Target Found ✓',
+        title: "Target Found ✓",
         message: "A* reached the target! Optimal path found.",
-        highlights: { pseudo: [7], javascript: [6], python: [6] }
+        highlights: { pseudo: [7], javascript: [6], python: [6] },
       },
       BACKTRACKING: {
-        title: 'Reconstructing Path',
+        title: "Reconstructing Path",
         message: "Tracing back from target to start using parent pointers.",
-        highlights: { pseudo: [7], javascript: [6], python: [6] }
+        highlights: { pseudo: [7], javascript: [6], python: [6] },
       },
       DONE: {
-        title: 'Path Complete ✓',
+        title: "Path Complete ✓",
         message: "A* pathfinding completed successfully.",
-        highlights: { pseudo: [7], javascript: [6], python: [6] }
+        highlights: { pseudo: [7], javascript: [6], python: [6] },
       },
       NO_PATH: {
-        title: 'No Path Found',
+        title: "No Path Found",
         message: "Open set exhausted. No path exists to the target.",
-        highlights: { pseudo: [5], javascript: [4], python: [4] }
-      }
-    }
+        highlights: { pseudo: [5], javascript: [4], python: [4] },
+      },
+    },
   },
 
   codeSnippets: {
@@ -119,7 +121,7 @@ export const astar = createAlgorithmCard({
                 prev[neighbor] = current
                 g_score[neighbor] = tentative_g
                 h = heuristic(neighbor, target)
-                heapq.heappush(open_set, (tentative_g + h, neighbor))`
+                heapq.heappush(open_set, (tentative_g + h, neighbor))`,
   },
 
   // --- Logic ---
@@ -128,10 +130,13 @@ export const astar = createAlgorithmCard({
 
     let walls;
     if (existingState?.walls) {
-      walls = existingState.walls instanceof Set ? existingState.walls : new Set(existingState.walls.map(w => `${w.r},${w.c}`));
+      walls =
+        existingState.walls instanceof Set
+          ? existingState.walls
+          : new Set(existingState.walls.map((w) => `${w.r},${w.c}`));
     } else {
       const mazeWalls = generateMaze(rows, cols, startNode, endNode);
-      walls = new Set(mazeWalls.map(w => `${w.r},${w.c}`));
+      walls = new Set(mazeWalls.map((w) => `${w.r},${w.c}`));
     }
 
     const gScore = {};
@@ -140,14 +145,17 @@ export const astar = createAlgorithmCard({
     gScore[startKey] = 0;
     fScore[startKey] = Math.abs(startNode.r - endNode.r) + Math.abs(startNode.c - endNode.c);
 
-    const costs = existingState?.costs || new Array(rows).fill().map(() =>
-      new Array(cols).fill().map(() => 1)
-    );
+    const costs = existingState?.costs || new Array(rows).fill().map(() => new Array(cols).fill().map(() => 1));
 
     return {
-      rows, cols,
-      startNode, endNode, walls, costs,
-      gScore, fScore,
+      rows,
+      cols,
+      startNode,
+      endNode,
+      walls,
+      costs,
+      gScore,
+      fScore,
       visited: new Set(),
       previous: {},
       openSet: [startNode],
@@ -157,23 +165,24 @@ export const astar = createAlgorithmCard({
       isFinished: false,
       iterations: 0,
       log: {
-        title: 'Ready',
-        type: 'info',
-        messageKey: 'READY',
-        params: { startNode, endNode }
-      }
+        title: "Ready",
+        type: "info",
+        messageKey: "READY",
+        params: { startNode, endNode },
+      },
     };
   },
 
   nextStep: (state) => {
     const { gScore, fScore, visited, previous, openSet, phase, rows, cols, endNode, path, walls, costs } = state;
 
-    if (phase === 0) { // handleSearchPhase
+    if (phase === 0) {
+      // handleSearchPhase
       if (openSet.length === 0) {
         return {
           ...state,
           isFinished: true,
-          log: { title: 'NO PATH', type: 'mismatch', messageKey: 'NO_PATH' }
+          log: { title: "NO PATH", type: "mismatch", messageKey: "NO_PATH" },
         };
       }
 
@@ -183,7 +192,7 @@ export const astar = createAlgorithmCard({
         return dNode < dMin ? node : min;
       }, openSet[0]);
 
-      const restOpenSet = openSet.filter(n => n !== current);
+      const restOpenSet = openSet.filter((n) => n !== current);
       const key = `${current.r},${current.c}`;
 
       if (visited.has(key)) return { ...state, openSet: restOpenSet };
@@ -197,7 +206,7 @@ export const astar = createAlgorithmCard({
           visited: newVisited,
           phase: 1,
           activeNode: current,
-          log: { title: 'TARGET REACHED', type: 'success', messageKey: 'TARGET_REACHED' }
+          log: { title: "TARGET REACHED", type: "success", messageKey: "TARGET_REACHED" },
         };
       }
 
@@ -205,7 +214,7 @@ export const astar = createAlgorithmCard({
         { r: current.r - 1, c: current.c },
         { r: current.r + 1, c: current.c },
         { r: current.r, c: current.c - 1 },
-        { r: current.r, c: current.c + 1 }
+        { r: current.r, c: current.c + 1 },
       ];
 
       const newGScore = { ...gScore };
@@ -216,14 +225,14 @@ export const astar = createAlgorithmCard({
       for (const n of neighbors) {
         const nKey = `${n.r},${n.c}`;
         if (n.r >= 0 && n.r < rows && n.c >= 0 && n.c < cols && !visited.has(nKey) && !walls.has(nKey)) {
-          const weight = (costs[n.r][n.c] || 1);
+          const weight = costs[n.r][n.c] || 1;
           const tentativeG = (gScore[key] ?? 0) + weight;
           if (tentativeG < (gScore[nKey] ?? Infinity)) {
             newPrevious[nKey] = current;
             newGScore[nKey] = tentativeG;
             const h = Math.abs(n.r - endNode.r) + Math.abs(n.c - endNode.c);
             newFScore[nKey] = tentativeG + h;
-            if (!newOpenSet.some(o => o.r === n.r && o.c === n.c)) {
+            if (!newOpenSet.some((o) => o.r === n.r && o.c === n.c)) {
               newOpenSet.push(n);
             }
           }
@@ -241,21 +250,22 @@ export const astar = createAlgorithmCard({
         iterations: state.iterations + 1,
         activeNode: current,
         log: {
-          title: 'SEARCHING',
-          type: 'info',
-          messageKey: 'SEARCHING',
+          title: "SEARCHING",
+          type: "info",
+          messageKey: "SEARCHING",
           params: {
             r: current.r,
             c: current.c,
             gScore: newGScore[key],
             hScore,
-            fScore: newFScore[key]
-          }
-        }
+            fScore: newFScore[key],
+          },
+        },
       };
     }
 
-    if (phase === 1) { // handleBacktrackPhase
+    if (phase === 1) {
+      // handleBacktrackPhase
       const lastKey = path.length === 0 ? `${endNode.r},${endNode.c}` : `${path[0].r},${path[0].c}`;
       const parent = previous[lastKey];
 
@@ -263,17 +273,17 @@ export const astar = createAlgorithmCard({
         return {
           ...state,
           isFinished: true,
-          log: { title: 'DONE ✓', type: 'success', messageKey: 'DONE' }
+          log: { title: "DONE ✓", type: "success", messageKey: "DONE" },
         };
       }
       return {
         ...state,
         path: [parent, ...path],
         activeNode: parent,
-        log: { title: 'BACKTRACKING', type: 'shift', messageKey: 'BACKTRACKING', params: { r: parent.r, c: parent.c } }
+        log: { title: "BACKTRACKING", type: "shift", messageKey: "BACKTRACKING", params: { r: parent.r, c: parent.c } },
       };
     }
 
     return state;
-  }
+  },
 });

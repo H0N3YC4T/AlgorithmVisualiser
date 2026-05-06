@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import GridNode from "./GridNode";
 import { classCategories } from "@/styles/divClassCustom";
 
-export default function GridVisualizer({ algorithm, state, updateState, toggleWall, gridTool, isEditingDisabled }) {
+export default function GridVisualiser({ algorithm, state, updateState, toggleWall, gridTool, isEditingDisabled }) {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState(null); // 'adding' | 'removing' | null
 
@@ -219,7 +219,7 @@ export default function GridVisualizer({ algorithm, state, updateState, toggleWa
   );
 }
 
-GridVisualizer.propTypes = {
+GridVisualiser.propTypes = {
   state: PropTypes.shape({
     rows: PropTypes.number.isRequired,
     cols: PropTypes.number.isRequired,
@@ -245,3 +245,4 @@ GridVisualizer.propTypes = {
   gridTool: PropTypes.string,
   isEditingDisabled: PropTypes.bool,
 };
+

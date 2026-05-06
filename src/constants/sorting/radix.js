@@ -1,13 +1,13 @@
 /** Radix Sort Module */
-import { createAlgorithmCard } from "../factory";
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
 
-export const radix = createAlgorithmCard({
+export const radix = createAlgorithmPage({
   id: "radix",
 
   // --- Metadata ---
   metadata: {
     type: "sorting",
-    visualizerType: "array",
+    VisualiserType: "array",
     category: "Sorting Algorithms",
     defaultInputs: { target: "53, 17, 82, 34, 91, 26, 45, 68", pattern: "" },
   },

@@ -1,84 +1,101 @@
-import { createAlgorithmCard } from '../factory';
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
 
-export const rabinkarp = createAlgorithmCard({
-  id: 'rabinkarp',
+export const rabinkarp = createAlgorithmPage({
+  id: "rabinkarp",
   metadata: {
-    type: 'pattern-matching',
-    visualizerType: 'pattern-matching',
-    category: 'Pattern Matching Algorithms',
-    defaultInputs: { target: 'THE FASTEST FOX TESTS', pattern: 'TEST' },
+    type: "pattern-matching",
+    VisualiserType: "pattern-matching",
+    category: "Pattern Matching Algorithms",
+    defaultInputs: { target: "THE FASTEST FOX TESTS", pattern: "TEST" },
   },
   homeCard: {
-    name: 'Rabin-Karp Search',
-    difficulty: 'Hard',
-    description: 'Uses a rolling hash to find any one of a set of pattern strings in a text, typically in linear time.',
+    name: "Rabin-Karp Search",
+    difficulty: "Hard",
+    description: "Uses a rolling hash to find any one of a set of pattern strings in a text, typically in linear time.",
     complexity: {
-      timeBest: '׸(n+m)',
-      timeAvg: '׸(n+m)',
-      timeWorst: '׸(nm)',
-      space: '׸(1)',
+      timeBest: "׸(n+m)",
+      timeAvg: "׸(n+m)",
+      timeWorst: "׸(nm)",
+      space: "׸(1)",
     },
   },
   algorithmPage: {
     uiConfig: {
-      statusLabel: 'Current Hash: {targetHash}',
-      startButton: 'Start Search',
-      playbackSpeed: 500
+      statusLabel: "Current Hash: {targetHash}",
+      startButton: "Start Search",
+      playbackSpeed: 500,
     },
-    extendedDescription: 'Rabin-Karp uses a rolling hash to quickly filter through the text. Instead of checking every character, it calculates a hash for each window and only performs a character-by-character comparison if the hashes match.',
+    extendedDescription:
+      "Rabin-Karp uses a rolling hash to quickly filter through the text. Instead of checking every character, it calculates a hash for each window and only performs a character-by-character comparison if the hashes match.",
     legendItems: [
-      { label: 'Unvisited', color: 'bg-slate-800 border-slate-700' },
-      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-      { label: 'Match', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
-      { label: 'Mismatch', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+      { label: "Unvisited", color: "bg-slate-800 border-slate-700" },
+      { label: "Checking", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
+      { label: "Match", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
+      { label: "Mismatch", color: "bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]" },
     ],
+    auxDataConfig: {
+      header: "Rolling Hash",
+      type: "rollingHash",
+      description: "Numerical fingerprints for the pattern and current text window.",
+      logic: "Hash = (d * (H - charOut * h) + charIn) % q",
+      logicNote: "d = 256 (base), q = 101 (prime)",
+    },
   },
   visualSteps: {
     READY: {
-      title: 'Ready',
-      message: "Commencing Rabin-Karp Search: A hashing-based string matching algorithm.\n\n• Mechanism: Mapping string windows to numerical 'fingerprints' for accelerated comparison.\n• Optimization: Performing character-by-character validation only upon fingerprint (hash) collisions.",
-      highlights: { pseudo: [1, 2], javascript: [1, 2, 3], python: [1, 2, 3] }
+      title: "Ready",
+      message:
+        "Commencing Rabin-Karp Search: A hashing-based string matching algorithm.\n\n• Mechanism: Mapping string windows to numerical 'fingerprints' for accelerated comparison.\n• Optimization: Performing character-by-character validation only upon fingerprint (hash) collisions.",
+      highlights: { pseudo: [1, 2], javascript: [1, 2, 3], python: [1, 2, 3] },
     },
     INITIAL_HASHING: {
-      title: 'Initial Hashing',
-      message: "Fingerprint Generation Phase.\n\n• Pattern Hash: {pHash}\n• Initial Window Hash: {tHash}\n• Strategy: Initializing the search state by hashing the pattern and the first text window.",
-      highlights: { pseudo: [3], javascript: [4, 5, 6, 7, 8], python: [4, 5, 6, 7, 8, 9] }
+      title: "Initial Hashing",
+      message:
+        "Fingerprint Generation Phase.\n\n• Pattern Hash: {pHash}\n• Initial Window Hash: {tHash}\n• Strategy: Initializing the search state by hashing the pattern and the first text window.",
+      highlights: { pseudo: [3], javascript: [4, 5, 6, 7, 8], python: [4, 5, 6, 7, 8, 9] },
     },
     HASH_MATCH: {
-      title: 'Hash Match!',
-      message: "Fingerprint Collision Detected.\n\n• Target hash ({targetHash}) matches pattern hash ({patternHash}).\n• Action: Initiating character-by-character verification to confirm the match or identify a spurious hit.",
-      highlights: { pseudo: [5, 6], javascript: [11, 12], python: [11, 12] }
+      title: "Hash Match!",
+      message:
+        "Fingerprint Collision Detected.\n\n• Target hash ({targetHash}) matches pattern hash ({patternHash}).\n• Action: Initiating character-by-character verification to confirm the match or identify a spurious hit.",
+      highlights: { pseudo: [5, 6], javascript: [11, 12], python: [11, 12] },
     },
     HASH_MISMATCH: {
-      title: 'Hash Mismatch',
-      message: "Fingerprint Divergence.\n\n• Window hash ({targetHash}) ≠ pattern hash ({patternHash}).\n• Logic: Invariant failure—the window cannot contain the pattern.\n• Action: Shifting the window via rolling hash.",
-      highlights: { pseudo: [5, 8], javascript: [11, 14], python: [11, 14] }
+      title: "Hash Mismatch",
+      message:
+        "Fingerprint Divergence.\n\n• Window hash ({targetHash}) ≠ pattern hash ({patternHash}).\n• Logic: Invariant failure—the window cannot contain the pattern.\n• Action: Shifting the window via rolling hash.",
+      highlights: { pseudo: [5, 8], javascript: [11, 14], python: [11, 14] },
     },
     SPURIOUS_HIT: {
-      title: 'Spurious Hit',
-      message: "Spurious Hit Identified (Hash Collision).\n\n• Hashes matched, but the character sequence at index {textIdx} differs.\n• Note: A collision occurred in the hash function's finite range.",
-      highlights: { pseudo: [6], javascript: [12], python: [12] }
+      title: "Spurious Hit",
+      message:
+        "Spurious Hit Identified (Hash Collision).\n\n• Hashes matched, but the character sequence at index {textIdx} differs.\n• Note: A collision occurred in the hash function's finite range.",
+      highlights: { pseudo: [6], javascript: [12], python: [12] },
     },
     SUCCESS_FULL_MATCH: {
-      title: 'Success!',
-      message: "Pattern Instance Finalized!\n\n• Result: Both fingerprints and character sequences are fully synchronized at index {currentIndex}.\n• Match Confirmed.",
-      highlights: { pseudo: [7], javascript: [12], python: [12] }
+      title: "Success!",
+      message:
+        "Pattern Instance Finalized!\n\n• Result: Both fingerprints and character sequences are fully synchronized at index {currentIndex}.\n• Match Confirmed.",
+      highlights: { pseudo: [7], javascript: [12], python: [12] },
     },
     CHAR_MATCH: {
-      title: 'Verification Scan',
-      message: "Verification Scan.\n\n• Local character match confirmed within a valid hash window.\n• Continuing sequential validation of the remaining pattern length.",
-      highlights: { pseudo: [6], javascript: [12], python: [12] }
+      title: "Verification Scan",
+      message:
+        "Verification Scan.\n\n• Local character match confirmed within a valid hash window.\n• Continuing sequential validation of the remaining pattern length.",
+      highlights: { pseudo: [6], javascript: [12], python: [12] },
     },
     ROLLING_HASH: {
-      title: 'Rolling Hash',
-      message: "Rolling Hash Update (O(1) Shift).\n\n• Evicting: '{charToRemove}' | Admitting: '{charToAdd}'.\n• Updated Hash: {tHash}\n• Strategy: Recalculating the fingerprint in constant time by shifting the sliding window digits.",
-      highlights: { pseudo: [9], javascript: [15, 16], python: [15, 16] }
+      title: "Rolling Hash",
+      message:
+        "Rolling Hash Update (O(1) Shift).\n\n• Evicting: '{charToRemove}' | Admitting: '{charToAdd}'.\n• Updated Hash: {tHash}\n• Strategy: Recalculating the fingerprint in constant time by shifting the sliding window digits.",
+      highlights: { pseudo: [9], javascript: [15, 16], python: [15, 16] },
     },
     SEARCH_COMPLETED: {
-      title: 'Search Completed',
-      message: "Search Domain Exhausted.\n\n• All potential window alignments have been fingerprints and/or validated.\n• Result: Execution terminated.",
-      highlights: { pseudo: [10], javascript: [10, 11], python: [10, 11] }
-    }
+      title: "Search Completed",
+      message:
+        "Search Domain Exhausted.\n\n• All potential window alignments have been fingerprints and/or validated.\n• Result: Execution terminated.",
+      highlights: { pseudo: [10], javascript: [10, 11], python: [10, 11] },
+    },
   },
   codeSnippets: {
     pseudo: `function rabinKarp(text, pattern):
@@ -128,27 +145,35 @@ export const rabinkarp = createAlgorithmCard({
         if i < n - m:
             t = (d * (t - ord(text[i]) * h) + ord(text[i + m])) % q
             if t < 0: t += q
-    return -1`
+    return -1`,
   },
   getInitialState: (p) => {
     const prime = 101;
     const base = 256;
     let pHash = 0;
-    if (p && typeof p === 'string') {
+    if (p && typeof p === "string") {
       for (let i = 0; i < p.length; i++) {
         pHash = (base * pHash + p.codePointAt(i)) % prime;
       }
     }
     return {
-      phase: 0, compIdx: -1, mismatchFound: false, targetHash: 0, patternHash: pHash,
-      currentIndex: 0, accessedIndices: new Set(), activeIndices: new Set(),
-      log: { title: 'Ready', type: 'info', messageKey: 'READY' }
+      phase: 0,
+      compIdx: -1,
+      mismatchFound: false,
+      targetHash: 0,
+      patternHash: pHash,
+      currentIndex: 0,
+      accessedIndices: new Set(),
+      activeIndices: new Set(),
+      log: { title: "Ready", type: "info", messageKey: "READY" },
     };
   },
   getPreprocessing: (pattern) => {
     const m = pattern.length;
-    const prime = 101, base = 256;
-    let pHash = 0, h = 1;
+    const prime = 101,
+      base = 256;
+    let pHash = 0,
+      h = 1;
     for (let i = 0; i < m - 1; i++) h = (h * base) % prime;
     for (let i = 0; i < m; i++) pHash = (base * pHash + pattern.codePointAt(i)) % prime;
     return { prime, base, h, pHash };
@@ -172,9 +197,18 @@ export const rabinkarp = createAlgorithmCard({
       initialIndices.add(i);
     }
     return {
-      ...state, phase: 1, targetHash: tHash, patternHash: preprocessing.pHash,
-      accessedIndices: initialIndices, activeIndices: initialIndices,
-      log: { title: 'INITIAL HASHING', type: 'info', messageKey: 'INITIAL_HASHING', params: { pHash: preprocessing.pHash, tHash } }
+      ...state,
+      phase: 1,
+      targetHash: tHash,
+      patternHash: preprocessing.pHash,
+      accessedIndices: initialIndices,
+      activeIndices: initialIndices,
+      log: {
+        title: "INITIAL HASHING",
+        type: "info",
+        messageKey: "INITIAL_HASHING",
+        params: { pHash: preprocessing.pHash, tHash },
+      },
     };
   },
   handleCompareHashesPhase: (state, pattern) => {
@@ -184,13 +218,23 @@ export const rabinkarp = createAlgorithmCard({
     for (let i = 0; i < m; i++) windowIndices.add(currentIndex + i);
     if (targetHash === patternHash) {
       return {
-        ...state, phase: 2, compIdx: 0, activeIndices: windowIndices,
-        log: { title: 'HASH MATCH!', type: 'match', messageKey: 'HASH_MATCH', params: { targetHash, patternHash } }
+        ...state,
+        phase: 2,
+        compIdx: 0,
+        activeIndices: windowIndices,
+        log: { title: "HASH MATCH!", type: "match", messageKey: "HASH_MATCH", params: { targetHash, patternHash } },
       };
     }
     return {
-      ...state, phase: 3, activeIndices: windowIndices,
-      log: { title: 'HASH MISMATCH', type: 'mismatch', messageKey: 'HASH_MISMATCH', params: { targetHash, patternHash } }
+      ...state,
+      phase: 3,
+      activeIndices: windowIndices,
+      log: {
+        title: "HASH MISMATCH",
+        type: "mismatch",
+        messageKey: "HASH_MISMATCH",
+        params: { targetHash, patternHash },
+      },
     };
   },
   handleVerificationPhase: (state, target, pattern) => {
@@ -201,39 +245,68 @@ export const rabinkarp = createAlgorithmCard({
     newAccessed.add(textIdx);
     if (target[textIdx] !== pattern[compIdx]) {
       return {
-        ...state, phase: 3, accessedIndices: newAccessed, activeIndices: new Set([textIdx]),
-        log: { title: 'SPURIOUS HIT', type: 'mismatch', messageKey: 'SPURIOUS_HIT', params: { textIdx } }
+        ...state,
+        phase: 3,
+        accessedIndices: newAccessed,
+        activeIndices: new Set([textIdx]),
+        log: { title: "SPURIOUS HIT", type: "mismatch", messageKey: "SPURIOUS_HIT", params: { textIdx } },
       };
     }
     if (compIdx + 1 === m) {
       return {
-        ...state, isFinished: true, accessedIndices: newAccessed, activeIndices: new Set([textIdx]),
-        log: { title: 'SUCCESS: FULL MATCH', type: 'success', messageKey: 'SUCCESS_FULL_MATCH', params: { currentIndex } }
+        ...state,
+        isFinished: true,
+        accessedIndices: newAccessed,
+        activeIndices: new Set([textIdx]),
+        log: {
+          title: "SUCCESS: FULL MATCH",
+          type: "success",
+          messageKey: "SUCCESS_FULL_MATCH",
+          params: { currentIndex },
+        },
       };
     }
     return {
-      ...state, compIdx: compIdx + 1, accessedIndices: newAccessed, activeIndices: new Set([textIdx]),
-      log: { title: 'CHARACTER MATCH', type: 'match', messageKey: 'CHAR_MATCH' }
+      ...state,
+      compIdx: compIdx + 1,
+      accessedIndices: newAccessed,
+      activeIndices: new Set([textIdx]),
+      log: { title: "CHARACTER MATCH", type: "match", messageKey: "CHAR_MATCH" },
     };
   },
   handleRollHashPhase: (state, target, pattern, preprocessing) => {
     const { currentIndex, targetHash } = state;
     const { prime, base, h } = preprocessing;
-    const m = pattern.length, n = target.length;
+    const m = pattern.length,
+      n = target.length;
     const nextPos = currentIndex + 1;
     if (nextPos + m > n) {
-      return { ...state, currentIndex: nextPos, isFinished: true, log: { title: 'SEARCH COMPLETED', type: 'info', messageKey: 'SEARCH_COMPLETED' } };
+      return {
+        ...state,
+        currentIndex: nextPos,
+        isFinished: true,
+        log: { title: "SEARCH COMPLETED", type: "info", messageKey: "SEARCH_COMPLETED" },
+      };
     }
     const charToRemoveCode = target.codePointAt(currentIndex);
     const charToAddCode = target.codePointAt(nextPos + m - 1);
-    let tHash = (base * (targetHash - (charToRemoveCode * h) % prime) + charToAddCode) % prime;
+    let tHash = (base * (targetHash - ((charToRemoveCode * h) % prime)) + charToAddCode) % prime;
     if (tHash < 0) tHash += prime;
     const newAccessed = new Set(state.accessedIndices);
     newAccessed.add(nextPos + m - 1);
     return {
-      ...state, currentIndex: nextPos, targetHash: tHash, phase: 1,
-      accessedIndices: newAccessed, activeIndices: new Set([nextPos + m - 1]),
-      log: { title: 'ROLLING HASH', type: 'shift', messageKey: 'ROLLING_HASH', params: { charToRemove: target[currentIndex], charToAdd: target[nextPos + m - 1], tHash } }
+      ...state,
+      currentIndex: nextPos,
+      targetHash: tHash,
+      phase: 1,
+      accessedIndices: newAccessed,
+      activeIndices: new Set([nextPos + m - 1]),
+      log: {
+        title: "ROLLING HASH",
+        type: "shift",
+        messageKey: "ROLLING_HASH",
+        params: { charToRemove: target[currentIndex], charToAdd: target[nextPos + m - 1], tHash },
+      },
     };
-  }
+  },
 });

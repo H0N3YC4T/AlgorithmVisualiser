@@ -163,3 +163,4 @@ export const generateMaze = (rows, cols, startNode, endNode) => {
   return walls;
 };
 
+

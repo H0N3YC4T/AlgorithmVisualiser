@@ -1,12 +1,12 @@
-import { createAlgorithmCard } from "../factory";
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
 
-export const quicklomuto = createAlgorithmCard({
+export const quicklomuto = createAlgorithmPage({
   id: "quicklomuto",
 
   // --- Metadata ---
   metadata: {
     type: "sorting",
-    visualizerType: "array",
+    VisualiserType: "array",
     category: "Sorting Algorithms",
     defaultInputs: { target: "6, 2, 8, 4, 9, 3, 7, 5", pattern: "" },
   },

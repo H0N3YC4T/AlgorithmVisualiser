@@ -2,7 +2,7 @@ import { Search, BarChart3, AlertTriangle, Cpu, Layers, Zap, ArrowUpRight, Arrow
 
 export const homeDefaults = {
   hero: {
-    badge: 'INTERACTIVE VISUALIZER',
+    badge: 'INTERACTIVE Visualiser',
     title: 'Introduction to',
     titleAccent: 'Algorithms',
     description: 'A visual guide to algorithmic complexity and performance.'
@@ -68,15 +68,8 @@ export const homeDefaults = {
     { label: 'O(log n) Space', name: 'RECURSIVE', desc: 'Memory grows with the depth of the recursion tree.', examples: 'Quick Sort (recursive stack)' },
     { label: 'O(n) Space', name: 'LINEAR EXTRA', desc: 'Needs extra memory proportional to the input size.', examples: 'Merge Sort, Counting Sort' }
   ],
-  charts: {
-    constant: "M2 18 L18 18",
-    log: "M2 18 Q10 16 18 12",
-    linear: "M2 18 L18 2",
-    nlog: "M2 18 Q8 12 18 2",
-    quadratic: "M2 18 Q12 18 18 2",
-    exponential: "M2 18 Q16 18 18 2"
-  },
   footer: {
-    copyright: '2026 INTERACTIVE VISUALIZER PLATFORM'
+    copyright: '2026 INTERACTIVE Visualiser PLATFORM'
   }
 };
+

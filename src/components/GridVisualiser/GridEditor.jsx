@@ -71,3 +71,4 @@ GridEditor.propTypes = {
   disabled: PropTypes.bool,
   onClear: PropTypes.func
 };
+

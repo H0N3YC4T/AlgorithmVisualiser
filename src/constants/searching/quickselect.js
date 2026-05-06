@@ -1,92 +1,101 @@
-import { createAlgorithmCard } from '../factory';
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
 
 /**
  * Quickselect Algorithm Module
  * Used to find the k-th smallest element in an unordered list.
  */
-export const quickselect = createAlgorithmCard({
-  id: 'quickselect',
-  
+export const quickselect = createAlgorithmPage({
+  id: "quickselect",
+
   // --- Metadata ---
   metadata: {
-    type: 'searching',
-    visualizerType: 'array',
-    category: 'Searching Algorithms',
-    defaultInputs: { target: '3', pattern: '5, 2, 8, 3, 9, 1, 7, 4' },
+    type: "searching",
+    VisualiserType: "array",
+    category: "Searching Algorithms",
+    defaultInputs: { target: "3", pattern: "5, 2, 8, 3, 9, 1, 7, 4" },
   },
 
   homeCard: {
-    name: 'Quickselect',
-    difficulty: 'Medium',
-    description: 'A selection algorithm to find the k-th smallest element in an unordered list.',
+    name: "Quickselect",
+    difficulty: "Medium",
+    description: "A selection algorithm to find the k-th smallest element in an unordered list.",
     complexity: {
-      timeBest: 'Ω(n)',
-      timeAvg: 'Θ(n)',
-      timeWorst: 'O(n²)',
-      space: 'O(1)'
+      timeBest: "Ω(n)",
+      timeAvg: "Θ(n)",
+      timeWorst: "O(n²)",
+      space: "O(1)",
     },
   },
 
   algorithmPage: {
     uiConfig: {
-      statusLabel: 'K: {targetK}',
-      startButton: 'Start Quickselect',
-      playbackSpeed: 300
+      statusLabel: "K: {targetK}",
+      startButton: "Start Quickselect",
+      playbackSpeed: 300,
     },
-    extendedDescription: 'Quickselect is a selection algorithm related to the QuickSort sorting algorithm. It has average-case linear time complexity. Like QuickSort, it is efficient in practice and has good cache performance.',
+    extendedDescription:
+      "Quickselect is a selection algorithm related to the QuickSort sorting algorithm. It has average-case linear time complexity. Like QuickSort, it is efficient in practice and has good cache performance.",
     legendItems: [
-        { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
-        { label: "Pivot", color: "bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]" },
-        { label: "Scanning", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
-        { label: "Found", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
-      ],
+      { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
+      { label: "Pivot", color: "bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]" },
+      { label: "Scanning", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
+      { label: "Found", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
+    ],
     visualSteps: {
       INITIALIZING: {
-        title: 'Initializing',
-        message: "Commencing Quickselect: A selection algorithm with average linear time complexity.\n\n• Objective: Identifying the {targetK}-th smallest element (Target Index: {k}).\n• Mechanism: Utilizing partitioning logic similar to Quicksort to isolate the k-th position.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        title: "Initializing",
+        message:
+          "Commencing Quickselect: A selection algorithm with average linear time complexity.\n\n• Objective: Identifying the {targetK}-th smallest element (Target Index: {k}).\n• Mechanism: Utilizing partitioning logic similar to Quicksort to isolate the k-th position.",
+        highlights: { pseudo: [1], javascript: [1], python: [1] },
       },
       START_PARTITION: {
-        title: 'Start Partition',
-        message: "Isolating Domain [{l}, {r}].\n\n• Strategy: Choosing pivot '{pivot}' from the current segment.\n• Objective: Rearranging elements so that those smaller than the pivot reside on its left.",
-        highlights: { pseudo: [2], javascript: [4], python: [4] }
+        title: "Start Partition",
+        message:
+          "Isolating Domain [{l}, {r}].\n\n• Strategy: Choosing pivot '{pivot}' from the current segment.\n• Objective: Rearranging elements so that those smaller than the pivot reside on its left.",
+        highlights: { pseudo: [2], javascript: [4], python: [4] },
       },
       SWAP_SMALLER: {
-        title: 'Swap Smaller',
-        message: "Partitioning: {val} < {pivot}.\n\n• Action: Moving '{val}' to the 'smaller' partition at index {i}.\n• Strategy: Building the left-side segment of elements smaller than the pivot.",
-        highlights: { pseudo: [3], javascript: [6], python: [6] }
+        title: "Swap Smaller",
+        message:
+          "Partitioning: {val} < {pivot}.\n\n• Action: Moving '{val}' to the 'smaller' partition at index {i}.\n• Strategy: Building the left-side segment of elements smaller than the pivot.",
+        highlights: { pseudo: [3], javascript: [6], python: [6] },
       },
       CONTINUE_SCAN: {
-        title: 'Continue Scan',
-        message: "Partitioning: {val} ≥ {pivot}.\n\n• Logic: Element '{val}' belongs to the 'larger' partition.\n• Action: Continuing scan at the next index.",
-        highlights: { pseudo: [3], javascript: [7], python: [7] }
+        title: "Continue Scan",
+        message:
+          "Partitioning: {val} ≥ {pivot}.\n\n• Logic: Element '{val}' belongs to the 'larger' partition.\n• Action: Continuing scan at the next index.",
+        highlights: { pseudo: [3], javascript: [7], python: [7] },
       },
       PIVOT_PLACED: {
-        title: 'Pivot Placed',
-        message: "Pivot Alignment Finalized.\n\n• Result: Pivot '{pivot}' moved to its final sorted position at index {i}.\n• Note: All elements to the left are smaller, and all to the right are larger.",
-        highlights: { pseudo: [4], javascript: [9], python: [9] }
+        title: "Pivot Placed",
+        message:
+          "Pivot Alignment Finalized.\n\n• Result: Pivot '{pivot}' moved to its final sorted position at index {i}.\n• Note: All elements to the left are smaller, and all to the right are larger.",
+        highlights: { pseudo: [4], javascript: [9], python: [9] },
       },
       FOUND: {
-        title: 'Match Found ✓',
-        message: "Target Synchronized!\n\n• Result: The pivot landed exactly at index {k}.\n• Conclusion: The {kPlusOne}-th smallest element is confirmed as {val}.",
-        highlights: { pseudo: [5], javascript: [11], python: [11] }
+        title: "Match Found ✓",
+        message:
+          "Target Synchronized!\n\n• Result: The pivot landed exactly at index {k}.\n• Conclusion: The {kPlusOne}-th smallest element is confirmed as {val}.",
+        highlights: { pseudo: [5], javascript: [11], python: [11] },
       },
       SEARCH_LEFT: {
-        title: 'Search Left',
-        message: "Strategic Branching: pivotIndex ({pivotIdx}) > k ({k}).\n\n• Deduction: The target {targetK}-th element must reside in the LEFT partition.\n• Action: Pruning the right partition and recursing into [{l}, {pivotIdxMinusOne}].",
-        highlights: { pseudo: [6], javascript: [13], python: [13] }
+        title: "Search Left",
+        message:
+          "Strategic Branching: pivotIndex ({pivotIdx}) > k ({k}).\n\n• Deduction: The target {targetK}-th element must reside in the LEFT partition.\n• Action: Pruning the right partition and recursing into [{l}, {pivotIdxMinusOne}].",
+        highlights: { pseudo: [6], javascript: [13], python: [13] },
       },
       SEARCH_RIGHT: {
-        title: 'Search Right',
-        message: "Strategic Branching: pivotIndex ({pivotIdx}) < k ({k}).\n\n• Deduction: The target {targetK}-th element must reside in the RIGHT partition.\n• Action: Pruning the left partition and recursing into [{pivotIdxPlusOne}, {r}].",
-        highlights: { pseudo: [7], javascript: [15], python: [15] }
+        title: "Search Right",
+        message:
+          "Strategic Branching: pivotIndex ({pivotIdx}) < k ({k}).\n\n• Deduction: The target {targetK}-th element must reside in the RIGHT partition.\n• Action: Pruning the left partition and recursing into [{pivotIdxPlusOne}, {r}].",
+        highlights: { pseudo: [7], javascript: [15], python: [15] },
       },
       ERROR: {
-        title: 'Error',
+        title: "Error",
         message: "Domain Violation: Search space exhausted without locating the target index.",
-        highlights: { pseudo: [], javascript: [], python: [] }
-      }
-    }
+        highlights: { pseudo: [], javascript: [], python: [] },
+      },
+    },
   },
   codeSnippets: {
     pseudo: `function quickselect(list, left, right, k):
@@ -111,7 +120,7 @@ export const quickselect = createAlgorithmCard({
     elif k < pivot_index:
         return quickselect(arr, left, pivot_index - 1, k)
     else:
-        return quickselect(arr, pivot_index + 1, right, k)`
+        return quickselect(arr, pivot_index + 1, right, k)`,
   },
 
   // --- Logic ---
@@ -119,9 +128,9 @@ export const quickselect = createAlgorithmCard({
     const array = Array.isArray(t) ? [...t] : [5, 2, 8, 3, 9, 1, 7, 4];
     let kInput = p;
     if (Array.isArray(p)) kInput = p[0];
-    const parsedK = typeof kInput === 'number' ? kInput : Number.parseInt(kInput, 10);
+    const parsedK = typeof kInput === "number" ? kInput : Number.parseInt(kInput, 10);
     const targetK = Number.isNaN(parsedK) ? 3 : parsedK;
-    const k = Math.max(0, targetK - 1); 
+    const k = Math.max(0, targetK - 1);
 
     return {
       phase: 0,
@@ -136,11 +145,11 @@ export const quickselect = createAlgorithmCard({
       isFinished: false,
       comparisons: 0,
       log: {
-        title: 'INITIALIZING',
-        type: 'info',
-        messageKey: 'INITIALIZING',
-        params: { k: k, targetK: targetK }
-      }
+        title: "INITIALIZING",
+        type: "info",
+        messageKey: "INITIALIZING",
+        params: { k: k, targetK: targetK },
+      },
     };
   },
 
@@ -149,7 +158,7 @@ export const quickselect = createAlgorithmCard({
     const newState = { ...state, activeIndices: [], pivotIndex: -1 };
 
     if (l > r) {
-      return { ...newState, isFinished: true, log: { title: 'ERROR', type: 'mismatch', messageKey: 'ERROR' } };
+      return { ...newState, isFinished: true, log: { title: "ERROR", type: "mismatch", messageKey: "ERROR" } };
     }
 
     if (phase === 0) {
@@ -162,11 +171,11 @@ export const quickselect = createAlgorithmCard({
         i: l,
         j: l,
         log: {
-          title: 'START PARTITION',
-          type: 'info',
-          messageKey: 'START_PARTITION',
-          params: { l: l, r: r, pivot: pivot, k: k }
-        }
+          title: "START PARTITION",
+          type: "info",
+          messageKey: "START_PARTITION",
+          params: { l: l, r: r, pivot: pivot, k: k },
+        },
       };
     }
 
@@ -183,22 +192,22 @@ export const quickselect = createAlgorithmCard({
             i: i + 1,
             j: j + 1,
             log: {
-              title: 'SWAP SMALLER',
-              type: 'match',
-              messageKey: 'SWAP_SMALLER',
-              params: { val: array[j], pivot: pivot, i: i }
-            }
+              title: "SWAP SMALLER",
+              type: "match",
+              messageKey: "SWAP_SMALLER",
+              params: { val: array[j], pivot: pivot, i: i },
+            },
           };
         } else {
           return {
             ...newState,
             j: j + 1,
             log: {
-              title: 'CONTINUE SCAN',
-              type: 'info',
-              messageKey: 'CONTINUE_SCAN',
-              params: { val: array[j], pivot: pivot }
-            }
+              title: "CONTINUE SCAN",
+              type: "info",
+              messageKey: "CONTINUE_SCAN",
+              params: { val: array[j], pivot: pivot },
+            },
           };
         }
       } else {
@@ -210,11 +219,11 @@ export const quickselect = createAlgorithmCard({
           phase: 2,
           pivotIndex: i,
           log: {
-            title: 'PIVOT PLACED',
-            type: 'shift',
-            messageKey: 'PIVOT_PLACED',
-            params: { i: i }
-          }
+            title: "PIVOT PLACED",
+            type: "shift",
+            messageKey: "PIVOT_PLACED",
+            params: { i: i },
+          },
         };
       }
     }
@@ -227,11 +236,11 @@ export const quickselect = createAlgorithmCard({
           isFinished: true,
           sortedIndices: [pivotIdx],
           log: {
-            title: 'FOUND ✓',
-            type: 'success',
-            messageKey: 'FOUND',
-            params: { k: k, kPlusOne: k + 1, val: array[pivotIdx] }
-          }
+            title: "FOUND ✓",
+            type: "success",
+            messageKey: "FOUND",
+            params: { k: k, kPlusOne: k + 1, val: array[pivotIdx] },
+          },
         };
       } else if (pivotIdx > k) {
         return {
@@ -240,11 +249,11 @@ export const quickselect = createAlgorithmCard({
           l,
           r: pivotIdx - 1,
           log: {
-            title: 'SEARCH LEFT',
-            type: 'shift',
-            messageKey: 'SEARCH_LEFT',
-            params: { pivotIdx: pivotIdx, k: k, l: l, pivotIdxMinusOne: pivotIdx - 1 }
-          }
+            title: "SEARCH LEFT",
+            type: "shift",
+            messageKey: "SEARCH_LEFT",
+            params: { pivotIdx: pivotIdx, k: k, l: l, pivotIdxMinusOne: pivotIdx - 1 },
+          },
         };
       } else {
         return {
@@ -253,15 +262,15 @@ export const quickselect = createAlgorithmCard({
           l: pivotIdx + 1,
           r,
           log: {
-            title: 'SEARCH RIGHT',
-            type: 'shift',
-            messageKey: 'SEARCH_RIGHT',
-            params: { pivotIdx: pivotIdx, k: k, pivotIdxPlusOne: pivotIdx + 1, r: r }
-          }
+            title: "SEARCH RIGHT",
+            type: "shift",
+            messageKey: "SEARCH_RIGHT",
+            params: { pivotIdx: pivotIdx, k: k, pivotIdxPlusOne: pivotIdx + 1, r: r },
+          },
         };
       }
     }
 
     return newState;
-  }
+  },
 });

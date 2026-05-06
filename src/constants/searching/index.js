@@ -4,3 +4,4 @@ export { jumpsearch } from "./jump";
 export { exponentialsearch } from "./exponential";
 export { interpolationsearch } from "./interpolation";
 export { quickselect } from "./quickselect";
+

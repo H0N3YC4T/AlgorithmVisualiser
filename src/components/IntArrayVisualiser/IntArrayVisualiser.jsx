@@ -2,28 +2,13 @@ import { motion } from "framer-motion";
 import { useMemo, memo } from "react";
 import PropTypes from "prop-types";
 import { classCategories } from "@/styles/divClassCustom";
+import { mapArrayToUniqueIds, calculateRelativeHeight } from "@/utils/visualiserHelpers";
 
-
-const ArrayVisualizer = memo(
+const IntArrayVisualiser = memo(
   ({ array = [], activeIndices = [], sortedIndices = [], pivotIndex = -1, swapIndices = [] }) => {
     const safeArray = useMemo(() => (Array.isArray(array) ? array : []), [array]);
 
-    const itemsWithIds = useMemo(() => {
-      const counts = {};
-      return safeArray.map((val) => {
-        const isObj = typeof val === "object" && val !== null;
-        const v = isObj ? val.value : val;
-        const id = isObj ? val.id : null;
-
-        if (id !== null) return { id, value: v };
-
-        counts[v] = (counts[v] || 0) + 1;
-        return {
-          id: `${v}-${counts[v]}`,
-          value: v,
-        };
-      });
-    }, [safeArray]);
+    const itemsWithIds = useMemo(() => mapArrayToUniqueIds(safeArray), [safeArray]);
 
     const slotIds = useMemo(() => {
       return Array.from({ length: safeArray.length }, (_, i) => `slot-${i}`);
@@ -45,12 +30,11 @@ const ArrayVisualizer = memo(
     const rawValues = itemsWithIds.map((item) => item.value);
     const maxValue = Math.max(...rawValues, 1);
     const minValue = Math.min(...rawValues, 0);
-    const range = maxValue - minValue || 1;
 
     const bars = useMemo(() => {
       return itemsWithIds.map((item, i) => {
         const { id, value } = item;
-        const height = 10 + ((value - minValue) / range) * 75;
+        const height = calculateRelativeHeight(value, minValue, maxValue);
         const isActive = activeSet.has(i);
         const isSorted = sortedSet.has(i);
         const isPivot = pivotIndex === i;
@@ -81,14 +65,16 @@ const ArrayVisualizer = memo(
             className="flex-1 flex flex-col items-center justify-end h-full"
           >
             <div className={`${barClass} ${colorClass} border-t border-x`} style={{ height: `${height}%` }}>
-              <span className={`absolute -top-8 left-1/2 -translate-x-1/2 ${classCategories.logicText.split(" ")[0]} font-black text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-1 rounded-md border border-slate-700 whitespace-nowrap z-30`}>
+              <span
+                className={`absolute -top-8 left-1/2 -translate-x-1/2 ${classCategories.logicText.split(" ")[0]} font-black text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-1 rounded-md border border-slate-700 whitespace-nowrap z-30`}
+              >
                 {value}
               </span>
             </div>
           </motion.div>
         );
       });
-    }, [itemsWithIds, minValue, range, activeSet, sortedSet, pivotIndex, swappingSet]);
+    }, [itemsWithIds, minValue, maxValue, activeSet, sortedSet, pivotIndex, swappingSet]);
 
     const labels = useMemo(() => {
       return slotIds.map((slotId, i) => {
@@ -134,7 +120,7 @@ const ArrayVisualizer = memo(
   },
 );
 
-ArrayVisualizer.propTypes = {
+IntArrayVisualiser.propTypes = {
   array: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.object])),
   activeIndices: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.instanceOf(Set)]),
   sortedIndices: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.instanceOf(Set)]),
@@ -142,4 +128,4 @@ ArrayVisualizer.propTypes = {
   swapIndices: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.instanceOf(Set)]),
 };
 
-export default ArrayVisualizer;
+export default IntArrayVisualiser;

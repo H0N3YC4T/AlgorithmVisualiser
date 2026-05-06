@@ -1,6 +1,12 @@
-import PropTypes from 'prop-types';
-import { motion } from 'framer-motion';
-import { classCategories } from '@/styles/divClassCustom';
+import PropTypes from "prop-types";
+import { motion } from "framer-motion";
+import { globalTheme } from "@/styles/globalTheme";
+
+const localTheme = {
+  nodeText: `fill-white font-mono font-black ${globalTheme.typography.sizes.baseSmall} select-none`,
+  header: `${globalTheme.typography.sizes.subtext} font-black text-slate-500 uppercase tracking-[0.2em] mb-8`,
+  empty: `text-slate-500 italic ${globalTheme.typography.sizes.baseSmall}`,
+};
 
 const NODE_SIZE = 48;
 const LEVEL_HEIGHT = 80;
@@ -8,8 +14,8 @@ const LEVEL_HEIGHT = 80;
 function TreeNode({ node, x, y, level, parentX, parentY }) {
   if (!node) return null;
 
-  const leftX = x - (100 / Math.pow(2, level));
-  const rightX = x + (100 / Math.pow(2, level));
+  const leftX = x - 100 / Math.pow(2, level);
+  const rightX = x + 100 / Math.pow(2, level);
   const childY = y + LEVEL_HEIGHT;
 
   return (
@@ -38,15 +44,9 @@ function TreeNode({ node, x, y, level, parentX, parentY }) {
           cx={`${x}%`}
           cy={y}
           r={NODE_SIZE / 2}
-          className={`fill-slate-800 stroke-slate-700 stroke-2 transition-colors ${node.active ? 'fill-indigo-500 stroke-indigo-400' : ''}`}
+          className={`fill-slate-800 stroke-slate-700 stroke-2 transition-colors ${node.active ? "fill-indigo-500 stroke-indigo-400" : ""}`}
         />
-        <text
-          x={`${x}%`}
-          y={y}
-          dy=".3em"
-          textAnchor="middle"
-          className={`fill-white font-mono font-black ${classCategories.cardDescription.split(" ")[0]} select-none`}
-        >
+        <text x={`${x}%`} y={y} dy=".3em" textAnchor="middle" className={localTheme.nodeText}>
           {node.value}
         </text>
       </motion.g>
@@ -57,25 +57,21 @@ function TreeNode({ node, x, y, level, parentX, parentY }) {
   );
 }
 
-export default function TreeVisualizer({ root, title = "" }) {
+export default function TreeVisualiser({ root, title = "" }) {
   return (
     <div className="w-full flex flex-col items-center justify-center p-8 bg-slate-900/20 rounded-3xl border border-slate-800/40 min-h-[400px]">
-      {title && (
-        <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-[0.2em] mb-8`}>{title}</div>
-      )}
-      
+      {title && <div className={localTheme.header}>{title}</div>}
+
       <svg className="w-full h-[300px] overflow-visible">
         <TreeNode node={root} x={50} y={40} level={1} />
       </svg>
 
-      {!root && (
-        <div className={`text-slate-500 italic ${classCategories.cardDescription.split(" ")[0]}`}>Tree is empty</div>
-      )}
+      {!root && <div className={localTheme.empty}>Tree is empty</div>}
     </div>
   );
 }
 
-TreeVisualizer.propTypes = {
+TreeVisualiser.propTypes = {
   root: PropTypes.object,
-  title: PropTypes.string
+  title: PropTypes.string,
 };

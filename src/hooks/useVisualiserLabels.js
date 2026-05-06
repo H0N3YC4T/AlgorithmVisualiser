@@ -2,7 +2,7 @@ import { useMemo, useCallback } from "react";
 import { uiDefaults } from "@/constants/ui";
 
 
-export default function useVisualizerLabels(algorithm, state) {
+export default function useVisualiserLabels(algorithm, state) {
   // Resolve properties with fallbacks for schema compatibility
   const metadata = useMemo(() => algorithm?.metadata || {}, [algorithm]);
   const uiConfig = useMemo(() => algorithm?.algorithmPage?.uiConfig || algorithm?.uiConfig || {}, [algorithm]);

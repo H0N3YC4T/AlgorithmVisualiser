@@ -9,3 +9,4 @@ export const stack = {
   difficulty: 'Easy',
   cheatSheetData: stackDefaults.cheatSheetData
 };
+

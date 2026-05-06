@@ -9,3 +9,4 @@ export const bst = {
   difficulty: 'Medium',
   cheatSheetData: bstDefaults.cheatSheetData
 };
+

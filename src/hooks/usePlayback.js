@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-export default function useVisualizerPlayback(nextStep, reset, isFinished, speed = 500) {
+export default function useVisualiserPlayback(nextStep, reset, isFinished, speed = 500) {
   const [isPlaying, setIsPlaying] = useState(false);
   const timerRef = useRef(null);
 

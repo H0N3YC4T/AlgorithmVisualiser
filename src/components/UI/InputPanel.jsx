@@ -2,19 +2,21 @@ import PropTypes from "prop-types";
 import { memo } from "react";
 import { GridEditor } from "@/components/GridVisualiser";
 import { classCategories } from "@/styles/divClassCustom";
+import { globalTheme } from "@/styles/globalTheme";
 
 const localTheme = {
   panel: `w-full h-full bg-slate-900/40 backdrop-blur-md border border-slate-800/60 ${classCategories.cardRound} p-5 shadow-2xl`,
-  configContainer: "flex items-center gap-6 bg-slate-950/50 border border-slate-800/60 rounded-2xl px-4 py-2 shadow-inner",
-  configTitle: `${classCategories.logicText.split(" ")[0]} font-black uppercase tracking-[0.2em] text-slate-500`,
+  configContainer:
+    "flex items-center gap-6 bg-slate-950/50 border border-slate-800/60 rounded-2xl px-4 py-2 shadow-inner",
+  configTitle: `${globalTheme.typography.sizes.subtext} font-black uppercase tracking-[0.2em] text-slate-500`,
   speedContainer: "bg-slate-950/50 border border-slate-800/60 rounded-2xl px-5 py-3 shadow-inner group",
-  speedInput: "w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500 group-hover:bg-slate-700 transition-colors",
+  speedInput:
+    "w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500 group-hover:bg-slate-700 transition-colors",
   sizeInput: {
-    container:
-      `w-12 bg-slate-900 border border-slate-800 rounded-xl px-1.5 py-1 ${classCategories.cardDescription.split(" ")[0]} font-mono text-sky-400 focus:border-sky-500 outline-none text-center`,
-    label: `${classCategories.logicText.split(" ")[0]} font-bold text-slate-600 uppercase`,
+    container: `w-12 bg-slate-900 border border-slate-800 rounded-xl px-1.5 py-1 ${globalTheme.typography.sizes.baseSmall} font-mono text-sky-400 focus:border-sky-500 outline-none text-center`,
+    label: `${globalTheme.typography.sizes.subtext} font-bold text-slate-600 uppercase`,
   },
-  input: `!py-4 !px-6 !rounded-xl !${classCategories.cardDescription.split(" ")[0]} bg-slate-950/50 shadow-inner`,
+  input: `!py-4 !px-6 !rounded-xl !${globalTheme.typography.sizes.baseSmall} bg-slate-950/50 shadow-inner`,
 };
 
 const InputPanel = memo(

@@ -9,3 +9,4 @@ export const queue = {
   difficulty: 'Easy',
   cheatSheetData: queueDefaults.cheatSheetData
 };
+

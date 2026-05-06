@@ -2,7 +2,7 @@ import { Routes, Route, useParams, useNavigate, Navigate, useLocation } from "re
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Home from "@/layout/Home";
-import VisualizerFrame from "@/layout/VisualizerFrame";
+import VisualiserFrame from "@/layout/VisualiserFrame";
 
 
 /**
@@ -64,7 +64,7 @@ export const AppRouter = ({ categories, algorithms, stateManager }) => {
             path="/:algoId"
             element={
               <PageTransition>
-                <VisualizerWrapper stateManager={stateManager} algorithms={algorithms} />
+                <VisualiserWrapper stateManager={stateManager} algorithms={algorithms} />
               </PageTransition>
             }
           />
@@ -76,7 +76,7 @@ export const AppRouter = ({ categories, algorithms, stateManager }) => {
   );
 };
 
-const VisualizerWrapper = ({ stateManager, algorithms }) => {
+const VisualiserWrapper = ({ stateManager, algorithms }) => {
   const { algoId } = useParams();
   const navigate = useNavigate();
 
@@ -92,7 +92,7 @@ const VisualizerWrapper = ({ stateManager, algorithms }) => {
   }, [algoId, stateManager, algorithms, navigate]);
 
   return (
-    <VisualizerFrame
+    <VisualiserFrame
       key={stateManager.algorithm.id}
       algorithm={stateManager.algorithm}
       state={stateManager.state}

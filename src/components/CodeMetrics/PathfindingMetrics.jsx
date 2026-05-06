@@ -1,6 +1,11 @@
 import PropTypes from "prop-types";
 import { Target, Footprints, Grid } from "lucide-react";
-import { classCategories } from "@/styles/divClassCustom";
+import { globalTheme } from "@/styles/globalTheme";
+
+const localTheme = {
+  label: `${globalTheme.typography.sizes.subtext} font-black text-slate-500 uppercase tracking-widest`,
+  value: `${globalTheme.typography.semantics.home.title} font-mono font-black text-white`,
+};
 
 export default function PathfindingMetrics({ state }) {
   const { path, visited, rows, cols } = state;
@@ -17,8 +22,8 @@ export default function PathfindingMetrics({ state }) {
           <Target className="w-5 h-5 text-emerald-400" />
         </div>
         <div>
-          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`}>Path Length</div>
-          <div className={`${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-mono font-black text-white`}>{pathLength}</div>
+          <div className={localTheme.label}>Path Length</div>
+          <div className={localTheme.value}>{pathLength}</div>
         </div>
       </div>
 
@@ -27,8 +32,8 @@ export default function PathfindingMetrics({ state }) {
           <Footprints className="w-5 h-5 text-indigo-400" />
         </div>
         <div>
-          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`}>Visited Nodes</div>
-          <div className={`${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-mono font-black text-white`}>{visitedCount}</div>
+          <div className={localTheme.label}>Visited Nodes</div>
+          <div className={localTheme.value}>{visitedCount}</div>
         </div>
       </div>
 
@@ -37,8 +42,8 @@ export default function PathfindingMetrics({ state }) {
           <Grid className="w-5 h-5 text-blue-400" />
         </div>
         <div>
-          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`}>Grid Coverage</div>
-          <div className={`${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-mono font-black text-white`}>{coverage}%</div>
+          <div className={localTheme.label}>Grid Coverage</div>
+          <div className={localTheme.value}>{coverage}%</div>
         </div>
       </div>
     </div>

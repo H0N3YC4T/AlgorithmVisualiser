@@ -9,3 +9,4 @@ export const array = {
   difficulty: 'Easy',
   cheatSheetData: arrayDefaults.cheatSheetData
 };
+

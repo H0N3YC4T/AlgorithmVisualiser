@@ -1,22 +1,25 @@
 import { LayoutGrid } from "lucide-react";
 import { memo, useMemo } from "react";
+import { globalTheme } from "@/styles/globalTheme";
 import PropTypes from "prop-types";
 import { InputPanel, Legend, CodePanel } from "@/components/UI";
-import { ArrayVisualizer } from "@/components/ArrayVisualiser";
-import { GridVisualizer } from "@/components/GridVisualiser";
-import { TextVisualizer, ZVisualizer } from "@/components/TextVisualiser";
-import { ProcessLog, MetricsBar, AlgorithmSidebar, AuxiliaryArrays } from "@/components/Metrics";
+import { IntArrayVisualiser } from "@/components/IntArrayVisualiser";
+import { GridVisualiser } from "@/components/GridVisualiser";
+import { StringArrayVisualiser, ZArrayVisualiser } from "@/components/StringArrayVisualiser";
+import { MetricsBar } from "@/components/CodeMetrics";
+import { ProcessLog } from "@/components/UI";
+import { AuxDataVisualiser, AuxArrayVisualiser } from "@/components/AuxiliaryVisualiser";
 import usePlayback from "@/hooks/usePlayback";
-import useVisualizerLabels from "@/hooks/useVisualizerLabels";
+import useVisualiserLabels from "@/hooks/useVisualiserLabels";
 import { classCategories } from "@/styles/divClassCustom";
 
 const MainVisualization = memo(
   ({ algorithm, state, target, pattern, updateState, toggleWall, gridTool, isEditingDisabled }) => {
     const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
 
-    if (algorithm.visualizerType === "array" || isArrayBased) {
+    if (algorithm.visualiserType === "array" || isArrayBased) {
       return (
-        <ArrayVisualizer
+        <IntArrayVisualiser
           array={state.array || state.nodes || state.table || state.tree || []}
           activeIndices={state.activeIndices}
           sortedIndices={state.sortedIndices}
@@ -26,9 +29,9 @@ const MainVisualization = memo(
       );
     }
 
-    if (algorithm.visualizerType === "z") {
+    if (algorithm.visualiserType === "z") {
       return (
-        <ZVisualizer
+        <ZArrayVisualiser
           concat={state.concat}
           z={state.z || []}
           i={state.i}
@@ -40,10 +43,10 @@ const MainVisualization = memo(
       );
     }
 
-    if (algorithm.visualizerType === "grid" || algorithm.type === "pathfinding") {
+    if (algorithm.visualiserType === "grid" || algorithm.type === "pathfinding") {
       return (
         <div className="space-y-6">
-          <GridVisualizer
+          <GridVisualiser
             algorithm={algorithm}
             state={state}
             updateState={updateState}
@@ -56,7 +59,7 @@ const MainVisualization = memo(
     }
 
     return (
-      <TextVisualizer
+      <StringArrayVisualiser
         target={target}
         pattern={pattern}
         currentIndex={state.currentIndex}
@@ -85,7 +88,7 @@ MainVisualization.propTypes = {
   isEditingDisabled: PropTypes.bool,
 };
 
-export default function VisualizerFrame({
+export default function VisualiserFrame({
   algorithm,
   state,
   target,
@@ -115,8 +118,12 @@ export default function VisualizerFrame({
     gridSection: "grid grid-cols-1 xl:grid-cols-10 gap-6 items-stretch",
     inputWrapper: "xl:col-span-7 w-full min-w-0",
     legendWrapper: "xl:col-span-3 w-full min-w-0",
-    bottomGrid: (hasSidebar) => `grid grid-cols-1 ${hasSidebar ? "xl:grid-cols-3" : "xl:grid-cols-2"} gap-8 items-stretch`,
-    footerIcon: "w-3 h-3 text-indigo-400",
+    bottomGrid: (hasAuxData) =>
+      `grid grid-cols-1 ${hasAuxData ? "xl:grid-cols-3" : "xl:grid-cols-2"} gap-8 items-stretch`,
+    footerIcon: `w-3 h-3 text-${globalTheme.colors.primaryLight}`,
+    panel: `w-full max-w-[1400px] bg-${globalTheme.colors.background}/40 backdrop-blur-xl border border-${globalTheme.colors.border} rounded-2xl shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden transition-all duration-500 flex flex-col`,
+    footer: `p-6 flex justify-between items-center border-t border-${globalTheme.colors.border} bg-slate-950/50 text-${globalTheme.colors.textMuted} font-medium tracking-wider uppercase`,
+    logicText: `${globalTheme.typography.sizes.subtext} text-${globalTheme.colors.textDisabled} font-bold uppercase leading-relaxed tracking-wider`,
   };
 
   const lineHighlights = useMemo(() => {
@@ -136,7 +143,7 @@ export default function VisualizerFrame({
   const adjustedSpeed = (algorithm.uiConfig?.playbackSpeed || 500) / playbackRate;
 
   const { isPlaying, togglePlay, stopPlay } = usePlayback(nextStep, softReset, state.isFinished, adjustedSpeed);
-  const texts = useVisualizerLabels(algorithm, state);
+  const texts = useVisualiserLabels(algorithm, state);
 
   const isEditingDisabled = isPlaying || state.phase > 0 || (state.iterations || 0) > 0;
   const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
@@ -172,7 +179,7 @@ export default function VisualizerFrame({
     </div>
   );
 
-  const renderVisualizer = () => (
+  const renderVisualiser = () => (
     <div className="w-full px-2">
       <MainVisualization
         algorithm={algorithm}
@@ -189,12 +196,10 @@ export default function VisualizerFrame({
 
   return (
     <div className={classCategories.pageWrapper}>
-      <div className={classCategories.vizPanel}>
+      <div className={localTheme.panel}>
         <MetricsBar
           name={algorithm.name}
-          phase={state.phase}
           isFinished={state.isFinished}
-          phaseNames={algorithm.phaseNames}
           onBack={onBack}
           reset={() => {
             stopPlay();
@@ -222,19 +227,17 @@ export default function VisualizerFrame({
           {/* Toolbar & Legend - Controls first */}
           {renderInputsAndLegend()}
 
-          {/* Main Visualizer Area */}
-          <div className={localTheme.vizArea}>
-            {renderVisualizer()}
-          </div>
+          {/* Main Visualiser Area */}
+          <div className={localTheme.vizArea}>{renderVisualiser()}</div>
 
-          <AuxiliaryArrays state={state} />
+          <AuxArrayVisualiser state={state} />
 
           {/* Bottom Info Section: Dynamic Grid */}
-          <div className={localTheme.bottomGrid(!!algorithm.sidebarConfig)}>
+          <div className={localTheme.bottomGrid(!!algorithm.auxDataConfig)}>
             <ProcessLog log={state.log} algorithm={algorithm} />
 
-            {algorithm.sidebarConfig && (
-              <AlgorithmSidebar
+            {algorithm.auxDataConfig && (
+              <AuxDataVisualiser
                 algorithm={algorithm}
                 state={state}
                 preprocessing={preprocessing}
@@ -256,24 +259,24 @@ export default function VisualizerFrame({
         </div>
 
         {/* Footer */}
-        <div className={classCategories.panelFooter}>
+        <div className={localTheme.footer}>
           <div className="flex items-center gap-2">
             <LayoutGrid className={localTheme.footerIcon} /> {algorithm.category}
           </div>
-          <div className={`font-mono ${classCategories.logicText.split(" ")[0]} text-slate-500`}>Interactive Tool</div>
+          <div className={`font-mono ${localTheme.logicText} text-slate-500`}>Interactive Tool</div>
         </div>
       </div>
     </div>
   );
 }
 
-VisualizerFrame.propTypes = {
+VisualiserFrame.propTypes = {
   algorithm: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
-    visualizerType: PropTypes.string,
+    visualiserType: PropTypes.string,
     cheatSheetData: PropTypes.object,
     phaseNames: PropTypes.arrayOf(PropTypes.string),
     codeSnippets: PropTypes.object,

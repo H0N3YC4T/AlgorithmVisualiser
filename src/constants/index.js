@@ -29,3 +29,4 @@ export const categories = Object.keys(groupedAlgorithms);
 
 // Individual namespace exports for specific hook access
 export { Sorting, Searching, Pathfinding, PatternMatching };
+

@@ -2,6 +2,14 @@ import PropTypes from "prop-types";
 import { memo } from "react";
 import { Info, CheckCircle2, AlertCircle, ArrowRightCircle } from "lucide-react";
 import { classCategories } from "@/styles/divClassCustom";
+import { globalTheme } from "@/styles/globalTheme";
+
+const localTheme = {
+  container: (style) =>
+    `p-8 ${classCategories.cardRound} border transition-all duration-500 ${style.bg} ${style.border} shadow-2xl min-h-[300px] h-full flex flex-col backdrop-blur-sm shadow-inner`,
+  title: `${globalTheme.typography.sizes.subtext} font-black uppercase tracking-[0.25em]`,
+  content: `font-mono ${globalTheme.typography.semantics.home.subtitle} leading-relaxed whitespace-pre-line text-slate-100 font-bold flex-1`,
+};
 
 const ProcessLog = memo(({ log, algorithm }) => {
   const logStyles = {
@@ -54,16 +62,12 @@ const ProcessLog = memo(({ log, algorithm }) => {
   })();
 
   return (
-    <div
-      className={`p-8 ${classCategories.cardRound} border transition-all duration-500 ${style.bg} ${style.border} shadow-2xl min-h-[300px] h-full flex flex-col backdrop-blur-sm shadow-inner`}
-    >
+    <div className={localTheme.container(style)}>
       <div className={`flex items-center gap-3 mb-6 ${style.text}`}>
         {style.icon}
-        <span className={`${classCategories.logicText.split(" ")[0]} font-black uppercase tracking-[0.25em]`}>{log?.title}</span>
+        <span className={localTheme.title}>{log?.title}</span>
       </div>
-      <div className={`font-mono ${classCategories.homeSubtitle.split(" ")[0]} leading-relaxed whitespace-pre-line text-slate-100 font-bold flex-1`}>
-        {resolvedContent}
-      </div>
+      <div className={localTheme.content}>{resolvedContent}</div>
     </div>
   );
 });

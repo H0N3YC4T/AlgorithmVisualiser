@@ -2,8 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import { classCategories } from "@/styles/divClassCustom";
 
-
-export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referenceIndex }) {
+export default function ZArrayVisualiser({ concat, z, i, l, r, activeIndices, referenceIndex }) {
   const active = activeIndices instanceof Set ? activeIndices : new Set(activeIndices || []);
   const refIdx = referenceIndex ?? -1;
   const str = concat || "";
@@ -96,8 +95,12 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
                   animate={{ opacity: 1, y: 0 }}
                   className={`${cellClass} w-10 h-14`}
                 >
-                  <span className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-600 mb-1`}>Z[{slot.pos}]</span>
-                  <span className={`${classCategories.logicText.split(" ")[0]} font-bold ${valueColor}`}>{displayValue}</span>
+                  <span className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-600 mb-1`}>
+                    Z[{slot.pos}]
+                  </span>
+                  <span className={`${classCategories.logicText.split(" ")[0]} font-bold ${valueColor}`}>
+                    {displayValue}
+                  </span>
                 </motion.div>
               );
             })}
@@ -119,7 +122,9 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
                 }}
               >
                 <div className="absolute inset-0 bg-indigo-500 blur-[2px] opacity-50" />
-                <span className={`absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap ${classCategories.logicText.split(" ")[0]} font-black text-indigo-400 uppercase tracking-tighter bg-slate-950 px-2 py-0.5 border border-indigo-500/30 rounded-md shadow-xl z-30`}>
+                <span
+                  className={`absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap ${classCategories.logicText.split(" ")[0]} font-black text-indigo-400 uppercase tracking-tighter bg-slate-950 px-2 py-0.5 border border-indigo-500/30 rounded-md shadow-xl z-30`}
+                >
                   Z-Box [{l}, {r}]
                 </span>
               </motion.div>
@@ -131,7 +136,7 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
   );
 }
 
-ZVisualizer.propTypes = {
+ZArrayVisualiser.propTypes = {
   concat: PropTypes.string.isRequired,
   z: PropTypes.arrayOf(PropTypes.number).isRequired,
   i: PropTypes.number.isRequired,

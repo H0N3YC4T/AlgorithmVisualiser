@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 import { MoveRight } from "lucide-react";
 import { classCategories } from "@/styles/divClassCustom";
 
-
-export default function TextVisualizer({
+export default function StringArrayVisualiser({
   target = "",
   pattern = "",
   currentIndex,
@@ -91,8 +90,10 @@ export default function TextVisualizer({
               let cellClass = `${classCategories.cellBase} w-10 h-10 bg-slate-700 border-slate-600 text-slate-100 shadow-md`;
               if (isComparingIdx)
                 cellClass = `${classCategories.cellBase} w-10 h-10 bg-amber-400 border-amber-300 text-amber-950 ring-4 ring-amber-400/30 scale-110 z-20 shadow-xl`;
-              if (isMismatched) cellClass = `${classCategories.cellBase} w-10 h-10 bg-rose-500 border-rose-400 text-white shadow-lg shadow-rose-500/20`;
-              if (isMatched) cellClass = `${classCategories.cellBase} w-10 h-10 bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20`;
+              if (isMismatched)
+                cellClass = `${classCategories.cellBase} w-10 h-10 bg-rose-500 border-rose-400 text-white shadow-lg shadow-rose-500/20`;
+              if (isMatched)
+                cellClass = `${classCategories.cellBase} w-10 h-10 bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20`;
 
               return (
                 <div key={item.id} className={cellClass}>
@@ -112,7 +113,7 @@ export default function TextVisualizer({
   );
 }
 
-TextVisualizer.propTypes = {
+StringArrayVisualiser.propTypes = {
   target: PropTypes.string.isRequired,
   pattern: PropTypes.string.isRequired,
   currentIndex: PropTypes.number.isRequired,

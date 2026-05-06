@@ -1,10 +1,10 @@
-import { createAlgorithmCard } from "../factory";
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
 
-export const quickhoare = createAlgorithmCard({
+export const quickhoare = createAlgorithmPage({
   id: "quick-hoare",
   metadata: {
     type: "sorting",
-    visualizerType: "array",
+    VisualiserType: "array",
     category: "Sorting Algorithms",
     defaultInputs: { target: "5, 3, 8, 4, 2, 7, 1, 6", pattern: "" },
   },

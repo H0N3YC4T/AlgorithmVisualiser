@@ -1,1 +1,1 @@
-export { default as TreeVisualizer } from "./TreeVisualizer";
+export { default as TreeVisualiser } from "./TreeVisualiser";

@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { algorithms } from "@/constants/index";
 import { AppRouter } from "@/router";
-import { useUrlResolver } from "@/hooks/useUrlResolver";
+import { useVisualizationManager } from "@/hooks/useVisualizationManager";
 import { Background } from "@/components/UI";
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
 }
 
 function AppContent() {
-  const stateManager = useUrlResolver(algorithms);
+  const stateManager = useVisualizationManager(algorithms);
   return (
     <AppRouter
       categories={[...new Set(algorithms.map((a) => a.category).filter(Boolean))]}

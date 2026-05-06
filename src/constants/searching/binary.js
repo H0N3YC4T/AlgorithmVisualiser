@@ -1,15 +1,15 @@
-import { createAlgorithmCard } from "../factory";
+import { createAlgorithmPage } from "@/utils/createAlgorithmPage";
 
 /**
  * Binary Search Algorithm Module
  */
-export const binarysearch = createAlgorithmCard({
+export const binarysearch = createAlgorithmPage({
   id: "binarysearch",
 
   // --- Metadata ---
   metadata: {
     type: "searching",
-    visualizerType: "array",
+    VisualiserType: "array",
     category: "Searching Algorithms",
     defaultInputs: { target: "26", pattern: "3, 7, 11, 14, 19, 22, 26, 30, 35, 41, 47, 53" },
   },
@@ -34,46 +34,53 @@ export const binarysearch = createAlgorithmCard({
     },
     extendedDescription:
       "Binary search is an efficient algorithm for finding an item from a sorted list of items. It works by repeatedly dividing in half the portion of the list that could contain the item, until you've narrowed down the possible locations to just one.",
-      legendItems: [
-        { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
-        { label: "Range Bounds", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
-        { label: "Midpoint", color: "bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]" },
-        { label: "Found", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
-      ],
+    legendItems: [
+      { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
+      { label: "Range Bounds", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
+      { label: "Midpoint", color: "bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]" },
+      { label: "Found", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
+    ],
     visualSteps: {
       READY: {
-        title: 'Ready',
-        message: "Commencing Binary Search: A logarithmic-time search strategy.\n\n• Prerequisite: The search space MUST be sorted.\n• Strategy: Repeatedly bisecting the active range to isolate the target value '{targetValue}'.",
+        title: "Ready",
+        message:
+          "Commencing Binary Search: A logarithmic-time search strategy.\n\n• Prerequisite: The search space MUST be sorted.\n• Strategy: Repeatedly bisecting the active range to isolate the target value '{targetValue}'.",
         highlights: { pseudo: [1], javascript: [1], python: [1] },
       },
       INITIALIZING: {
-        title: 'Initializing',
-        message: "Establishing initial boundaries.\n\n• Action: Setting Left=0 and Right={lenMinusOne}.\n• Scope: The entire array is currently in the potential search domain.",
+        title: "Initializing",
+        message:
+          "Establishing initial boundaries.\n\n• Action: Setting Left=0 and Right={lenMinusOne}.\n• Scope: The entire array is currently in the potential search domain.",
         highlights: { pseudo: [2, 3, 4], javascript: [2, 3], python: [2, 3] },
       },
       CALCULATING_MID: {
-        title: 'Calculating Mid',
-        message: "Bisecting the Range [{l}, {r}].\n\n• Computation: Mid = floor({l} + {r}) / 2 = {mid}.\n• Probe: Evaluating the element at the center of the current domain.",
+        title: "Calculating Mid",
+        message:
+          "Bisecting the Range [{l}, {r}].\n\n• Computation: Mid = floor({l} + {r}) / 2 = {mid}.\n• Probe: Evaluating the element at the center of the current domain.",
         highlights: { pseudo: [5, 6], javascript: [6, 7], python: [6, 7] },
       },
       MATCH_FOUND: {
-        title: 'Match Found ✓',
-        message: "Target Synchronized!\n\n• Result: arr[{mid}] == {targetValue}.\n• Action: Terminating search and returning the target index.",
+        title: "Match Found ✓",
+        message:
+          "Target Synchronized!\n\n• Result: arr[{mid}] == {targetValue}.\n• Action: Terminating search and returning the target index.",
         highlights: { pseudo: [7, 8], javascript: [8, 9, 10], python: [8, 9, 10] },
       },
       SEARCH_RIGHT: {
-        title: 'Search Right',
-        message: "Target is Greater ({val} < {targetValue}).\n\n• Deduction: The target must reside in the upper half of the current range.\n• Action: Shifting the Left boundary to {midPlusOne}.",
+        title: "Search Right",
+        message:
+          "Target is Greater ({val} < {targetValue}).\n\n• Deduction: The target must reside in the upper half of the current range.\n• Action: Shifting the Left boundary to {midPlusOne}.",
         highlights: { pseudo: [9, 10], javascript: [11, 12], python: [11, 12] },
       },
       SEARCH_LEFT: {
-        title: 'Search Left',
-        message: "Target is Smaller ({val} > {targetValue}).\n\n• Deduction: The target must reside in the lower half of the current range.\n• Action: Shifting the Right boundary to {midMinusOne}.",
+        title: "Search Left",
+        message:
+          "Target is Smaller ({val} > {targetValue}).\n\n• Deduction: The target must reside in the lower half of the current range.\n• Action: Shifting the Right boundary to {midMinusOne}.",
         highlights: { pseudo: [11, 12], javascript: [13, 14], python: [13, 14] },
       },
       NOT_FOUND: {
-        title: 'Not Found',
-        message: "Search Domain Exhausted.\n\n• Boundary Condition: Left pointer has crossed Right pointer.\n• Result: Target value '{targetValue}' is not present in the dataset.",
+        title: "Not Found",
+        message:
+          "Search Domain Exhausted.\n\n• Boundary Condition: Left pointer has crossed Right pointer.\n• Result: Target value '{targetValue}' is not present in the dataset.",
         highlights: { pseudo: [13], javascript: [17], python: [17] },
       },
     },

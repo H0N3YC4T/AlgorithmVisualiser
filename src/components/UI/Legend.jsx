@@ -1,23 +1,27 @@
 import PropTypes from "prop-types";
 import { memo } from "react";
 import { classCategories } from "@/styles/divClassCustom";
+import { globalTheme } from "@/styles/globalTheme";
+
+const localTheme = {
+  container: `${classCategories.glassPanel} ${classCategories.cardRound} p-3 h-full flex items-center justify-center`,
+  itemLabel: `${globalTheme.typography.sizes.subtext} font-black text-slate-400 uppercase tracking-[0.2em]`,
+};
 
 /**
  * Legend Component
- * Displays a color-coded key for the visualizer elements.
+ * Displays a color-coded key for the Visualiser elements.
  */
 const Legend = memo(({ items }) => {
   if (!items || items.length === 0) return null;
 
   return (
-    <div
-      className={`${classCategories.glassPanel} ${classCategories.cardRound} p-3 h-full flex items-center justify-center`}
-    >
+    <div className={localTheme.container}>
       <div className="flex flex-wrap gap-x-8 gap-y-6 items-center justify-center">
         {items.map((item, idx) => (
           <div key={idx} className="flex items-center gap-4">
             <div className={`w-5 h-5 rounded-md border border-white/10 ${item.color} shadow-lg`} />
-            <span className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-400 uppercase tracking-[0.2em]`}>{item.label}</span>
+            <span className={localTheme.itemLabel}>{item.label}</span>
           </div>
         ))}
       </div>

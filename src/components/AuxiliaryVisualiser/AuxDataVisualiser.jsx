@@ -1,29 +1,34 @@
 import PropTypes from "prop-types";
 import { memo } from "react";
 import { Hash, Table as TableIcon } from "lucide-react";
-import ShiftTable from "./ShiftTable";
+import AuxShiftTableVisualiser from "./AuxShiftTableVisualiser";
 import { classCategories } from "@/styles/divClassCustom";
+import { globalTheme } from "@/styles/globalTheme";
 
-const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target, pattern, isArrayBased }) => {
-  const config = algorithm.sidebarConfig;
+const AuxDataVisualiser = memo(({ algorithm, state, preprocessing, target, pattern, isArrayBased }) => {
+  const config = algorithm.auxDataConfig;
 
   const localTheme = {
-    sectionTitle: `${classCategories.logicText.split(" ")[0]} font-black text-indigo-400 uppercase tracking-[0.25em] flex items-center gap-3`,
-    label: `${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase mr-2 tracking-widest`,
-    logicTitle: `${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-[0.2em] mb-3 opacity-50`,
-    logicText: `${classCategories.logicText.split(" ")[0]} text-slate-500 font-bold uppercase leading-relaxed tracking-wider`,
-    logicNote: `text-slate-600 mt-2 block italic ${classCategories.logicText.split(" ")[0]} normal-case`,
-    dataCard: "p-4 bg-slate-900 rounded-2xl border border-slate-800 flex justify-between items-center shadow-lg",
-    dataLabel: `${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`,
-    dataValue: `font-mono font-black ${classCategories.cardDescription.split(" ")[0]}`,
-    arrayItem: (isActive, color) => `w-10 h-12 bg-slate-900 border ${isActive ? `border-${color}-500 ring-2 ring-${color}-500/20 shadow-[0_0_20px_rgba(0,0,0,0.2)]` : "border-slate-800"} rounded-xl flex flex-col items-center justify-center transition-all shadow-md`,
-    bucketContainer: "flex-1 bg-slate-900 border border-slate-800/60 rounded-xl p-2 min-h-[60px] flex flex-col-reverse gap-1.5 items-center shadow-inner",
+    sectionTitle: `${globalTheme.typography.sizes.subtext} font-black text-${globalTheme.colors.primaryLight} uppercase tracking-[0.25em] flex items-center gap-3`,
+    label: `${globalTheme.typography.sizes.subtext} font-black text-${globalTheme.colors.textDisabled} uppercase mr-2 tracking-widest`,
+    logicTitle: `${globalTheme.typography.sizes.subtext} font-black text-${globalTheme.colors.textDisabled} uppercase tracking-[0.2em] mb-3 opacity-50`,
+    logicText: `${globalTheme.typography.sizes.subtext} text-${globalTheme.colors.textDisabled} font-bold uppercase leading-relaxed tracking-wider`,
+    logicNote: `text-slate-600 mt-2 block italic ${globalTheme.typography.sizes.subtext} normal-case`,
+    dataCard: `p-4 bg-${globalTheme.colors.background} rounded-2xl border border-${globalTheme.colors.borderStrong} flex justify-between items-center shadow-lg`,
+    dataLabel: `${globalTheme.typography.sizes.subtext} font-black text-${globalTheme.colors.textDisabled} uppercase tracking-widest`,
+    dataValue: `font-mono font-black ${globalTheme.typography.sizes.baseSmall}`,
+    arrayItem: (isActive, color) =>
+      `w-10 h-12 bg-slate-900 border ${isActive ? `border-${color}-500 ring-2 ring-${color}-500/20 shadow-[0_0_20px_rgba(0,0,0,0.2)]` : `border-${globalTheme.colors.borderStrong}`} rounded-xl flex flex-col items-center justify-center transition-all shadow-md`,
+    bucketContainer: `flex-1 bg-slate-900 border border-${globalTheme.colors.borderStrong}/60 rounded-xl p-2 min-h-[60px] flex flex-col-reverse gap-1.5 items-center shadow-inner`,
+    section: `p-8 ${classCategories.cardRound} border border-${globalTheme.colors.borderStrong}/50 bg-slate-900/20 backdrop-blur-sm`,
+    charBox: `w-8 h-8 bg-slate-950 border border-${globalTheme.colors.borderStrong} rounded-2xl flex items-center justify-center ${globalTheme.typography.sizes.subtext} font-mono font-black text-${globalTheme.colors.primaryLight} shadow-inner`,
+    dataBox: `flex flex-col items-center justify-center p-3 bg-slate-950 border border-${globalTheme.colors.borderStrong} rounded-2xl min-w-[3.5rem] shadow-lg hover:border-${globalTheme.colors.primary}/50 transition-colors`,
   };
 
   return (
     <div className="h-full space-y-8">
-      {config?.type === "shiftTable" && preprocessing?.[config.dataKey] && (
-        <ShiftTable
+      {config?.type === "map" && preprocessing?.[config.dataKey] && (
+        <AuxShiftTableVisualiser
           shiftTable={preprocessing[config.dataKey]}
           lookAheadChar={target[state.currentIndex + pattern.length - (config.dataKey === "badCharTable" ? 1 : 0)]}
           patternLength={pattern.length}
@@ -36,16 +41,14 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
 
       {/* Failure Function */}
       {config?.type === "failureFunction" && preprocessing?.[config.dataKey] && (
-        <div className={classCategories.sidebarSection}>
+        <div className={localTheme.section}>
           <div className="flex justify-between items-center mb-8">
-            <div className={localTheme.sectionTitle}>
-              {config.title}
-            </div>
+            <div className={localTheme.sectionTitle}>{config.title}</div>
             {pattern && (
               <div className="flex gap-2 items-center">
                 <span className={localTheme.label}>Pattern:</span>
                 {pattern.split("").map((char, i) => (
-                  <div key={`char-box-${i}-${char}`} className={classCategories.charBox}>
+                  <div key={`char-box-${i}-${char}`} className={localTheme.charBox}>
                     {char}
                   </div>
                 ))}
@@ -57,18 +60,26 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
               {preprocessing[config.dataKey]
                 .map((val, i) => ({ val, i, id: `pi-${i}` }))
                 .map((item) => (
-                  <div key={item.id} className={classCategories.dataBox}>
-                    <span className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 mb-1.5 uppercase`}>p[{item.i}]</span>
-                    <span className={`text-white font-mono font-black ${classCategories.cardDescription.split(" ")[0]}`}>{pattern[item.i]}</span>
-                    <span className={`text-indigo-400 font-mono font-black ${classCategories.cardDescription.split(" ")[0]}`}>{item.val}</span>
+                  <div key={item.id} className={localTheme.dataBox}>
+                    <span className={`${localTheme.logicText} font-black text-slate-500 mb-1.5 uppercase`}>
+                      p[{item.i}]
+                    </span>
+                    <span
+                      className={`text-white font-mono font-black ${classCategories.cardDescription.split(" ")[0]}`}
+                    >
+                      {pattern[item.i]}
+                    </span>
+                    <span
+                      className={`text-indigo-400 font-mono font-black ${classCategories.cardDescription.split(" ")[0]}`}
+                    >
+                      {item.val}
+                    </span>
                   </div>
                 ))}
             </div>
 
             <div className="md:w-56 flex-shrink-0 flex flex-col justify-center pl-8 border-l border-slate-800/60 hidden md:flex">
-              <div className={localTheme.logicTitle}>
-                Shift Logic
-              </div>
+              <div className={localTheme.logicTitle}>Shift Logic</div>
               <p className={localTheme.logicText}>
                 {config.logic.split("\n").map((line, idx) => (
                   <span key={`${config.title}-line-${idx}`}>
@@ -76,9 +87,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
                     <br />
                   </span>
                 ))}
-                {config.logicNote && (
-                  <span className={localTheme.logicNote}>{config.logicNote}</span>
-                )}
+                {config.logicNote && <span className={localTheme.logicNote}>{config.logicNote}</span>}
               </p>
             </div>
           </div>
@@ -87,7 +96,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
 
       {/* Rolling Hash */}
       {config?.type === "rollingHash" && state.patternHash !== undefined && (
-        <div className={classCategories.sidebarSection}>
+        <div className={localTheme.section}>
           <div className="flex justify-between items-center mb-8">
             <div className={localTheme.sectionTitle}>
               <Hash className="w-4 h-4" /> {config.title}
@@ -98,7 +107,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
                 {pattern.split("").map((char, i) => (
                   <div
                     key={`char-box-${i}-${char}`}
-                    className={`w-6 h-6 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center ${classCategories.logicText.split(" ")[0]} font-mono font-bold text-slate-300`}
+                    className={`w-6 h-6 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center ${localTheme.logicText} font-mono font-bold text-slate-300`}
                   >
                     {char}
                   </div>
@@ -126,9 +135,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
             </div>
 
             <div className="md:w-56 flex-shrink-0 flex flex-col justify-center pl-8 border-l border-slate-800/60 hidden md:flex">
-              <div className={localTheme.logicTitle}>
-                Hash Logic
-              </div>
+              <div className={localTheme.logicTitle}>Hash Logic</div>
               <p className={localTheme.logicText}>
                 {config.logic.split("\n").map((line, idx) => (
                   <span key={`${config.title}-hash-line-${idx}`}>
@@ -136,9 +143,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
                     <br />
                   </span>
                 ))}
-                {config.logicNote && (
-                  <span className={localTheme.logicNote}>{config.logicNote}</span>
-                )}
+                {config.logicNote && <span className={localTheme.logicNote}>{config.logicNote}</span>}
               </p>
             </div>
           </div>
@@ -150,7 +155,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
         <div className="space-y-8">
           {/* Counting Sort: Count and Output side-by-side */}
           {config?.type === "countingArrays" && (state.countArray || state.output) && (
-            <div className={classCategories.sidebarSection}>
+            <div className={localTheme.section}>
               <div className="flex flex-col md:flex-row gap-10">
                 {state.countArray && (
                   <div className="flex-1 space-y-5">
@@ -165,8 +170,14 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
                             key={item.id}
                             className={localTheme.arrayItem(state.phase === 2 && state.i === item.i, "indigo")}
                           >
-                            <span className={`${classCategories.logicText.split(" ")[0]} text-slate-600 font-bold uppercase`}>{item.i}</span>
-                            <span className={`${classCategories.cardDescription.split(" ")[0]} text-white font-mono font-black`}>{item.c}</span>
+                            <span className={`${localTheme.logicText} text-slate-600 font-bold uppercase`}>
+                              {item.i}
+                            </span>
+                            <span
+                              className={`${classCategories.cardDescription.split(" ")[0]} text-white font-mono font-black`}
+                            >
+                              {item.c}
+                            </span>
                           </div>
                         ))}
                     </div>
@@ -185,8 +196,14 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
                             key={item.id}
                             className={localTheme.arrayItem(state.swapIndices?.includes(item.i), "emerald")}
                           >
-                            <span className={`${classCategories.logicText.split(" ")[0]} text-slate-600 font-bold uppercase`}>{item.i}</span>
-                            <span className={`${classCategories.cardDescription.split(" ")[0]} text-white font-mono font-black`}>{item.val ?? "-"}</span>
+                            <span className={`${localTheme.logicText} text-slate-600 font-bold uppercase`}>
+                              {item.i}
+                            </span>
+                            <span
+                              className={`${classCategories.cardDescription.split(" ")[0]} text-white font-mono font-black`}
+                            >
+                              {item.val ?? "-"}
+                            </span>
                           </div>
                         ))}
                     </div>
@@ -198,7 +215,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
 
           {/* Bucket / Radix Sort: Buckets */}
           {config?.type === "buckets" && state.buckets && (
-            <div className={classCategories.sidebarSection}>
+            <div className={localTheme.section}>
               <div className={localTheme.sectionTitle}>
                 <TableIcon className="w-4 h-4" /> Distribution Buckets
               </div>
@@ -207,7 +224,9 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
                   .map((bucket, bIdx) => ({ bucket, bIdx, id: `bucket-slot-${bIdx}` }))
                   .map((item) => (
                     <div key={item.id} className="flex flex-col gap-3">
-                      <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 text-center uppercase tracking-widest`}>
+                      <div
+                        className={`${localTheme.logicText} font-black text-slate-500 text-center uppercase tracking-widest`}
+                      >
                         B{item.bIdx}
                       </div>
                       <div className={localTheme.bucketContainer}>
@@ -221,7 +240,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
                             />
                           ))}
                       </div>
-                      <div className={`${classCategories.logicText.split(" ")[0]} font-mono text-center text-slate-400 font-black`}>
+                      <div className={`${localTheme.logicText} font-mono text-center text-slate-400 font-black`}>
                         {item.bucket.length}
                       </div>
                     </div>
@@ -235,7 +254,7 @@ const VisualiserAuxiliaryData = memo(({ algorithm, state, preprocessing, target,
   );
 });
 
-VisualiserAuxiliaryData.propTypes = {
+AuxDataVisualiser.propTypes = {
   algorithm: PropTypes.object.isRequired,
   state: PropTypes.object.isRequired,
   preprocessing: PropTypes.object.isRequired,
@@ -244,4 +263,4 @@ VisualiserAuxiliaryData.propTypes = {
   isArrayBased: PropTypes.bool.isRequired,
 };
 
-export default VisualiserAuxiliaryData;
+export default AuxDataVisualiser;

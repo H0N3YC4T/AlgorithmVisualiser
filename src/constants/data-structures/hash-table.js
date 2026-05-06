@@ -9,3 +9,4 @@ export const hashtable = {
   difficulty: 'Hard',
   cheatSheetData: hashtableDefaults.cheatSheetData
 };
+

@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import { Terminal, Copy, Check } from "lucide-react";
 import { uiDefaults } from "@/constants/ui";
 import { classCategories } from "@/styles/divClassCustom";
+import { globalTheme } from "@/styles/globalTheme";
 
 SyntaxHighlighter.registerLanguage("javascript", js);
 SyntaxHighlighter.registerLanguage("python", python);
@@ -18,7 +19,7 @@ const CodePanel = memo(({ codeSnippets, lineHighlights, activeStep }) => {
 
   const localTheme = {
     tabBtn: (isActive) =>
-      `px-3 py-1.5 rounded-xl ${classCategories.cardDescription.split(" ")[0]} font-black uppercase tracking-widest transition-all ${
+      `px-3 py-1.5 rounded-xl ${globalTheme.typography.sizes.baseSmall} font-black uppercase tracking-widest transition-all ${
         isActive
           ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
           : "text-slate-500 hover:text-slate-300 hover:bg-slate-800"

@@ -9,3 +9,4 @@ export const skiplist = {
   difficulty: 'Hard',
   cheatSheetData: skiplistDefaults.cheatSheetData
 };
+
