@@ -42,37 +42,36 @@ export const jumpsearch = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Jump Search initialized. Optimal jump size is √n ≈ {step}.",
+        message: "Commencing Jump Search: A block-based searching strategy.\n\n• Prerequisite: The search space MUST be sorted.\n• Strategy: Jumping ahead by fixed intervals (steps) to isolate a candidate block of size √n ≈ {step}.",
         highlights: { pseudo: [1], javascript: [1], python: [1] }
       },
       JUMPING: {
         title: 'Jumping',
-        message: "Checking jump point {currentJump} ({val}). Still smaller than target {targetValue}. Jumping to {nextI}.",
+        message: "Evaluating Jump Point {currentJump} (Value: {val}).\n\n• Observation: {val} < {targetValue}.\n• Action: Skipping the current block and jumping to index {nextI}.",
         highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
       },
       BLOCK_IDENTIFIED: {
         title: 'Block Identified',
-        message: "Target {targetValue} must be between index {prev} and {curr}. Switching to linear scan.",
+        message: "Candidate Segment Isolated: [{prev}, {curr}].\n\n• Deduction: The target '{targetValue}' must reside within this specific block.\n• Strategy: Switching to a sequential linear scan to locate the exact position.",
         highlights: { pseudo: [4], javascript: [7], python: [7] }
       },
       LINEAR_SCAN: {
         title: 'Linear Scan',
-        message: "Scanning block... Checking index {prev}.",
+        message: "Probing Segment Sequentially.\n\n• Action: Checking index {prev} in the identified block.\n• Objective: Performing final character-by-character validation.",
         highlights: { pseudo: [5], javascript: [8], python: [8] }
       },
       MATCH_FOUND: {
         title: 'Match Found ✓',
-        message: "Target value found at index {prev}!",
+        message: "Target Synchronized!\n\n• Result: Value '{targetValue}' located successfully at index {prev}.\n• Note: O(√n) performance achieved through balanced jumping and scanning.",
         highlights: { pseudo: [6], javascript: [9], python: [9] }
       },
       NOT_FOUND: {
         title: 'Not Found',
-        message: "Value {targetValue} is not in the array.",
+        message: "Search Domain Exhausted.\n\n• Result: Linear scan of the candidate block completed without locating '{targetValue}'.\n• Conclusion: The value is not present in this dataset.",
         highlights: { pseudo: [7], javascript: [11], python: [11] }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function jumpSearch(arr, target):
   n = arr.length, step = sqrt(n)
@@ -117,7 +116,6 @@ def jump_search(arr, target):
     if arr[prev] == target: return prev
     return -1`
   },
-
   // --- Logic ---
   getInitialState: (p, t) => {
     const rawArray = Array.isArray(t) ? t : [3, 7, 11, 14, 19, 22, 26, 30, 35, 41, 47, 53];

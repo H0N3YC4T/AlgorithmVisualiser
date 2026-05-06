@@ -38,37 +38,36 @@ export const naive = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Naive Search initialized. Starting brute-force scan.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        message: "Commencing Naive (Brute-Force) Search.\n\n• Strategy: Exhaustive character-by-character validation at every possible window alignment.\n• Note: A simple but robust baseline for substring search comparisons.",
+        highlights: { pseudo: [1, 2, 3], javascript: [1, 2, 3, 4], python: [1, 2, 3] }
       },
       CHAR_MATCH: {
         title: 'Character Match',
-        message: "Local Correspondence: '{targetChar}' == '{patternChar}'.",
-        highlights: { pseudo: [2], javascript: [3], python: [3] }
+        message: "Local Correspondence: '{targetChar}' == '{patternChar}'.\n\n• Alignment validated for the current pattern offset.\n• Strategy: Advancing to the next character in the pattern sequence.",
+        highlights: { pseudo: [4, 5], javascript: [7, 8], python: [5] }
       },
       MISMATCH: {
         title: 'Mismatch',
-        message: "Inconsistency Detected: '{targetChar}' ≠ '{patternChar}' at index {idx}.",
-        highlights: { pseudo: [3], javascript: [4], python: [4] }
+        message: "Inconsistency Detected: '{targetChar}' ≠ '{patternChar}'.\n\n• Violation identified at global text index {idx}.\n• Action: Aborting current scan and shifting the window by exactly 1 position.",
+        highlights: { pseudo: [6], javascript: [8], python: [6] }
       },
       MATCH_FOUND: {
         title: 'Match Found ✓',
-        message: "Pattern Instance Found at starting index {idx}!",
-        highlights: { pseudo: [4], javascript: [5], python: [5] }
+        message: "Pattern Instance Finalized!\n\n• Result: Full character-by-character correspondence verified.\n• Match identified at starting index {idx}.",
+        highlights: { pseudo: [7], javascript: [9], python: [7] }
       },
       SHIFTING: {
         title: 'Shifting',
-        message: "Window translation from {currentIndex} to {nextPos}.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        message: "Sliding Window: Origin translated from {currentIndex} to {nextPos}.\n\n• Strategy: Resetting comparison pointers for the next exhaustive scan pass.",
+        highlights: { pseudo: [3], javascript: [5], python: [3] }
       },
       END_OF_TEXT: {
         title: 'End of Text',
-        message: "Boundary condition reached. Scan terminated.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        message: "Search Domain Exhausted.\n\n• Final window alignment processed.\n• Result: Execution terminated.",
+        highlights: { pseudo: [8], javascript: [10], python: [8] }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function naiveSearch(text, pattern):
   n = text.length, m = pattern.length
@@ -81,7 +80,6 @@ export const naive = createAlgorithmCard({
     javascript: `function naiveSearch(text, pattern) {
   const n = text.length;
   const m = pattern.length;
-
   for (let i = 0; i <= n - m; i++) {
     let j;
     for (j = 0; j < m; j++) {
@@ -102,6 +100,7 @@ export const naive = createAlgorithmCard({
         if match: return i
     return -1`
   },
+  getInitialState: (_target, _pattern) => ({
     currentIndex: 0,
     compIdx: 0,
     phase: 1,

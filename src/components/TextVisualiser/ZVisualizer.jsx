@@ -114,8 +114,8 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
                 exit={{ opacity: 0, y: 5 }}
                 className="absolute h-1 bg-indigo-500/50 rounded-full bottom-0 transition-all duration-500"
                 style={{
-                  left: `${l * 2.125}rem`,
-                  width: `${(r - l + 1) * 2.125 - 0.125}rem`,
+                  left: `${l * 2.75}rem`,
+                  width: `${(r - l + 1) * 2.75 - 0.25}rem`,
                 }}
               >
                 <div className="absolute inset-0 bg-indigo-500 blur-[2px] opacity-50" />

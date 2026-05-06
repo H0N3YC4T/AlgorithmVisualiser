@@ -42,32 +42,31 @@ export const linear = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Linear Search initialized. Preparing to scan the array for target value {targetValue}.",
+        message: "Commencing Linear Search: The most fundamental search strategy.\n\n• Strategy: Sequential, exhaustive scan of the dataset.\n• Objective: Locating the target value '{targetValue}' by checking every element from index 0.",
         highlights: { pseudo: [1], javascript: [1], python: [1] }
       },
       STARTING_SEARCH: {
         title: 'Starting Search',
-        message: "Commencing sequential scan from index 0.",
+        message: "Initiating Scan.\n\n• Action: Setting the initial probe pointer to index 0.\n• Strategy: Advancing one element at a time until the target is found or the end is reached.",
         highlights: { pseudo: [2], javascript: [2], python: [2] }
       },
       COMPARING: {
         title: 'Comparing',
-        message: "Comparing element at index {i} ({val}) with target {targetValue}.",
+        message: "Probe Evaluation: arr[{i}] = {val}.\n\n• Comparison: {val} == {targetValue}?\n• Action: If no match, incrementing the pointer and continuing the scan.",
         highlights: { pseudo: [3], javascript: [3], python: [3] }
       },
       VALUE_FOUND: {
         title: 'Match Found ✓',
-        message: "Target value {targetValue} located at index {i}!",
+        message: "Target Synchronized!\n\n• Result: Value '{targetValue}' located successfully at index {i}.\n• Note: Linear complexity O(n) scan concluded.",
         highlights: { pseudo: [4], javascript: [4], python: [4] }
       },
       NOT_FOUND: {
         title: 'Not Found',
-        message: "Value {targetValue} was not found in the array after a full scan.",
+        message: "Search Domain Exhausted.\n\n• Result: Full traversal completed without locating '{targetValue}'.\n• Conclusion: The value is not present in this dataset.",
         highlights: { pseudo: [5], javascript: [5], python: [5] }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function linearSearch(list, target):
   for each element in list:
@@ -86,7 +85,6 @@ export const linear = createAlgorithmCard({
             return i
     return -1`
   },
-
   // --- Logic ---
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [12, 5, 14, 8, 4, 11, 8, 15, 4, 6, 13, 10];

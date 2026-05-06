@@ -42,57 +42,56 @@ export const exponentialsearch = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Exponential Search initialized. Searching for {targetValue}.",
+        message: "Commencing Exponential Search: A dynamic range-finding strategy.\n\n• Prerequisite: The search space MUST be sorted.\n• Strategy: Finding an upper bound for the search range by exponentially increasing the index (1, 2, 4, 8...).",
         highlights: { pseudo: [1], javascript: [1], python: [1] }
       },
       FOUND_AT_0: {
         title: 'Found at 0 ✓',
-        message: "Target value {targetValue} found at index 0!",
+        message: "Target Synchronized at Origin!\n\n• Result: arr[0] == {targetValue}.\n• Action: Immediate termination; target located at the first element.",
         highlights: { pseudo: [2], javascript: [4], python: [4] }
       },
       STARTING_JUMPS: {
         title: 'Starting Jumps',
-        message: "Index 0 is not the target. Starting exponential jumps.",
+        message: "Origin Mismatch. Initiating Exponential Probing.\n\n• Action: Setting the initial jump pointer to index 1.\n• Objective: Doubling the index until an element greater than '{targetValue}' is encountered.",
         highlights: { pseudo: [3], javascript: [5], python: [5] }
       },
       DOUBLING_INDEX: {
         title: 'Doubling Index',
-        message: "Checking index {i} ({val}). Still ≤ {targetValue}. Doubling to {nextI}.",
+        message: "Exponential Leap: Checking index {i} (Value: {val}).\n\n• Observation: {val} ≤ {targetValue}.\n• Action: Doubling search pointer from {i} to {nextI}.",
         highlights: { pseudo: [4], javascript: [6, 7], python: [6, 7] }
       },
       BOUNDS_FOUND: {
         title: 'Bounds Found',
-        message: "Range identified: [{left}, {right}]. Switching to binary search.",
+        message: "Search Window Isolated: [{left}, {right}].\n\n• Deduction: The target MUST reside within this specific sub-range.\n• Strategy: Switching to Binary Search for logarithmic refinement.",
         highlights: { pseudo: [5], javascript: [9], python: [9] }
       },
       BS_CALC_MID: {
         title: 'BS: Calc Mid',
-        message: "Binary search in range [{l}, {r}]. Midpoint at {mid} (value: {val}).",
+        message: "Binary Refinement: Range [{l}, {r}].\n\n• Midpoint: {mid} (Value: {val}).\n• Strategy: Bisecting the isolated exponential window.",
         highlights: { pseudo: [6], javascript: [11], python: [11] }
       },
       BS_MATCH_FOUND: {
         title: 'Match Found ✓',
-        message: "Target value found at index {mid}!",
+        message: "Target Synchronized!\n\n• Result: Value located at index {mid} during binary refinement.\n• Note: Highly efficient O(log i) performance achieved.",
         highlights: { pseudo: [7], javascript: [12], python: [12] }
       },
       BS_SEARCH_RIGHT: {
         title: 'BS: Search Right',
-        message: "{val} < {targetValue}. Moving left boundary to {midPlusOne}.",
+        message: "Target is Greater ({val} < {targetValue}).\n\n• Action: Shifting binary search window to the right half: [{midPlusOne}, {r}].",
         highlights: { pseudo: [8], javascript: [14], python: [14] }
       },
       BS_SEARCH_LEFT: {
         title: 'BS: Search Left',
-        message: "{val} > {targetValue}. Moving right boundary to {midMinusOne}.",
+        message: "Target is Smaller ({val} > {targetValue}).\n\n• Action: Shifting binary search window to the left half: [{l}, {midMinusOne}].",
         highlights: { pseudo: [9], javascript: [16], python: [16] }
       },
       BS_NOT_FOUND: {
         title: 'Not Found',
-        message: "Binary search range exhausted. Value {targetValue} not found.",
+        message: "Search Domain Exhausted.\n\n• Result: Target value '{targetValue}' not found within the exponential window.\n• Conclusion: Value is not present in the dataset.",
         highlights: { pseudo: [10], javascript: [18], python: [18] }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function exponentialSearch(arr, target):
   if arr[0] == target: return 0
@@ -115,7 +114,6 @@ export const exponentialsearch = createAlgorithmCard({
         i = i * 2
     return binary_search(arr, target, i//2, min(i, len(arr)-1))`
   },
-
   // --- Logic ---
   getInitialState: (p, t) => {
     const rawArray = Array.isArray(t) ? t : [3, 7, 11, 14, 19, 22, 26, 30, 35, 41, 47, 53];

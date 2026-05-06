@@ -33,26 +33,32 @@ export const bucket = createAlgorithmCard({
       { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
   },
-  visualSteps: {
-    READY: {
-      title: 'Ready',
-      message: "Bucket Sort Initiated.\n\n• First, we'll find the max value to determine bucket ranges.\n• Then, elements are distributed into k buckets.",
-      highlights: { pseudo: [1], javascript: [1, 2], python: [1, 2] }
-    },
-    DISTRIBUTING: {
-      title: 'Distributing',
-      message: "Assigning {val} to bucket {bucketIdx}.\n\n• Range calculation: (val / max) * numBuckets.\n• Current element index: {i}.",
-      highlights: { pseudo: [2, 3], javascript: [4, 5, 6], python: [4, 5, 6] }
-    },
-    SORTING_BUCKETS: {
-      title: 'Sorting Buckets',
-      message: "Individual buckets are now being sorted.\n\n• Typically uses Insertion Sort for small buckets.\n• Ensuring stability within each partition.",
-      highlights: { pseudo: [4], javascript: [8, 9], python: [8, 9] }
-    },
-    CONCATENATING: {
-      title: 'Concatenating',
-      message: "Merging sorted buckets back into the original array.\n\n• Order is preserved across bucket boundaries.",
-      highlights: { pseudo: [5], javascript: [11], python: [11] }
+    visualSteps: {
+      READY: {
+        title: 'Ready',
+        message: "Commencing Bucket Sort: A distribution-based sorting strategy.\n\n• Strategy: Partitioning the input domain into several discrete 'buckets'.\n• Objective: Distributing elements based on their relative magnitude to achieve near-linear performance.",
+        highlights: { pseudo: [1], javascript: [1, 2], python: [1, 2] }
+      },
+      DISTRIBUTING: {
+        title: 'Distributing',
+        message: "Assigning {val} to Bucket {bucketIdx}.\n\n• Mapping Function: (val - min) / (max - min) * numBuckets.\n• Note: Values within similar ranges are clustered together for localized sorting.",
+        highlights: { pseudo: [2, 3], javascript: [4, 5, 6], python: [4, 5, 6] }
+      },
+      SORTING_BUCKETS: {
+        title: 'Sorting Buckets',
+        message: "Refining Local Partitions.\n\n• Strategy: Sorting each bucket individually (typically using Insertion Sort).\n• Note: High performance is achieved when elements are uniformly distributed.",
+        highlights: { pseudo: [4], javascript: [8, 9], python: [8, 9] }
+      },
+      CONCATENATING: {
+        title: 'Concatenating',
+        message: "Reconstructed Global Array.\n\n• Action: Merging sorted buckets in sequential order.\n• Result: A fully sorted array composed of ordered partitions.",
+        highlights: { pseudo: [5], javascript: [11], python: [11] }
+      },
+      SORTED: {
+        title: 'Sorted ✓',
+        message: "Bucket Sort Finalized!\n\n• Result: All partitions merged and verified.\n• Complexity: O(n+k) achieved for uniform distributions.",
+        highlights: { pseudo: [5], javascript: [11], python: [11] }
+      }
     }
   },
   codeSnippets: {

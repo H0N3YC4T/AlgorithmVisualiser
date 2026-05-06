@@ -42,31 +42,35 @@ export const radix = createAlgorithmCard({
   visualSteps: {
     READY: {
       title: 'Ready',
-      message: "LSD Radix Sort Initiated.\n\n• Principle: Sort by each digit position starting from the ones digit.\n• Dependency: Requires a stable sub-sorting algorithm.",
+      message: "LSD Radix Sort Initiated.\n\n• Principle: Distributing keys into buckets based on individual digits.\n• Strategy: Processing positions from Least Significant Digit (LSD) to Most Significant Digit (MSD).\n• Requirement: Utilizing a stable sub-sorting algorithm for each pass.",
       highlights: { pseudo: [1], javascript: [1], python: [1] }
     },
     PROCESSING_DIGIT: {
       title: 'Processing Digit',
-      message: "Analyzing {exp}s digit position.\n\n• Distributing elements into 10 buckets (0-9).\n• Maintaining relative order for stability.",
+      message: "Targeting the {exp}s digit position.\n\n• Analysis: Isolating the digit at 10^{exp} place for every element.\n• Objective: Distributing elements into 10 decimal buckets (0-9).",
       highlights: { pseudo: [2, 3], javascript: [2, 3], python: [2, 3] }
     },
     BUCKETING: {
       title: 'Bucketing',
-      message: "Value {val} placed in Bucket {digit}.\n\n• Radix calculation: floor({val} / {exp}) % 10 = {digit}.",
-      highlights: { pseudo: 4, javascript: 4, python: 4 }
+      message: "Distribution: Value {val} → Bucket {digit}.\n\n• Calculation: floor({val} / {exp}) % 10 = {digit}.\n• Stability: Maintaining the relative order of elements with identical digits.",
+      highlights: { pseudo: [4], javascript: [4], python: [4] }
+    },
+    DISTRIBUTION_COMPLETE: {
+      title: 'Distribution Complete',
+      message: "Bucket Partitioning Finalized for {exp}s position.\n\n• Action: Preparing to reconstruct the array from buckets in sequential order.",
+      highlights: { pseudo: [5], javascript: [5], python: [5] }
     },
     PASS_COMPLETE: {
       title: 'Pass Complete',
-      message: "Collected elements from buckets.\n\n• Reconstructed array is now sorted by the {exp}s digit.\n• Moving to the next power of 10.",
-      highlights: { pseudo: 5, javascript: 5, python: 5 }
+      message: "Array Reconstructed.\n\n• State: The array is now stably sorted relative to the {exp}s digit position.\n• Strategy: Advancing to the next significant digit (x10).",
+      highlights: { pseudo: [5], javascript: [5], python: [5] }
     },
     SORT_COMPLETE: {
       title: 'Sorted ✓',
-      message: "Radix Sort Finalized.\n\n• All digit positions processed.\n• Array is fully sorted non-comparatively.",
-      highlights: { pseudo: 6, javascript: 6, python: 6 }
+      message: "Radix Sort Finalized!\n\n• Result: All digit positions have been processed.\n• Complexity: O(nk) achieved non-comparatively.",
+      highlights: { pseudo: [6], javascript: [6], python: [6] }
     }
   },
-
   codeSnippets: {
     pseudo: `function radixSort(arr):
   max = findMax(arr)
@@ -74,7 +78,6 @@ export const radix = createAlgorithmCard({
   while max / exp > 0:
     countingSortByDigit(arr, exp)
     exp *= 10
-
 function countingSortByDigit(arr, exp):
   n = arr.length
   output = array of size n
@@ -95,12 +98,10 @@ function countingSortByDigit(arr, exp):
   }
   return arr;
 }
-
 function countingSortForRadix(arr, exp) {
   let n = arr.length;
   let output = new Array(n);
   let count = new Array(10).fill(0);
-
   for (let i = 0; i < n; i++) {
     count[Math.floor(arr[i] / exp) % 10]++;
   }
@@ -118,7 +119,6 @@ function countingSortForRadix(arr, exp) {
         counting_sort_for_radix(arr, exp)
         exp *= 10
     return arr
-
 def counting_sort_for_radix(arr, exp):
     n = len(arr)
     output = [0] * n
@@ -134,6 +134,7 @@ def counting_sort_for_radix(arr, exp):
         count[idx] -= 1
     for i in range(n):
         arr[i] = output[i]`
+  },
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [53, 17, 82, 34, 91, 26, 45, 68];
     return {

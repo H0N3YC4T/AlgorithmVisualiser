@@ -42,37 +42,36 @@ export const interpolationsearch = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Interpolation Search initialized. Preparing to estimate position of {targetValue}.",
+        message: "Commencing Interpolation Search: A value-based estimation strategy.\n\n• Prerequisite: The search space MUST be sorted and ideally uniformly distributed.\n• Strategy: Estimating the target's position based on its magnitude relative to the range boundaries.",
         highlights: { pseudo: [1], javascript: [1], python: [1] }
       },
       OUT_OF_BOUNDS: {
         title: 'Out of Bounds',
-        message: "Target {targetValue} is outside the current range [{low}, {high}]. Value not found.",
+        message: "Search Domain Violation.\n\n• Observation: Target value '{targetValue}' is outside the range [{low}, {high}].\n• Result: Terminating search; the value cannot exist in this sorted segment.",
         highlights: { pseudo: [2], javascript: [4], python: [4] }
       },
       ESTIMATING_POSITION: {
         title: 'Estimating Position',
-        message: "Calculating probe position using formula. Estimated at index {pos}.",
+        message: "Interpolating Probe Index.\n\n• Calculation: pos = low + [(target - arr[low]) * (high - low) / (arr[high] - arr[low])] = {pos}.\n• Strategy: Probing the array at the estimated location rather than the center.",
         highlights: { pseudo: [3], javascript: [5], python: [5] }
       },
       MATCH_FOUND: {
         title: 'Match Found ✓',
-        message: "Target value found at index {pos}!",
+        message: "Target Synchronized!\n\n• Result: Value '{targetValue}' located exactly at index {pos}.\n• Note: Highly efficient O(log log n) performance achieved for uniform data.",
         highlights: { pseudo: [4], javascript: [7], python: [7] }
       },
       ESTIMATE_TOO_LOW: {
         title: 'Estimate Too Low',
-        message: "Value at index {pos} ({val}) is < {targetValue}. Searching right.",
+        message: "Probe Value '{val}' < Target '{targetValue}'.\n\n• Deduction: The target must reside in the upper segment.\n• Action: Shifting the 'low' boundary to {low} (pos + 1).",
         highlights: { pseudo: [5], javascript: [9], python: [9] }
       },
       ESTIMATE_TOO_HIGH: {
         title: 'Estimate Too High',
-        message: "Value at index {pos} ({val}) is > {targetValue}. Searching left.",
+        message: "Probe Value '{val}' > Target '{targetValue}'.\n\n• Deduction: The target must reside in the lower segment.\n• Action: Shifting the 'high' boundary to {high} (pos - 1).",
         highlights: { pseudo: [6], javascript: [11], python: [11] }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function interpolationSearch(arr, target):
   low = 0, high = arr.length - 1
@@ -101,7 +100,6 @@ export const interpolationsearch = createAlgorithmCard({
         else: high = pos - 1
     return -1`
   },
-
   // --- Logic ---
   getInitialState: (p, t) => {
     const rawArray = Array.isArray(t) ? t : [3, 9, 15, 21, 27, 33, 39, 45, 51, 57, 63, 69];

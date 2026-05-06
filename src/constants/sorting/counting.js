@@ -42,31 +42,45 @@ export const counting = createAlgorithmCard({
   visualSteps: {
     READY: {
       title: 'Ready',
-      message: "Non-comparative Sort Initiated.\n\n• Principle: Map input values to indices in a count array.\n• Requirement: Input must be within a known, small range.",
-      highlights: { pseudo: [1], javascript: [1] }
+      message: "Commencing Counting Sort: A non-comparative integer sorting algorithm.\n\n• Mechanism: Mapping input values to indices in an auxiliary frequency array.\n• Requirement: Input domain must be constrained within a known, finite range [0, k].",
+      highlights: { pseudo: [1], javascript: [1], python: [1] }
+    },
+    INITIALIZING: {
+      title: 'Initializing',
+      message: "Allocating auxiliary resources.\n\n• Action: Constructing a 'Count Array' of size {maxVal} + 1.\n• Purpose: To track the occurrence frequency of each unique element.",
+      highlights: { pseudo: [2, 3], javascript: [2, 3], python: [2, 3] }
     },
     RECORDING_COUNT: {
       title: 'Recording Count',
-      message: "Processing value {val}.\n\n• Incrementing countArray[{val}] to {newCountVal}.\n• Frequency mapping in progress.",
-      highlights: { pseudo: [2, 3], javascript: [2, 3] }
+      message: "Tallying Occurrence: {val}.\n\n• Action: Incrementing countArray[{val}] to {newCountVal}.\n• Strategy: Building a histogram of all input frequencies.",
+      highlights: { pseudo: [4], javascript: [6], python: [7] }
+    },
+    COUNTING_COMPLETE: {
+      title: 'Counting Complete',
+      message: "Frequency Mapping Finalized.\n\n• State: The count array now contains the raw frequency of every input element.\n• Next Step: Converting frequencies to cumulative positions.",
+      highlights: { pseudo: [4], javascript: [6], python: [7] }
     },
     ACCUMULATING: {
       title: 'Accumulating',
-      message: "Calculating cumulative positions.\n\n• countArray[{i}] now represents the starting index for value {i}.",
-      highlights: { pseudo: 4, javascript: 4 }
+      message: "Calculating Cumulative Positions.\n\n• countArray[{i}] updated to {newCountI}.\n• Logic: Summing previous counts to determine the starting offset for value {i}.",
+      highlights: { pseudo: [5], javascript: [7], python: [9] }
+    },
+    CUMULATIVE_DONE: {
+      title: 'Prefix Sums Finalized',
+      message: "Cumulative Map Ready.\n\n• Result: countArray now serves as a look-up table for the starting index of each element.\n• Strategy: Preparing for stable output generation.",
+      highlights: { pseudo: [5], javascript: [7], python: [9] }
     },
     PLACING_ELEMENT: {
-      title: 'Placing Element',
-      message: "Mapping {val} to sorted position {pos}.\n\n• Determining stable position using the cumulative count.",
-      highlights: { pseudo: 5, javascript: 5 }
+      title: 'Stable Placement',
+      message: "Placing {val} into final position {pos}.\n\n• Action: Mapping the input element to its calculated offset and decrementing the tracker.\n• Stability: Processing from right-to-left to preserve original relative order.",
+      highlights: { pseudo: [6, 7, 8], javascript: [8, 9, 10], python: [10, 11, 12] }
     },
     SORT_COMPLETE: {
       title: 'Sorted ✓',
-      message: "Counting Sort Complete.\n\n• All elements placed in output array.\n• Linear time complexity O(n+k) achieved.",
-      highlights: { pseudo: 6, javascript: 6 }
+      message: "Counting Sort Complete!\n\n• Result: Linear-time O(n+k) sort achieved without a single element comparison.\n• Array is fully stabilized.",
+      highlights: { pseudo: [9], javascript: [12], python: [13] }
     }
   },
-
   codeSnippets: {
     pseudo: `function countingSort(arr):
   max = findMax(arr)
@@ -82,7 +96,6 @@ export const counting = createAlgorithmCard({
   let max = Math.max(...arr);
   let count = new Array(max + 1).fill(0);
   let output = new Array(n);
-
   for (let i = 0; i < n; i++) count[arr[i]]++;
   for (let i = 1; i <= max; i++) count[i] += count[i - 1];
   for (let i = n - 1; i >= 0; i--) {
@@ -96,7 +109,6 @@ export const counting = createAlgorithmCard({
     max_val = max(arr)
     count = [0] * (max_val + 1)
     output = [0] * n
-
     for x in arr:
         count[x] += 1
     for i in range(1, max_val + 1):
@@ -105,6 +117,7 @@ export const counting = createAlgorithmCard({
         output[count[arr[i]] - 1] = arr[i]
         count[arr[i]] -= 1
     return output`
+  },
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [4, 2, 6, 1, 3, 2, 5, 1];
     const maxVal = array.length > 0 ? Math.max(...array) : 1;

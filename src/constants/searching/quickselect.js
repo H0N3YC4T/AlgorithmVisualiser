@@ -43,47 +43,51 @@ export const quickselect = createAlgorithmCard({
     visualSteps: {
       INITIALIZING: {
         title: 'Initializing',
-        message: "Searching for the {targetK}-th smallest element (index {k}).",
+        message: "Commencing Quickselect: A selection algorithm with average linear time complexity.\n\n• Objective: Identifying the {targetK}-th smallest element (Target Index: {k}).\n• Mechanism: Utilizing partitioning logic similar to Quicksort to isolate the k-th position.",
         highlights: { pseudo: [1], javascript: [1], python: [1] }
       },
       START_PARTITION: {
         title: 'Start Partition',
-        message: "Partitioning range [{l}, {r}] using pivot {pivot}.",
+        message: "Isolating Domain [{l}, {r}].\n\n• Strategy: Choosing pivot '{pivot}' from the current segment.\n• Objective: Rearranging elements so that those smaller than the pivot reside on its left.",
         highlights: { pseudo: [2], javascript: [4], python: [4] }
       },
       SWAP_SMALLER: {
         title: 'Swap Smaller',
-        message: "{val} < {pivot}. Swapping to index {i}.",
+        message: "Partitioning: {val} < {pivot}.\n\n• Action: Moving '{val}' to the 'smaller' partition at index {i}.\n• Strategy: Building the left-side segment of elements smaller than the pivot.",
         highlights: { pseudo: [3], javascript: [6], python: [6] }
       },
       CONTINUE_SCAN: {
         title: 'Continue Scan',
-        message: "{val} ≥ {pivot}. Continuing scan.",
+        message: "Partitioning: {val} ≥ {pivot}.\n\n• Logic: Element '{val}' belongs to the 'larger' partition.\n• Action: Continuing scan at the next index.",
         highlights: { pseudo: [3], javascript: [7], python: [7] }
       },
       PIVOT_PLACED: {
         title: 'Pivot Placed',
-        message: "Pivot moved to its final sorted position {i}.",
+        message: "Pivot Alignment Finalized.\n\n• Result: Pivot '{pivot}' moved to its final sorted position at index {i}.\n• Note: All elements to the left are smaller, and all to the right are larger.",
         highlights: { pseudo: [4], javascript: [9], python: [9] }
       },
       FOUND: {
-        title: 'Found ✓',
-        message: "Match! The {kPlusOne}-th smallest element is {val}.",
+        title: 'Match Found ✓',
+        message: "Target Synchronized!\n\n• Result: The pivot landed exactly at index {k}.\n• Conclusion: The {kPlusOne}-th smallest element is confirmed as {val}.",
         highlights: { pseudo: [5], javascript: [11], python: [11] }
       },
       SEARCH_LEFT: {
         title: 'Search Left',
-        message: "Index {pivotIdx} > {k}. Searching left of pivot.",
+        message: "Strategic Branching: pivotIndex ({pivotIdx}) > k ({k}).\n\n• Deduction: The target {targetK}-th element must reside in the LEFT partition.\n• Action: Pruning the right partition and recursing into [{l}, {pivotIdxMinusOne}].",
         highlights: { pseudo: [6], javascript: [13], python: [13] }
       },
       SEARCH_RIGHT: {
         title: 'Search Right',
-        message: "Index {pivotIdx} < {k}. Searching right of pivot.",
+        message: "Strategic Branching: pivotIndex ({pivotIdx}) < k ({k}).\n\n• Deduction: The target {targetK}-th element must reside in the RIGHT partition.\n• Action: Pruning the left partition and recursing into [{pivotIdxPlusOne}, {r}].",
         highlights: { pseudo: [7], javascript: [15], python: [15] }
+      },
+      ERROR: {
+        title: 'Error',
+        message: "Domain Violation: Search space exhausted without locating the target index.",
+        highlights: { pseudo: [], javascript: [], python: [] }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function quickselect(list, left, right, k):
   if left == right: return list[left]

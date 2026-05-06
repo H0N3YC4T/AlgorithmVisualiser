@@ -36,23 +36,38 @@ export const zalgorithm = createAlgorithmCard({
   visualSteps: {
     READY: {
       title: 'Ready',
-      message: "Z-Algorithm Initiated.\n\n• Concatenating pattern and text: P + $ + T.\n• Initializing Z-array of size N.",
+      message: "Commencing Z-Algorithm: A linear-time pattern matching strategy.\n\n• Context: Operating on the concatenated string S = P + $ + T.\n• Objective: Constructing a 'Z-array' where Z[i] is the longest prefix of S starting at index i.\n• Skipping pattern self-comparison: Processing starting at index {startIndex}.",
       highlights: { pseudo: [1], javascript: [1, 2], python: [1, 2] }
+    },
+    Z_ARRAY_COMPLETE: {
+      title: 'Z-Array Complete ✓',
+      message: "Z-Array Construction Finalized.\n\n• Execution Status: {foundCountStatus}.\n• Logic: Text indices where Z[i] ≥ |P| signify a full pattern match.",
+      highlights: { pseudo: [11], javascript: [10], python: [11] }
     },
     OUTSIDE_Z_BOX: {
       title: 'Outside Z-Box',
-      message: "Current index i={i} is outside the current Z-box [l={l}, r={r}].\n\n• Performing manual comparison with prefix.",
+      message: "Probe Point {i} exceeds right boundary {r}.\n\n• Context: Current index is not covered by a previously discovered prefix match.\n• Strategy: Initiating manual naive comparison from index {i} against the global prefix (index 0).",
       highlights: { pseudo: [2], javascript: [4, 5], python: [4, 5] }
     },
     INSIDE_Z_BOX_OPTIMIZED: {
       title: 'Z-Box Optimized',
-      message: "i={i} is inside the Z-box [l={l}, r={r}].\n\n• Copying Z[{k}] = {zK} using symmetry.",
+      message: "Index {i} resides within the active Z-box [{l}..{r}].\n\n• Optimization: Leveraging internal symmetry via k = i - l = {k}.\n• Action: Inheriting Z[{k}] = {zK} directly as it is contained within the established box boundaries.",
       highlights: { pseudo: [3], javascript: [7, 8], python: [7, 8] }
     },
     EXTENDING_Z_BOX: {
       title: 'Extending Z-Box',
-      message: "Extending Z-box beyond index r={r}.\n\n• Checking further character matches.",
+      message: "Boundary Condition: Index {i} is inside the Z-box, but the prefix match Z[{k}] extends to the boundary {r}.\n\n• Strategy: Utilizing the known prefix length as a baseline and resuming manual character comparison beyond the boundary.",
       highlights: { pseudo: [4], javascript: [10], python: [10] }
+    },
+    CHARACTER_MATCH: {
+      title: 'Character Match',
+      message: "Prefix Correspondence: charAt({patternIdx}) == charAt({textIdx}) ('{char}').\n\n• Extension: Expanding the current match and advancing the Z-box right-boundary to {textIdx}.",
+      highlights: { pseudo: [6], javascript: [6], python: [8] }
+    },
+    MISMATCH_BOX_END: {
+      title: 'Mismatch / Box End',
+      message: "Prefix Divergence at pattern index {patternIdx}.\n\n• Match Finalized: Z[{i}] = {zValue}.\n• State Update: New active Z-box established at [{l}..{r}].",
+      highlights: { pseudo: [7, 8], javascript: [7], python: [10] }
     }
   },
   codeSnippets: {

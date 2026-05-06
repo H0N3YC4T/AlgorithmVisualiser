@@ -38,37 +38,36 @@ export const boyermoore = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Boyer-Moore initialized. Bad Character table precomputed.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        message: "Commencing Boyer-Moore (Horspool Variant) Search.\n\n• Strategy: Right-to-left character comparison within the current search window.\n• Heuristic: Utilizing the 'Bad Character Rule' to achieve sub-linear performance by skipping irrelevant text segments.",
+        highlights: { pseudo: [1, 2, 3, 4], javascript: [1, 2, 3], python: [1, 2, 3] }
       },
       CHAR_MATCH: {
         title: 'Right-to-Left Match',
-        message: "Match at pattern offset {compIdx}. Continuing right-to-left verification.",
-        highlights: { pseudo: [2], javascript: [3], python: [3] }
+        message: "Local Correspondence: '{targetChar}' == '{patternChar}'.\n\n• Alignment validated at the current offset.\n• Strategy: Moving LEFT to verify the preceding character in the pattern sequence.",
+        highlights: { pseudo: 7, javascript: 8, python: 7 }
       },
       MISMATCH: {
         title: 'Mismatch',
-        message: "Inconsistency detected at index {idx}. Consulting Bad Character table.",
-        highlights: { pseudo: [3], javascript: [4], python: [4] }
+        message: "Inconsistency Detected: '{targetChar}' ≠ '{patternChar}'.\n\n• Character violation identified at text index {idx}.\n• Action: Executing the Bad Character heuristic to determine the maximum safe shift.",
+        highlights: { pseudo: 8, javascript: 9, python: 9 }
       },
       BAD_CHAR_RULE: {
         title: 'Bad Character Rule',
-        message: "Character '{badChar}' {foundStatus}. Shift distance: {shiftValue}.",
-        highlights: { pseudo: [4], javascript: [5], python: [5] }
+        message: "Bad Character Heuristic: '{badChar}' {foundStatus}.\n\n• Logic: Aligning the pattern's rightmost occurrence of '{badChar}' with the mismatched text character.\n• Shift Distance: {shiftValue} units.",
+        highlights: { pseudo: 11, javascript: 12, python: 12 }
       },
       SHIFT_EXECUTED: {
-        title: 'Executing Shift',
-        message: "Window translation to {nextPos}. Jumping {shiftValue} units.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        title: 'Shift Executed',
+        message: "Window Jump Resolved.\n\n• Search origin translated {shiftValue} positions to index {nextPos}.\n• Strategy: Resetting comparison pointers for the next right-to-left verification pass.",
+        highlights: { pseudo: 11, javascript: 12, python: 12 }
       },
       MATCH_FOUND: {
         title: 'Match Found ✓',
-        message: "Pattern Instance Found at starting index {idx}!",
-        highlights: { pseudo: [4], javascript: [5], python: [5] }
+        message: "Pattern Instance Finalized!\n\n• Result: Successful right-to-left verification for all {m} pattern characters.\n• Match identified at starting index {idx}.",
+        highlights: { pseudo: 9, javascript: 10, python: 10 }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function boyerMoore(text, pattern):
   n = text.length, m = pattern.length
@@ -86,15 +85,11 @@ export const boyermoore = createAlgorithmCard({
   const n = text.length, m = pattern.length;
   const badCharTable = buildBadCharTable(pattern);
   let s = 0;
-
   while (s <= n - m) {
     let j = m - 1;
     while (j >= 0 && pattern[j] === text[s + j]) j--;
-    if (j < 0) {
-      return s;
-    } else {
-      s += Math.max(1, j - (badCharTable[text[s + j]] || -1));
-    }
+    if (j < 0) return s;
+    else s += Math.max(1, j - (badCharTable[text[s + j]] || -1));
   }
   return -1;
 }`,
@@ -111,6 +106,7 @@ export const boyermoore = createAlgorithmCard({
         else:
             s += max(1, j - bad_char.get(text[s + j], -1))
     return -1`
+  },
   getPreprocessing: (pattern, target) => {
     const m = pattern.length;
     const table = {};

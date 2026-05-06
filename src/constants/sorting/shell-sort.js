@@ -107,8 +107,8 @@ export const shellsort = createAlgorithmCard({
                 j -= gap
             arr[j] = temp
         gap //= 2
-    return arr`
   },
+  getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [23, 29, 15, 19, 31, 7, 9, 5, 2];
     return {
       phase: 0, gap: Math.floor(array.length / 2), i: Math.floor(array.length / 2),

@@ -37,23 +37,48 @@ export const rabinkarp = createAlgorithmCard({
   visualSteps: {
     READY: {
       title: 'Ready',
-      message: "Rabin-Karp Rolling Hash Initiated.\n\n• First, we'll calculate the hash of the pattern.\n• Then, we'll slide a window across the text.",
-      highlights: { pseudo: [1], javascript: [1], python: [1] }
+      message: "Commencing Rabin-Karp Search: A hashing-based string matching algorithm.\n\n• Mechanism: Mapping string windows to numerical 'fingerprints' for accelerated comparison.\n• Optimization: Performing character-by-character validation only upon fingerprint (hash) collisions.",
+      highlights: { pseudo: [1, 2], javascript: [1, 2, 3], python: [1, 2, 3] }
     },
     INITIAL_HASHING: {
       title: 'Initial Hashing',
-      message: "Calculating hash for the first window.\n\n• Pattern Hash: {pHash}\n• Text Hash: {tHash}",
-      highlights: { pseudo: [2], javascript: [4, 5], python: [4, 5] }
+      message: "Fingerprint Generation Phase.\n\n• Pattern Hash: {pHash}\n• Initial Window Hash: {tHash}\n• Strategy: Initializing the search state by hashing the pattern and the first text window.",
+      highlights: { pseudo: [3], javascript: [4, 5, 6, 7, 8], python: [4, 5, 6, 7, 8, 9] }
     },
     HASH_MATCH: {
       title: 'Hash Match!',
-      message: "Window hash matches pattern hash!\n\n• Hash: {targetHash}\n• Verifying character by character to confirm match.",
-      highlights: { pseudo: [3, 4], javascript: [7, 8], python: [7, 8] }
+      message: "Fingerprint Collision Detected.\n\n• Target hash ({targetHash}) matches pattern hash ({patternHash}).\n• Action: Initiating character-by-character verification to confirm the match or identify a spurious hit.",
+      highlights: { pseudo: [5, 6], javascript: [11, 12], python: [11, 12] }
+    },
+    HASH_MISMATCH: {
+      title: 'Hash Mismatch',
+      message: "Fingerprint Divergence.\n\n• Window hash ({targetHash}) ≠ pattern hash ({patternHash}).\n• Logic: Invariant failure—the window cannot contain the pattern.\n• Action: Shifting the window via rolling hash.",
+      highlights: { pseudo: [5, 8], javascript: [11, 14], python: [11, 14] }
+    },
+    SPURIOUS_HIT: {
+      title: 'Spurious Hit',
+      message: "Spurious Hit Identified (Hash Collision).\n\n• Hashes matched, but the character sequence at index {textIdx} differs.\n• Note: A collision occurred in the hash function's finite range.",
+      highlights: { pseudo: [6], javascript: [12], python: [12] }
+    },
+    SUCCESS_FULL_MATCH: {
+      title: 'Success!',
+      message: "Pattern Instance Finalized!\n\n• Result: Both fingerprints and character sequences are fully synchronized at index {currentIndex}.\n• Match Confirmed.",
+      highlights: { pseudo: [7], javascript: [12], python: [12] }
+    },
+    CHAR_MATCH: {
+      title: 'Verification Scan',
+      message: "Verification Scan.\n\n• Local character match confirmed within a valid hash window.\n• Continuing sequential validation of the remaining pattern length.",
+      highlights: { pseudo: [6], javascript: [12], python: [12] }
     },
     ROLLING_HASH: {
       title: 'Rolling Hash',
-      message: "Sliding window to the right.\n\n• Removing '{charToRemove}' and adding '{charToAdd}'.\n• New Hash: {tHash}",
-      highlights: { pseudo: [5], javascript: [12, 13], python: [12, 13] }
+      message: "Rolling Hash Update (O(1) Shift).\n\n• Evicting: '{charToRemove}' | Admitting: '{charToAdd}'.\n• Updated Hash: {tHash}\n• Strategy: Recalculating the fingerprint in constant time by shifting the sliding window digits.",
+      highlights: { pseudo: [9], javascript: [15, 16], python: [15, 16] }
+    },
+    SEARCH_COMPLETED: {
+      title: 'Search Completed',
+      message: "Search Domain Exhausted.\n\n• All potential window alignments have been fingerprints and/or validated.\n• Result: Execution terminated.",
+      highlights: { pseudo: [10], javascript: [10, 11], python: [10, 11] }
     }
   },
   codeSnippets: {

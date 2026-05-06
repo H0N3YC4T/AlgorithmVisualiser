@@ -38,42 +38,41 @@ export const kmp = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "KMP Search initialized. π Table precomputed.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
-      },
-      CHAR_MATCH: {
-        title: 'Character Match',
-        message: "Local Correspondence: '{targetChar}' == '{patternChar}'. Moving to index {compIdx}.",
-        highlights: { pseudo: [2], javascript: [3], python: [3] }
-      },
-      MISMATCH: {
-        title: 'Mismatch',
-        message: "Inconsistency Detected: '{targetChar}' ≠ '{patternChar}' at index {idx}.",
-        highlights: { pseudo: [3], javascript: [4], python: [4] }
-      },
-      CONSULT_PI: {
-        title: 'Consulting π Table',
-        message: "Mismatch at pattern index {compIdx}. Consultation suggests partial prefix match of length {newCompIdx}.",
-        highlights: { pseudo: [4], javascript: [5], python: [5] }
-      },
-      NO_PREFIX: {
-        title: 'No Prefix Matched',
-        message: "No shared prefix-suffix found. Shifting pattern by 1.",
-        highlights: { pseudo: [4], javascript: [5], python: [5] }
-      },
-      SMART_SHIFT: {
-        title: 'Smart Shift',
-        message: "Window translation to {nextPos}. Resuming from pattern offset {newCompIdx}.",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        message: "Commencing Knuth-Morris-Pratt (KMP) Search.\n\n• Strategy: Utilizing a 'Partial Match Table' (failure function) to avoid redundant character comparisons.\n• Optimization: Skipping ahead by identifying the longest proper prefix that is also a suffix within the current match.",
+        highlights: { pseudo: [1, 2, 3], javascript: [1, 2, 3, 4], python: [1, 2, 3] }
       },
       MATCH_FOUND: {
         title: 'Match Found ✓',
-        message: "Pattern Instance Found at starting index {idx}!",
-        highlights: { pseudo: [4], javascript: [5], python: [5] }
+        message: "Pattern Instance Finalized!\n\n• Result: Full character correspondence verified.\n• Match identified at starting index {idx}.",
+        highlights: { pseudo: [11], javascript: [12], python: [11] }
+      },
+      CHAR_MATCH: {
+        title: 'Character Match',
+        message: "Local Correspondence: '{targetChar}' == '{patternChar}'.\n\n• Alignment validated for current prefix segment.\n• Strategy: Extending the active match length to {newLen} characters.",
+        highlights: { pseudo: [9], javascript: [11], python: [9] }
+      },
+      MISMATCH: {
+        title: 'Mismatch',
+        message: "Inconsistency Detected: '{targetChar}' ≠ '{patternChar}'.\n\n• Character violation identified at global text index {idx}.\n• Action: Querying the prefix table for the next optimal alignment.",
+        highlights: { pseudo: [7, 8], javascript: [9, 10], python: [7, 8] }
+      },
+      NO_PREFIX: {
+        title: 'No Prefix Matched',
+        message: "Prefix Table Null: No usable symmetry identified.\n\n• Current match length has no proper prefix that is also a suffix.\n• Action: Shifting the search window by exactly 1 unit.",
+        highlights: { pseudo: [7, 8], javascript: [9, 10], python: [7, 8] }
+      },
+      CONSULT_PI: {
+        title: 'Consulting π Table',
+        message: "Consulting Prefix Table (pi[{piIdx}] = {newCompIdx}).\n\n• Result: Identifying a shift of {shiftValue} units that preserves {newCompIdx} existing character matches.\n• Objective: Minimize redundant comparisons.",
+        highlights: { pseudo: [7, 8], javascript: [9, 10], python: [7, 8] }
+      },
+      SMART_SHIFT: {
+        title: 'Smart Shift',
+        message: "Intelligent Shift Executed: Origin moved to {nextPos}.\n\n• Strategy: Resuming character verification from the first uncertain character.\n• Note: The first {newCompIdx} characters are mathematically guaranteed to match.",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
       }
     }
   },
-
   codeSnippets: {
     pseudo: `function kmpSearch(text, pattern):
   n = text.length, m = pattern.length
@@ -92,7 +91,6 @@ export const kmp = createAlgorithmCard({
   const m = pattern.length;
   const pi = computePrefixFunction(pattern);
   let q = 0;
-
   for (let i = 0; i < n; i++) {
     while (q > 0 && pattern[q] !== text[i]) {
       q = pi[q - 1];
@@ -114,6 +112,7 @@ export const kmp = createAlgorithmCard({
         if q == m:
             return i - m + 1
     return -1`
+  },
   getPreprocessing: (pattern, target) => {
     const m = pattern.length;
     const pi = new Array(m).fill(0);
