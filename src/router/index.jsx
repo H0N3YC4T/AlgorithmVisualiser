@@ -1,8 +1,8 @@
 import { Routes, Route, useParams, useNavigate, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home } from "@/features/dashboard";
-import { VisualizerFrame } from "@/features/visualizer";
+import Home from "@/layout/Home";
+import VisualizerFrame from "@/layout/VisualizerFrame";
 
 
 /**
