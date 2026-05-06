@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { memo } from "react";
 import { Info, CheckCircle2, AlertCircle, ArrowRightCircle } from "lucide-react";
-import { classCategories } from "@/styles/divClassCustom";
+
 
 
 const ProcessLog = memo(({ log, algorithm }) => {

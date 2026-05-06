@@ -12,8 +12,8 @@ import { CodePanel } from "@/features/educational";
 import MetricsBar from "@/features/visualizer/components/MetricsBar";
 import AlgorithmSidebar from "@/features/visualizer/components/AlgorithmSidebar";
 import AuxiliaryArrays from "@/features/visualizer/components/AuxiliaryArrays";
-import usePlayback from "@/features/visualizer/hooks/usePlayback";
-import useVisualizerLabels from "@/core/hooks/useVisualizerLabels";
+import usePlayback from "@/hooks/usePlayback";
+import useVisualizerLabels from "@/hooks/useVisualizerLabels";
 import { classCategories } from "@/styles/divClassCustom";
 
 const MainVisualization = memo(

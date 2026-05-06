@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { memo } from "react";
 import { Trash2 } from "lucide-react";
-import GridEditor from "../visualizer/grid/GridEditor";
+import GridEditor from "@/features/visualizer/components/GridEditor";
 import { classCategories } from "../../styles/divClassCustom";
 
 const InputPanel = memo(
