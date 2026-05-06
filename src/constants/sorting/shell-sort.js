@@ -3,7 +3,7 @@ import { createAlgorithmCard } from '../factory';
 
 export const shellsort = createAlgorithmCard({
   id: 'shellsort',
-  
+
   // --- Metadata ---
   metadata: {
     type: 'sorting',
@@ -37,35 +37,34 @@ export const shellsort = createAlgorithmCard({
       { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
       { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
-  },
-
-  // --- Visual Steps ---
-  visualSteps: {
-    READY: {
-      title: 'Ready',
-      message: "Diminishing Increment Sort Initiated.\n\n• Principle: Perform insertion sort on sub-lists of elements spaced by a 'gap'.\n• Strategy: Gradually reduce the gap to 1 to finalize the sort.",
-      highlights: { pseudo: [1], javascript: [1], python: [1] }
+    // --- Visual Steps ---
+    visualSteps: {
+      READY: {
+        title: 'Ready',
+        message: "Diminishing Increment Sort Initiated.\n\n• Principle: Perform insertion sort on sub-lists of elements spaced by a 'gap'.\n• Strategy: Gradually reduce the gap to 1 to finalize the sort.",
+        highlights: { pseudo: [1], javascript: [1], python: [1] }
+      },
+      GAP_SIZE: {
+        title: 'Gap Reduction',
+        message: "Reducing gap size to {gap}.\n\n• Sub-lists are now defined by elements {gap} positions apart.\n• Performing insertion sort on these coarse-grained sub-lists.",
+        highlights: { pseudo: [2], javascript: [2], python: [2] }
+      },
+      INSERTION_AT_GAP: {
+        title: 'Insertion Scan',
+        message: "Processing element {val} at index {i}.\n\n• Comparing with elements {gap} positions behind.",
+        highlights: { pseudo: [3, 4], javascript: [3, 4], python: [3, 4] }
+      },
+      GAP_SWAP: {
+        title: 'Gap Swap',
+        message: "Swapping {valLeft} and {valRight} across gap {gap}.\n\n• Long-distance exchange reduces overall inversions quickly.",
+        highlights: { pseudo: 5, javascript: 5, python: 5 }
+      },
+      SORT_COMPLETE: {
+        title: 'Sorted ✓',
+        message: "Shell Sort Finalized.\n\n• Final pass with gap=1 completed.\n• Array is fully sorted.",
+        highlights: { pseudo: 6, javascript: 6, python: 6 }
+      }
     },
-    GAP_SIZE: {
-      title: 'Gap Reduction',
-      message: "Reducing gap size to {gap}.\n\n• Sub-lists are now defined by elements {gap} positions apart.\n• Performing insertion sort on these coarse-grained sub-lists.",
-      highlights: { pseudo: [2], javascript: [2], python: [2] }
-    },
-    INSERTION_AT_GAP: {
-      title: 'Insertion Scan',
-      message: "Processing element {val} at index {i}.\n\n• Comparing with elements {gap} positions behind.",
-      highlights: { pseudo: [3, 4], javascript: [3, 4], python: [3, 4] }
-    },
-    GAP_SWAP: {
-      title: 'Gap Swap',
-      message: "Swapping {valLeft} and {valRight} across gap {gap}.\n\n• Long-distance exchange reduces overall inversions quickly.",
-      highlights: { pseudo: 5, javascript: 5, python: 5 }
-    },
-    SORT_COMPLETE: {
-      title: 'Sorted ✓',
-      message: "Shell Sort Finalized.\n\n• Final pass with gap=1 completed.\n• Array is fully sorted.",
-      highlights: { pseudo: 6, javascript: 6, python: 6 }
-    }
   },
 
   codeSnippets: {
@@ -107,6 +106,7 @@ export const shellsort = createAlgorithmCard({
                 j -= gap
             arr[j] = temp
         gap //= 2
+    return arr`
   },
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [23, 29, 15, 19, 31, 7, 9, 5, 2];

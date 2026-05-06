@@ -32,7 +32,6 @@ export const bucket = createAlgorithmCard({
       { label: 'Bucket Assign', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
       { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
-  },
     visualSteps: {
       READY: {
         title: 'Ready',
@@ -59,7 +58,7 @@ export const bucket = createAlgorithmCard({
         message: "Bucket Sort Finalized!\n\n• Result: All partitions merged and verified.\n• Complexity: O(n+k) achieved for uniform distributions.",
         highlights: { pseudo: [5], javascript: [11], python: [11] }
       }
-    }
+    },
   },
   codeSnippets: {
     pseudo: `function bucketSort(arr):

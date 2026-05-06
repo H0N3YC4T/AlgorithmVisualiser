@@ -38,8 +38,8 @@ export const boyermoore = createAlgorithmCard({
     visualSteps: {
       READY: {
         title: 'Ready',
-        message: "Commencing Boyer-Moore (Horspool Variant) Search.\n\n• Strategy: Right-to-left character comparison within the current search window.\n• Heuristic: Utilizing the 'Bad Character Rule' to achieve sub-linear performance by skipping irrelevant text segments.",
-        highlights: { pseudo: [1, 2, 3, 4], javascript: [1, 2, 3], python: [1, 2, 3] }
+        message: "Commencing Boyer-Moore Search: A high-performance string matching algorithm.\n\n• Strategy: Right-to-Left character verification combined with the 'Bad Character Heuristic'.\n• Optimization: Skipping redundant segments by aligning the mismatch character with its rightmost occurrence in the pattern.",
+        highlights: { pseudo: [1, 2, 3], javascript: [1, 2, 3], python: [1, 2, 3] }
       },
       CHAR_MATCH: {
         title: 'Right-to-Left Match',
@@ -107,7 +107,7 @@ export const boyermoore = createAlgorithmCard({
             s += max(1, j - bad_char.get(text[s + j], -1))
     return -1`
   },
-  getPreprocessing: (pattern, target) => {
+  getPreprocessing: (pattern, _target) => {
     const m = pattern.length;
     const table = {};
     for (let i = 0; i < m - 1; i++) {

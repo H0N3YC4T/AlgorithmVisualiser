@@ -113,7 +113,7 @@ export const kmp = createAlgorithmCard({
             return i - m + 1
     return -1`
   },
-  getPreprocessing: (pattern, target) => {
+  getPreprocessing: (pattern, _target) => {
     const m = pattern.length;
     const pi = new Array(m).fill(0);
     let k = 0;
@@ -138,7 +138,7 @@ export const kmp = createAlgorithmCard({
     }
   }),
 
-  nextStep: (state, target, pattern, preprocessing) => {
+  nextStep: (state, target, pattern, _preprocessing) => {
     const { currentIndex, phase, compIdx } = state;
     const { pi } = preprocessing;
     const m = pattern.length;

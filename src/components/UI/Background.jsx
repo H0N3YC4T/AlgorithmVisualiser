@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export default function Background() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden bg-[#020617]">
