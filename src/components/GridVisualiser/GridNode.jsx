@@ -18,7 +18,7 @@ const GridNode = memo(
     r,
     c,
   }) => {
-    let cellClass = `h-full w-full rounded-sm border transition-all duration-300 flex items-center justify-center select-none cursor-pointer [container-type:inline-size]`;
+    let cellClass = `h-full w-full rounded-sm border-1 border-white/55 transition-all duration-300 flex items-center justify-center select-none cursor-pointer [container-type:inline-size]`;
     let colorClass = colors.unvisited || "";
 
     if (isWall) colorClass = colors.wall || "";
