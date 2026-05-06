@@ -3,17 +3,17 @@ import { memo } from "react";
 import PropTypes from "prop-types";
 import InputPanel from "@/components/ui/InputPanel";
 import Legend from "@/components/ui/Legend";
-import ArrayVisualizer from "@/features/visualizer/renderers/ArrayVisualizer";
-import TextVisualizer from "@/features/visualizer/renderers/TextVisualizer";
-import ZVisualizer from "@/features/visualizer/renderers/ZVisualizer";
-import GridVisualizer from "@/features/visualizer/renderers/GridVisualizer";
-import ProcessLog from "@/features/visualizer/components/ProcessLog";
-import { CodePanel } from "@/features/educational";
-import MetricsBar from "@/features/visualizer/components/MetricsBar";
-import AlgorithmSidebar from "@/features/visualizer/components/AlgorithmSidebar";
-import AuxiliaryArrays from "@/features/visualizer/components/AuxiliaryArrays";
-import usePlayback from "@/features/visualizer/hooks/usePlayback";
-import useVisualizerLabels from "@/core/hooks/useVisualizerLabels";
+import ArrayVisualizer from "@/components/visualizer/types/ArrayVisualizer";
+import TextVisualizer from "@/components/visualizer/types/TextVisualizer";
+import ZVisualizer from "@/components/visualizer/types/ZVisualizer";
+import GridVisualizer from "@/components/visualizer/types/GridVisualizer";
+import ProcessLog from "@/components/visualizer/elements/ProcessLog";
+import CodePanel from "@/components/ui/CodePanel";
+import MetricsBar from "@/components/visualizer/elements/MetricsBar";
+import AlgorithmSidebar from "@/components/visualizer/elements/AlgorithmSidebar";
+import AuxiliaryArrays from "@/components/visualizer/elements/AuxiliaryArrays";
+import usePlayback from "@/hooks/useVisualizerPlayback";
+import useVisualizerLabels from "@/hooks/useVisualizerLabels";
 import { classCategories } from "@/styles/divClassCustom";
 
 const MainVisualization = memo(
