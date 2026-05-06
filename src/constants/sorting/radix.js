@@ -1,75 +1,84 @@
 /** Radix Sort Module */
-import { createAlgorithmCard } from '../factory';
+import { createAlgorithmCard } from "../factory";
 
 export const radix = createAlgorithmCard({
-  id: 'radix',
-  
+  id: "radix",
+
   // --- Metadata ---
   metadata: {
-    type: 'sorting',
-    visualizerType: 'array',
-    category: 'Sorting Algorithms',
-    defaultInputs: { target: '53, 17, 82, 34, 91, 26, 45, 68', pattern: '' },
+    type: "sorting",
+    visualizerType: "array",
+    category: "Sorting Algorithms",
+    defaultInputs: { target: "53, 17, 82, 34, 91, 26, 45, 68", pattern: "" },
   },
 
   homeCard: {
-    name: 'Radix Sort',
-    difficulty: 'Hard',
-    description: 'A non-comparative sorting algorithm that avoids comparison by creating and distributing elements into buckets according to their radix.',
+    name: "Radix Sort",
+    difficulty: "Hard",
+    description:
+      "A non-comparative sorting algorithm that avoids comparison by creating and distributing elements into buckets according to their radix.",
     complexity: {
-      timeBest: 'Ω(nk)',
-      timeAvg: 'Θ(nk)',
-      timeWorst: 'O(nk)',
-      space: 'O(n+k)'
+      timeBest: "Ω(nk)",
+      timeAvg: "Θ(nk)",
+      timeWorst: "O(nk)",
+      space: "O(n+k)",
     },
   },
 
   algorithmPage: {
     uiConfig: {
-      statusLabel: 'Digit: {exp}',
-      startButton: 'Start Sorting',
-      playbackSpeed: 200
+      statusLabel: "Digit: {exp}",
+      startButton: "Start Sorting",
+      playbackSpeed: 200,
     },
-    extendedDescription: 'Radix Sort processes digits from least significant to most significant (LSD), using a stable sub-sort (like Counting Sort) for each position.',
+    extendedDescription:
+      "Radix Sort processes digits from least significant to most significant (LSD), using a stable sub-sort (like Counting Sort) for each position.",
     legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
-      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-      { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
+      { label: "Digit Group", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
+      { label: "Bucketing", color: "bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]" },
+      { label: "Sorted", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
     ],
   },
 
   // --- Visual Steps ---
   visualSteps: {
     READY: {
-      title: 'Ready',
-      message: "LSD Radix Sort Initiated.\n\n• Principle: Distributing keys into buckets based on individual digits.\n• Strategy: Processing positions from Least Significant Digit (LSD) to Most Significant Digit (MSD).\n• Requirement: Utilizing a stable sub-sorting algorithm for each pass.",
-      highlights: { pseudo: [1], javascript: [1], python: [1] }
+      title: "Ready",
+      message:
+        "LSD Radix Sort Initiated.\n\n• Principle: Distributing keys into buckets based on individual digits.\n• Strategy: Processing positions from Least Significant Digit (LSD) to Most Significant Digit (MSD).\n• Requirement: Utilizing a stable sub-sorting algorithm for each pass.",
+      highlights: { pseudo: [1], javascript: [1], python: [1] },
     },
     PROCESSING_DIGIT: {
-      title: 'Processing Digit',
-      message: "Targeting the {exp}s digit position.\n\n• Analysis: Isolating the digit at 10^{exp} place for every element.\n• Objective: Distributing elements into 10 decimal buckets (0-9).",
-      highlights: { pseudo: [2, 3], javascript: [2, 3], python: [2, 3] }
+      title: "Processing Digit",
+      message:
+        "Targeting the {exp}s digit position.\n\n• Analysis: Isolating the digit at 10^{exp} place for every element.\n• Objective: Distributing elements into 10 decimal buckets (0-9).",
+      highlights: { pseudo: [2, 3], javascript: [2, 3], python: [2, 3] },
     },
     BUCKETING: {
-      title: 'Bucketing',
-      message: "Distribution: Value {val} → Bucket {digit}.\n\n• Calculation: floor({val} / {exp}) % 10 = {digit}.\n• Stability: Maintaining the relative order of elements with identical digits.",
-      highlights: { pseudo: [4], javascript: [4], python: [4] }
+      title: "Bucketing",
+      message:
+        "Distribution: Value {val} → Bucket {digit}.\n\n• Calculation: floor({val} / {exp}) % 10 = {digit}.\n• Stability: Maintaining the relative order of elements with identical digits.",
+      highlights: { pseudo: [4], javascript: [4], python: [4] },
     },
     DISTRIBUTION_COMPLETE: {
-      title: 'Distribution Complete',
-      message: "Bucket Partitioning Finalized for {exp}s position.\n\n• Action: Preparing to reconstruct the array from buckets in sequential order.",
-      highlights: { pseudo: [5], javascript: [5], python: [5] }
+      title: "Distribution Complete",
+      message:
+        "Bucket Partitioning Finalized for {exp}s position.\n\n• Action: Preparing to reconstruct the array from buckets in sequential order.",
+      highlights: { pseudo: [5], javascript: [5], python: [5] },
     },
     PASS_COMPLETE: {
-      title: 'Pass Complete',
-      message: "Array Reconstructed.\n\n• State: The array is now stably sorted relative to the {exp}s digit position.\n• Strategy: Advancing to the next significant digit (x10).",
-      highlights: { pseudo: [5], javascript: [5], python: [5] }
+      title: "Pass Complete",
+      message:
+        "Array Reconstructed.\n\n• State: The array is now stably sorted relative to the {exp}s digit position.\n• Strategy: Advancing to the next significant digit (x10).",
+      highlights: { pseudo: [5], javascript: [5], python: [5] },
     },
     SORT_COMPLETE: {
-      title: 'Sorted ✓',
-      message: "Radix Sort Finalized!\n\n• Result: All digit positions have been processed.\n• Complexity: O(nk) achieved non-comparatively.",
-      highlights: { pseudo: [6], javascript: [6], python: [6] }
-    }
+      title: "Sorted ✓",
+      message:
+        "Radix Sort Finalized!\n\n• Result: All digit positions have been processed.\n• Complexity: O(nk) achieved non-comparatively.",
+      highlights: { pseudo: [6], javascript: [6], python: [6] },
+    },
   },
   codeSnippets: {
     pseudo: `function radixSort(arr):
@@ -133,15 +142,21 @@ def counting_sort_for_radix(arr, exp):
         output[count[idx] - 1] = arr[i]
         count[idx] -= 1
     for i in range(n):
-        arr[i] = output[i]`
+        arr[i] = output[i]`,
   },
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [53, 17, 82, 34, 91, 26, 45, 68];
     return {
-      phase: 0, exp: 1, array, maxVal: Math.max(...array),
+      phase: 0,
+      exp: 1,
+      array,
+      maxVal: Math.max(...array),
       buckets: Array.from({ length: 10 }, () => []),
-      i: 0, activeIndices: [], sortedIndices: [], swapIndices: [],
-      log: { title: 'READY', type: 'info', messageKey: 'READY' }
+      i: 0,
+      activeIndices: [],
+      sortedIndices: [],
+      swapIndices: [],
+      log: { title: "READY", type: "info", messageKey: "READY" },
     };
   },
 
@@ -152,43 +167,65 @@ def counting_sort_for_radix(arr, exp):
     if (phase === 0) {
       if (Math.floor(maxVal / exp) <= 0) {
         return {
-          ...newState, isFinished: true, sortedIndices: [...new Array(array.length).keys()],
-          log: { title: 'SORT COMPLETE', type: 'success', messageKey: 'SORT_COMPLETE' }
+          ...newState,
+          isFinished: true,
+          sortedIndices: [...new Array(array.length).keys()],
+          log: { title: "SORT COMPLETE", type: "success", messageKey: "SORT_COMPLETE" },
         };
       }
-      
+
       return {
-        ...newState, phase: 1, i: 0, buckets: Array.from({ length: 10 }, () => []),
-        log: { title: `PROCESSING ${exp}s DIGIT`, type: 'info', messageKey: 'PROCESSING_DIGIT', params: { exp: exp } }
+        ...newState,
+        phase: 1,
+        i: 0,
+        buckets: Array.from({ length: 10 }, () => []),
+        log: { title: `PROCESSING ${exp}s DIGIT`, type: "info", messageKey: "PROCESSING_DIGIT", params: { exp: exp } },
       };
     }
 
     if (phase === 1) {
       if (i >= array.length) {
         return {
-          ...newState, phase: 2,
-          log: { title: 'DISTRIBUTION COMPLETE', type: 'match', messageKey: 'DISTRIBUTION_COMPLETE', params: { exp: exp } }
+          ...newState,
+          phase: 2,
+          log: {
+            title: "DISTRIBUTION COMPLETE",
+            type: "match",
+            messageKey: "DISTRIBUTION_COMPLETE",
+            params: { exp: exp },
+          },
         };
       }
 
       const val = array[i];
       const digit = Math.floor((val / exp) % 10);
-      const newBuckets = buckets.map((b, idx) => idx === digit ? [...b, val] : b);
+      const newBuckets = buckets.map((b, idx) => (idx === digit ? [...b, val] : b));
 
       return {
-        ...newState, buckets: newBuckets, i: i + 1, activeIndices: [i],
-        log: { title: 'BUCKETING', type: 'info', messageKey: 'BUCKETING', params: { val: val, digit: digit, exp: exp } }
+        ...newState,
+        buckets: newBuckets,
+        i: i + 1,
+        activeIndices: [i],
+        log: {
+          title: "BUCKETING",
+          type: "info",
+          messageKey: "BUCKETING",
+          params: { val: val, digit: digit, exp: exp },
+        },
       };
     }
 
     if (phase === 2) {
       const flattened = buckets.flat();
       return {
-        ...newState, array: flattened, phase: 0, exp: exp * 10,
-        log: { title: 'PASS COMPLETE', type: 'shift', messageKey: 'PASS_COMPLETE', params: { exp: exp } }
+        ...newState,
+        array: flattened,
+        phase: 0,
+        exp: exp * 10,
+        log: { title: "PASS COMPLETE", type: "shift", messageKey: "PASS_COMPLETE", params: { exp: exp } },
       };
     }
 
     return newState;
-  }
+  },
 });

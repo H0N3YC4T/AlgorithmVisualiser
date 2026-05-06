@@ -6,7 +6,7 @@ import { getGridConfig, generateMaze } from './grid-config';
  */
 export const astar = createAlgorithmCard({
   id: 'astar',
-  
+
   // --- Metadata ---
   metadata: {
     type: 'pathfinding',
@@ -125,7 +125,7 @@ export const astar = createAlgorithmCard({
   // --- Logic ---
   getInitialState: (p, t, algo, existingState) => {
     const { rows, cols, startNode, endNode } = getGridConfig(existingState || algo);
-    
+
     let walls;
     if (existingState?.walls) {
       walls = existingState.walls instanceof Set ? existingState.walls : new Set(existingState.walls.map(w => `${w.r},${w.c}`));
@@ -134,13 +134,13 @@ export const astar = createAlgorithmCard({
       walls = new Set(mazeWalls.map(w => `${w.r},${w.c}`));
     }
 
-    const gScore = {}; 
+    const gScore = {};
     const fScore = {};
     const startKey = `${startNode.r},${startNode.c}`;
     gScore[startKey] = 0;
     fScore[startKey] = Math.abs(startNode.r - endNode.r) + Math.abs(startNode.c - endNode.c);
 
-    const costs = existingState?.costs || new Array(rows).fill().map(() => 
+    const costs = existingState?.costs || new Array(rows).fill().map(() =>
       new Array(cols).fill().map(() => 1)
     );
 
@@ -187,7 +187,7 @@ export const astar = createAlgorithmCard({
       const key = `${current.r},${current.c}`;
 
       if (visited.has(key)) return { ...state, openSet: restOpenSet };
-      
+
       const newVisited = new Set(visited);
       newVisited.add(key);
 
@@ -258,7 +258,7 @@ export const astar = createAlgorithmCard({
     if (phase === 1) { // handleBacktrackPhase
       const lastKey = path.length === 0 ? `${endNode.r},${endNode.c}` : `${path[0].r},${path[0].c}`;
       const parent = previous[lastKey];
-      
+
       if (!parent) {
         return {
           ...state,

@@ -35,9 +35,9 @@ export const linear = createAlgorithmCard({
     extendedDescription: 'Linear Search is the simplest search algorithm. It traverses the array from the first element to the last, comparing each element with the target value until a match is found or the end of the array is reached.',
     legendItems: [
       { label: 'Unvisited', color: 'bg-slate-800 border-slate-700' },
-      { label: 'Checking', color: 'bg-indigo-500' },
-      { label: 'Match', color: 'bg-emerald-500' },
-      { label: 'Not Found', color: 'bg-rose-500' },
+      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Found', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      { label: 'Not Found', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
     ],
     visualSteps: {
       READY: {

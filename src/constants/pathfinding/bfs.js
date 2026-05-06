@@ -6,7 +6,7 @@ import { getGridConfig, generateMaze } from './grid-config';
  */
 export const bfs = createAlgorithmCard({
   id: 'bfs',
-  
+
   // --- Metadata ---
   metadata: {
     type: 'pathfinding',
@@ -117,7 +117,7 @@ export const bfs = createAlgorithmCard({
   // --- Logic ---
   getInitialState: (p, t, algo, existingState) => {
     const { rows, cols, startNode, endNode } = getGridConfig(existingState || algo);
-    
+
     let walls;
     if (existingState?.walls) {
       walls = existingState.walls instanceof Set ? existingState.walls : new Set(existingState.walls.map(w => `${w.r},${w.c}`));
@@ -125,16 +125,16 @@ export const bfs = createAlgorithmCard({
       const mazeWalls = generateMaze(rows, cols, startNode, endNode);
       walls = new Set(mazeWalls.map(w => `${w.r},${w.c}`));
     }
-    
+
     return {
       rows, cols,
-      startNode, endNode, 
+      startNode, endNode,
       walls, // Store as Set for O(1) lookup
       visited: new Set(),
       previous: {}, // Map key string to {r, c}
       queue: [startNode],
       path: [],
-      phase: 0, 
+      phase: 0,
       activeNode: null,
       isFinished: false,
       iterations: 0,
@@ -149,13 +149,13 @@ export const bfs = createAlgorithmCard({
 
   nextStep: (state) => {
     const { visited, previous, queue, phase, rows, cols, endNode, path, walls } = state;
-    
+
     if (phase === 0) { // handleSearchPhase
       if (queue.length === 0) {
-        return { 
-          ...state, 
-          isFinished: true, 
-          log: { title: 'NO PATH', type: 'mismatch', messageKey: 'NO_PATH' } 
+        return {
+          ...state,
+          isFinished: true,
+          log: { title: 'NO PATH', type: 'mismatch', messageKey: 'NO_PATH' }
         };
       }
 
@@ -166,7 +166,7 @@ export const bfs = createAlgorithmCard({
       if (visited.has(key)) {
         return { ...state, queue: restQueue };
       }
-      
+
       const newVisited = new Set(visited);
       newVisited.add(key);
 
@@ -214,12 +214,12 @@ export const bfs = createAlgorithmCard({
     if (phase === 1) { // handleBacktrackPhase
       const lastKey = path.length === 0 ? `${endNode.r},${endNode.c}` : `${path[0].r},${path[0].c}`;
       const parent = previous[lastKey];
-      
+
       if (!parent) {
-        return { 
-          ...state, 
-          isFinished: true, 
-          log: { title: 'DONE ✓', type: 'success', messageKey: 'DONE' } 
+        return {
+          ...state,
+          isFinished: true,
+          log: { title: 'DONE ✓', type: 'success', messageKey: 'DONE' }
         };
       }
       return {

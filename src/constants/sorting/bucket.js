@@ -27,9 +27,9 @@ export const bucket = createAlgorithmCard({
     },
     extendedDescription: 'Bucket Sort works by distributing the elements of an array into several buckets. Each bucket is then sorted individually, either using a different sorting algorithm, or by recursively applying the bucket sorting algorithm.',
     legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
-      { label: 'Analyzing', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-      { label: 'Bucket Assign', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
+      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
+      { label: 'Bucketing', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Sorting', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
       { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
     visualSteps: {

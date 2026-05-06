@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { ArrowLeft, RotateCcw, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { classCategories } from "@/styles/divClassCustom";
 
-
 export default function MetricsBar({
   name,
   phase,
@@ -18,8 +17,25 @@ export default function MetricsBar({
   isPlaying,
   buttonText,
   state,
+  algorithm,
 }) {
-  const isPathfinding = state?.type === "pathfinding" || !!state?.gridConfig || !!state?.rows;
+  const localTheme = {
+    bar: "px-6 py-4 border-b border-slate-800 bg-slate-900/80 flex flex-wrap justify-between items-center gap-6",
+    backBtn: "p-2.5 bg-slate-950 border border-slate-800 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all group shadow-inner",
+    category: `${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-black text-white/30 uppercase tracking-tighter`,
+    name: `${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-black text-white m-0 tracking-tighter leading-none uppercase`,
+    metricPill: "hidden lg:flex items-center gap-8 px-8 py-2.5 bg-slate-950/50 rounded-full border border-slate-800/50 shadow-inner",
+    metricLabel: `${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`,
+    metricValue: (color) => `${classCategories.cardDescription.split(" ")[0]} font-mono font-black text-${color}-400`,
+    controlGroup: "flex items-center gap-3 bg-slate-950/40 p-1.5 rounded-2xl border border-slate-800/40 shadow-inner",
+    btnBase: `flex items-center gap-2 px-4 py-2 rounded-xl ${classCategories.logicText.split(" ")[0]} font-black uppercase tracking-widest transition-all active:scale-95 border`,
+    btnReset: "bg-rose-500/10 border-rose-500/30 text-rose-400 hover:bg-rose-500/20",
+    btnPrimary: (active) => active ? "bg-cyan-500/15 text-cyan-400 border-cyan-500/40 hover:bg-cyan-500/25" : "bg-slate-800/80 border-slate-700/50 text-slate-300 hover:bg-slate-700 shadow-md",
+    btnGhost: "bg-slate-800/30 border-slate-700/40 text-amber-400/80 hover:bg-slate-700/50",
+    btnFinished: "bg-purple-500/15 text-purple-400 border-purple-500/30 hover:bg-purple-500/25 shadow-[0_0_15px_rgba(168,85,247,0.1)]",
+  };
+
+  const isPathfinding = algorithm?.type === "pathfinding";
 
   const pathLength = state?.path?.length || 0;
   const visitedCount =
@@ -28,93 +44,87 @@ export default function MetricsBar({
   const totalChecked = visitedCount + frontierCount;
 
   return (
-    <div className="px-6 py-3 border-b border-slate-800 bg-slate-900/80 flex flex-wrap justify-between items-center gap-4">
-      <div className="flex items-center gap-4">
+    <div className="px-6 py-4 border-b border-slate-800 bg-slate-900/80 flex flex-wrap justify-between items-center gap-6">
+      <div className="flex items-center gap-6">
         {onBack && (
           <button
             onClick={onBack}
-            className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors group"
+            className={localTheme.backBtn}
             title="Back to Dashboard"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           </button>
         )}
-        <div className="h-8 w-px bg-slate-800 mx-0.5" />
-        <div>
-          <h1 className="text-lg font-black text-white m-0 tracking-tight leading-none mb-1">{name}</h1>
+        <div className="flex flex-col justify-center">
           <div className="flex items-center gap-4">
-            <span
-              className={`text-[11px] font-black uppercase tracking-[0.2em] ${isFinished ? "text-emerald-400" : "text-indigo-400"}`}
-            >
-              {isFinished ? "Completed ✓" : phaseNames?.[phase] || "Running"}
+            <span className={localTheme.category}>
+              {algorithm.category}
             </span>
+            <span className={`text-slate-800 ${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-thin select-none mb-1`}>/</span>
+            <h1 className={localTheme.name}>{name}</h1>
           </div>
         </div>
       </div>
 
       {/* Centered Metrics (for Pathfinding) */}
       {isPathfinding && (
-        <div className="hidden lg:flex items-center gap-6 px-6 py-2 bg-slate-950/50 rounded-full border border-slate-800/50 shadow-inner">
-          <div className="flex items-center gap-2">
-            <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Path:</div>
-            <div className="text-sm font-mono font-black text-emerald-400">{pathLength}</div>
+        <div className={localTheme.metricPill}>
+          <div className="flex items-center gap-3">
+            <div className={localTheme.metricLabel}>Path:</div>
+            <div className={localTheme.metricValue("emerald")}>{pathLength}</div>
           </div>
-          <div className="w-px h-4 bg-slate-800" />
-          <div className="flex items-center gap-2">
-            <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Checked:</div>
-            <div className="text-sm font-mono font-black text-indigo-400 flex items-baseline">
+          <div className="w-px h-5 bg-slate-800/50" />
+          <div className="flex items-center gap-3">
+            <div className={localTheme.metricLabel}>Checked:</div>
+            <div className={`${localTheme.metricValue("indigo")} flex items-baseline`}>
               {totalChecked}
-              <span className="text-[10px] text-slate-500/60 font-bold ml-1">
-                / {Math.max(0, (state?.rows || 0) * (state?.cols || 0) - (state?.walls?.size ?? state?.walls?.length ?? 0) - 2)}
+              <span className={`${classCategories.logicText.split(" ")[0]} text-slate-500/60 font-bold ml-1.5`}>
+                /{" "}
+                {Math.max(
+                  0,
+                  (state?.rows || 0) * (state?.cols || 0) - (state?.walls?.size ?? state?.walls?.length ?? 0) - 2,
+                )}
               </span>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex items-center gap-2">
+      <div className={localTheme.controlGroup}>
         <button
           onClick={reset}
-          className={`${classCategories.buttonBase} bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 px-3 py-1 rounded-lg text-[10px]`}
+          className={`${localTheme.btnBase} ${localTheme.btnReset}`}
           title="Hard Reset"
         >
-          <RotateCcw className="w-3 h-3" />
+          <RotateCcw className="w-3.5 h-3.5" />
           Reset
         </button>
 
-        <div className="w-px h-5 bg-slate-800 mx-0.5" />
+        <div className="w-px h-6 bg-slate-800/50 mx-1" />
 
         <button
           onClick={togglePlay}
-          className={`${classCategories.buttonBase} px-3 py-1 rounded-lg text-[10px] ${
-            isPlaying
-              ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/40 hover:bg-cyan-500/25"
-              : "bg-slate-800/80 border border-slate-700/50 text-slate-300 hover:bg-slate-700"
-          }`}
+          className={`${localTheme.btnBase} ${localTheme.btnPrimary(isPlaying)}`}
         >
-          {isPlaying ? <Pause className="w-3 h-3 fill-current" /> : <Play className="w-3 h-3 fill-current" />}
+          {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
           {isPlaying ? "Pause" : "Auto Play"}
         </button>
 
         <button
           onClick={prevStep}
           disabled={!canPrev}
-          className={`${classCategories.buttonBase} px-3 py-1 rounded-lg text-[10px] bg-slate-800/30 border border-slate-700/40 text-amber-400/80 hover:bg-slate-700/50`}
+          className={`${localTheme.btnBase} ${localTheme.btnGhost} px-4`}
         >
-          <ChevronLeft className="w-3 h-3" /> Prev
+          <ChevronLeft className="w-3.5 h-3.5" /> Prev
         </button>
 
         <button
           onClick={nextStep}
           disabled={!canNext && !isFinished}
-          className={`${classCategories.buttonBase} px-4 py-1 rounded-lg text-[10px] ${
-            isFinished
-              ? "bg-purple-500/15 text-purple-400 border border-purple-500/30 hover:bg-purple-500/25"
-              : "bg-slate-800/30 text-sky-400 border border-slate-700/40 hover:bg-slate-700/50"
-          }`}
+          className={`${localTheme.btnBase} ${isFinished ? localTheme.btnFinished : localTheme.btnGhost} px-5`}
         >
           {isFinished ? "Restart" : buttonText || "Next"}
-          {isFinished ? <RotateCcw className="w-3 h-3 ml-1" /> : <ChevronRight className="w-3 h-3 ml-1" />}
+          {isFinished ? <RotateCcw className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
         </button>
       </div>
     </div>
@@ -136,4 +146,5 @@ MetricsBar.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   buttonText: PropTypes.string,
   state: PropTypes.object,
+  algorithm: PropTypes.object,
 };

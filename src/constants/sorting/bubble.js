@@ -32,7 +32,7 @@ export const bubble = createAlgorithmCard({
     },
     extendedDescription: 'Bubble Sort is the simplest sorting algorithm that repeatedly swaps adjacent elements if they are in the wrong order.',
     legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
       { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
       { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
       { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },

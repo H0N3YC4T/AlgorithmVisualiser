@@ -30,7 +30,7 @@ export const boyermoore = createAlgorithmCard({
     },
     extendedDescription: 'Boyer-Moore is one of the most efficient string-searching algorithms. It compares the pattern against the text from right to left. Upon a mismatch, it uses the "Bad Character Rule" to shift the pattern by the maximum possible distance, often skipping large sections of the text.',
     legendItems: [
-      { label: 'Unvisited', color: 'bg-slate-800/40 border-slate-700/50' },
+      { label: 'Unvisited', color: 'bg-slate-800 border-slate-700' },
       { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
       { label: 'Match', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
       { label: 'Mismatch', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },

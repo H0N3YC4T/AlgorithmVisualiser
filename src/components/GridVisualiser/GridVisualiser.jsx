@@ -7,6 +7,12 @@ export default function GridVisualizer({ algorithm, state, updateState, toggleWa
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState(null); // 'adding' | 'removing' | null
 
+  const localTheme = {
+    container: `${classCategories.vizContainer} h-[450px] p-4 shadow-inner select-none bg-slate-900/20 ${classCategories.cardRound} border-slate-800/40`,
+    grid: "grid gap-1 outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl",
+    overlay: `absolute inset-0 flex items-center justify-center text-slate-500 font-black ${classCategories.logicText.split(" ")[0]} uppercase tracking-widest bg-slate-950/40 rounded-2xl`,
+  };
+
   const {
     rows,
     cols,
@@ -191,20 +197,18 @@ export default function GridVisualizer({ algorithm, state, updateState, toggleWa
   ]);
 
   return (
-    <div
-      className={`${classCategories.vizContainer} h-[450px] p-4 shadow-inner select-none bg-slate-900/20 rounded-3xl border-slate-800/40`}
-    >
+    <div className={localTheme.container}>
       <div
         role="grid"
         tabIndex={0}
         aria-label="Pathfinding Grid"
-        className="grid gap-1 outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-lg"
+        className={localTheme.grid}
         onMouseLeave={handleMouseUp}
         onMouseUp={handleMouseUp}
         style={gridStyle}
       >
         {state?.rows === undefined ? (
-          <div className="absolute inset-0 flex items-center justify-center text-slate-500 font-black text-xs uppercase tracking-widest bg-slate-950/40 rounded-xl">
+          <div className={localTheme.overlay}>
             Initializing Grid...
           </div>
         ) : (

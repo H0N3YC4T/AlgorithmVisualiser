@@ -31,12 +31,11 @@ export const selection = createAlgorithmCard({
     },
     extendedDescription: 'Selection Sort is a simple comparison-based sorting algorithm. The algorithm divides the input list into two parts: the sublist of items already sorted and the sublist of items remaining to be sorted. It repeatedly finds the smallest (or largest) element in the unsorted part and swaps it with the first element of the unsorted part.',
       legendItems: [
-        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
-        { label: 'Scanning', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-        { label: 'Current Min', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
-        { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
-        { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
-      ],
+      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
+      { label: 'Minimum', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
+      { label: 'Current', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+    ],
   },
 
   // --- Visual Steps & Code ---

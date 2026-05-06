@@ -31,7 +31,7 @@ export default function TextVisualizer({
             .map((item) => (
               <div
                 key={item.id}
-                className="w-10 flex-shrink-0 text-center text-[10px] font-bold text-slate-500 font-mono"
+                className={`w-10 flex-shrink-0 text-center ${classCategories.logicText.split(" ")[0]} font-bold text-slate-500 font-mono`}
               >
                 {item.i}
               </div>

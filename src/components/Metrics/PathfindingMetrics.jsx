@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types';
-import { Target, Footprints, Grid } from 'lucide-react';
+import PropTypes from "prop-types";
+import { Target, Footprints, Grid } from "lucide-react";
+import { classCategories } from "@/styles/divClassCustom";
 
 export default function PathfindingMetrics({ state }) {
   const { path, visited, rows, cols } = state;
-  
+
   const pathLength = path?.length || 0;
   const visitedCount = (visited || []).flat().filter(Boolean).length;
   const totalNodes = rows * cols;
@@ -16,8 +17,8 @@ export default function PathfindingMetrics({ state }) {
           <Target className="w-5 h-5 text-emerald-400" />
         </div>
         <div>
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Path Length</div>
-          <div className="text-xl font-mono font-black text-white">{pathLength}</div>
+          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`}>Path Length</div>
+          <div className={`${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-mono font-black text-white`}>{pathLength}</div>
         </div>
       </div>
 
@@ -26,8 +27,8 @@ export default function PathfindingMetrics({ state }) {
           <Footprints className="w-5 h-5 text-indigo-400" />
         </div>
         <div>
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Visited Nodes</div>
-          <div className="text-xl font-mono font-black text-white">{visitedCount}</div>
+          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`}>Visited Nodes</div>
+          <div className={`${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-mono font-black text-white`}>{visitedCount}</div>
         </div>
       </div>
 
@@ -36,8 +37,8 @@ export default function PathfindingMetrics({ state }) {
           <Grid className="w-5 h-5 text-blue-400" />
         </div>
         <div>
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Grid Coverage</div>
-          <div className="text-xl font-mono font-black text-white">{coverage}%</div>
+          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-widest`}>Grid Coverage</div>
+          <div className={`${classCategories.homeTitle.split(" ").filter(c => c.startsWith("text-")).join(" ")} font-mono font-black text-white`}>{coverage}%</div>
         </div>
       </div>
     </div>
@@ -49,6 +50,6 @@ PathfindingMetrics.propTypes = {
     path: PropTypes.array,
     visited: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.bool)),
     rows: PropTypes.number,
-    cols: PropTypes.number
-  }).isRequired
+    cols: PropTypes.number,
+  }).isRequired,
 };

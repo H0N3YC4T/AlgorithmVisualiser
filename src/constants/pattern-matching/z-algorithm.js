@@ -27,47 +27,47 @@ export const zalgorithm = createAlgorithmCard({
     },
     extendedDescription: 'The Z-algorithm builds a "Z-array" where Z[i] is the length of the longest substring starting from concat[i] which is also a prefix of concat. It uses previously computed Z-values (Z-box) to speed up calculations.',
     legendItems: [
-      { label: 'Unvisited', color: 'bg-slate-800/40 border-slate-700/50' },
-      { label: 'Z-Box', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-      { label: 'Matching', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
-      { label: 'Prefix', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
+      { label: 'Unvisited', color: 'bg-slate-800 border-slate-700' },
+      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Match', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      { label: 'Mismatch', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
     ],
-  },
-  visualSteps: {
-    READY: {
-      title: 'Ready',
-      message: "Commencing Z-Algorithm: A linear-time pattern matching strategy.\n\n• Context: Operating on the concatenated string S = P + $ + T.\n• Objective: Constructing a 'Z-array' where Z[i] is the longest prefix of S starting at index i.\n• Skipping pattern self-comparison: Processing starting at index {startIndex}.",
-      highlights: { pseudo: [1], javascript: [1, 2], python: [1, 2] }
-    },
-    Z_ARRAY_COMPLETE: {
-      title: 'Z-Array Complete ✓',
-      message: "Z-Array Construction Finalized.\n\n• Execution Status: {foundCountStatus}.\n• Logic: Text indices where Z[i] ≥ |P| signify a full pattern match.",
-      highlights: { pseudo: [11], javascript: [10], python: [11] }
-    },
-    OUTSIDE_Z_BOX: {
-      title: 'Outside Z-Box',
-      message: "Probe Point {i} exceeds right boundary {r}.\n\n• Context: Current index is not covered by a previously discovered prefix match.\n• Strategy: Initiating manual naive comparison from index {i} against the global prefix (index 0).",
-      highlights: { pseudo: [2], javascript: [4, 5], python: [4, 5] }
-    },
-    INSIDE_Z_BOX_OPTIMIZED: {
-      title: 'Z-Box Optimized',
-      message: "Index {i} resides within the active Z-box [{l}..{r}].\n\n• Optimization: Leveraging internal symmetry via k = i - l = {k}.\n• Action: Inheriting Z[{k}] = {zK} directly as it is contained within the established box boundaries.",
-      highlights: { pseudo: [3], javascript: [7, 8], python: [7, 8] }
-    },
-    EXTENDING_Z_BOX: {
-      title: 'Extending Z-Box',
-      message: "Boundary Condition: Index {i} is inside the Z-box, but the prefix match Z[{k}] extends to the boundary {r}.\n\n• Strategy: Utilizing the known prefix length as a baseline and resuming manual character comparison beyond the boundary.",
-      highlights: { pseudo: [4], javascript: [10], python: [10] }
-    },
-    CHARACTER_MATCH: {
-      title: 'Character Match',
-      message: "Prefix Correspondence: charAt({patternIdx}) == charAt({textIdx}) ('{char}').\n\n• Extension: Expanding the current match and advancing the Z-box right-boundary to {textIdx}.",
-      highlights: { pseudo: [6], javascript: [6], python: [8] }
-    },
-    MISMATCH_BOX_END: {
-      title: 'Mismatch / Box End',
-      message: "Prefix Divergence at pattern index {patternIdx}.\n\n• Match Finalized: Z[{i}] = {zValue}.\n• State Update: New active Z-box established at [{l}..{r}].",
-      highlights: { pseudo: [7, 8], javascript: [7], python: [10] }
+    visualSteps: {
+      READY: {
+        title: 'Ready',
+        message: "Commencing Z-Algorithm: A linear-time pattern matching strategy.\n\n• Context: Operating on the concatenated string S = P + $ + T.\n• Principle: Leveraging previously discovered 'Z-boxes' to avoid redundant character comparisons.\n• Objective: Building the Z-array where Z[i] represents the longest prefix match starting at index i.",
+        highlights: { pseudo: [1], javascript: [1, 2], python: [1, 2] }
+      },
+      Z_ARRAY_COMPLETE: {
+        title: 'Z-Array Complete ✓',
+        message: "Z-Array Construction Finalized.\n\n• Analysis: {foundCountStatus}.\n• Logic: Any text index i where Z[i] equals the pattern length |P| indicates a total match.",
+        highlights: { pseudo: [11], javascript: [10], python: [11] }
+      },
+      OUTSIDE_Z_BOX: {
+        title: 'Outside Z-Box',
+        message: "Probe Point {i} exceeds established right boundary {r}.\n\n• Context: No internal symmetry available from previous matches.\n• Action: Initiating manual character comparison starting from index {i} against the prefix at index 0.",
+        highlights: { pseudo: [2], javascript: [4, 5], python: [4, 5] }
+      },
+      INSIDE_Z_BOX_OPTIMIZED: {
+        title: 'Z-Box Optimized',
+        message: "Index {i} is contained within the active Z-box [{l}..{r}].\n\n• Optimization: Querying internal symmetry at index k = i - l = {k}.\n• Result: Inheriting Z[{k}] = {zK} directly; the prefix property is guaranteed within the box limits.",
+        highlights: { pseudo: [3], javascript: [7, 8], python: [7, 8] }
+      },
+      EXTENDING_Z_BOX: {
+        title: 'Extending Z-Box',
+        message: "Boundary Condition Encountered: Prefix match at index {i} reaches the box limit {r}.\n\n• Strategy: Using the established match as a lower bound.\n• Action: Performing manual comparison for characters beyond the current boundary to find a new maximal Z-box.",
+        highlights: { pseudo: [4], javascript: [10], python: [10] }
+      },
+      MATCHING: {
+        title: 'Matching',
+        message: "Character Correspondence: concat[{zVal}] == concat[{iPlusZ}].\n\n• Local validation successful.\n• Status: Extending the current Z-value to {newZVal}.",
+        highlights: { pseudo: [5], javascript: [12], python: [12] }
+      },
+      MISMATCH: {
+        title: 'Mismatch',
+        message: "Inconsistency Detected: concat[{zVal}] ≠ concat[{iPlusZ}].\n\n• Result: Z-value finalized at {zVal}.\n• Action: Establishing new Z-box boundaries if the match extends beyond the current right limit.",
+        highlights: { pseudo: [5], javascript: [12], python: [12] }
+      }
     }
   },
   codeSnippets: {
@@ -120,8 +120,8 @@ export const zalgorithm = createAlgorithmCard({
       log: { title: 'INITIALIZING', type: 'info', messageKey: 'READY', params: { p, t, concat, pLen, startIndex: pLen + 1 } }
     };
   },
-  getPreprocessing: (pattern, target) => ({ concat: pattern + '$' + target }),
-  nextStep: (state, target, pattern, preprocessing) => {
+  getPreprocessing: (_pattern, _target) => ({}),
+  nextStep: (state, target, pattern, _preprocessing) => {
     const { phase, concat: stateConcat } = state;
     const concat = stateConcat || (pattern + '$' + target);
     const n = concat.length;

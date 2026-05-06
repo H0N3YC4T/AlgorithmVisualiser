@@ -5,13 +5,27 @@ import { FileText, ChevronDown, Layers, Search, Map, Zap, HelpCircle } from "luc
 import { homeDefaults } from "@/constants/home";
 import { classCategories } from "@/styles/divClassCustom";
 
-
 const ICON_MAP = {
   Layers,
   Search,
   Map,
   Zap,
   HelpCircle,
+};
+
+const localTheme = {
+  container: "min-h-screen bg-transparent text-slate-200 p-8 md:p-12 font-sans relative",
+  wrapper: "max-w-[1400px] mx-auto space-y-6 relative z-10",
+  header: "text-center space-y-6 pt-12",
+  badge: `inline-flex items-center gap-3 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 ${classCategories.cardDescription.split(" ")[0]} font-black uppercase tracking-[0.2em]`,
+  conceptCard: `p-5 bg-slate-900/40 border border-slate-800/60 ${classCategories.cardRound} space-y-4 hover:border-slate-700 transition-colors shadow-xl`,
+  iconBox: "p-2 rounded-xl bg-slate-950 border border-slate-800",
+  notationCard: `p-4 ${classCategories.cardRound} border border-slate-800/60 space-y-3 flex flex-col justify-between`,
+  complexityCard: `p-4 ${classCategories.cardRound} border border-slate-800/60 bg-indigo-500/5 space-y-3 group hover:border-slate-700 transition-colors shadow-xl`,
+  complexityPill: `flex items-center gap-2 px-2.5 py-1.5 rounded-2xl bg-slate-950/80 border border-slate-800/60 ${classCategories.logicText.split(" ")[0]} font-black shrink-0`,
+  complexityLabel: "text-slate-600 uppercase tracking-widest",
+  footer: "pt-24 border-t border-slate-900 text-center",
+  copyright: `${classCategories.cardDescription.split(" ")[0]} font-black text-slate-700 uppercase tracking-[0.5em]`,
 };
 
 const BigOChart = ({ type, color }) => {
@@ -92,19 +106,17 @@ export default function Home({ algorithms, categories, onSelect }) {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-200 p-8 md:p-12 font-sans relative">
-      <div className="max-w-[1400px] mx-auto space-y-6 relative z-10">
+    <div className={localTheme.container}>
+      <div className={localTheme.wrapper}>
         {/* Header */}
-        <div className="text-center space-y-6 pt-12">
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[12px] font-black uppercase tracking-[0.2em]">
+        <div className={localTheme.header}>
+          <div className={localTheme.badge}>
             <Zap className="w-4 h-4" /> {homeDefaults.hero.badge}
           </div>
           <h1 className={classCategories.homeTitle}>
             {homeDefaults.hero.title} <span className="text-indigo-500">{homeDefaults.hero.titleAccent}</span>
           </h1>
-          <p className={classCategories.homeSubtitle}>
-            {homeDefaults.hero.description}
-          </p>
+          <p className={classCategories.homeSubtitle}>{homeDefaults.hero.description}</p>
         </div>
 
         {/* Big O Reference */}
@@ -116,7 +128,7 @@ export default function Home({ algorithms, categories, onSelect }) {
               </div>
               <h2 className={classCategories.sectionHeader.title(!collapsedCategories.has("cheatsheet"))}>
                 Big O Cheatsheet{" "}
-                <span className="ml-4 text-[13px] text-slate-700 font-black tracking-[0.1em]">
+                <span className={`ml-4 ${classCategories.cardDescription.split(" ")[0]} text-slate-700 font-black tracking-[0.1em]`}>
                   ({homeDefaults.caseCards.length})
                 </span>
               </h2>
@@ -140,19 +152,14 @@ export default function Home({ algorithms, categories, onSelect }) {
                   {/* Concept Cards - 3 Columns */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {homeDefaults.caseCards.map((card) => (
-                      <div
-                        key={card.label}
-                        className="p-5 bg-slate-900/40 border border-slate-800/60 rounded-2xl space-y-4 hover:border-slate-700 transition-colors shadow-xl"
-                      >
+                      <div key={card.label} className={localTheme.conceptCard}>
                         <div className="flex items-center gap-4">
-                          <div className={`p-2 rounded-xl bg-slate-950 border border-slate-800 ${card.color}`}>
+                          <div className={`${localTheme.iconBox} ${card.color}`}>
                             <card.icon className="w-5 h-5" />
                           </div>
-                          <h3 className="font-black text-white text-[13px] uppercase tracking-[0.1em]">
-                            {card.label}
-                          </h3>
+                          <h3 className={`font-black text-white ${classCategories.cardDescription.split(" ")[0]} uppercase tracking-[0.1em]`}>{card.label}</h3>
                         </div>
-                        <p className="text-slate-500 text-[12px] font-medium leading-relaxed">{card.desc}</p>
+                        <p className={`text-slate-500 ${classCategories.cardDescription.split(" ")[0]} font-medium leading-relaxed`}>{card.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -162,18 +169,21 @@ export default function Home({ algorithms, categories, onSelect }) {
                     {homeDefaults.bigONotations.map((item) => (
                       <div
                         key={item.label}
-                        className={`p-4 rounded-xl border border-slate-800/60 ${item.bg} space-y-3 flex flex-col justify-between`}
+                        className={`${localTheme.notationCard} ${item.bg}`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className={`text-[18px] font-black ${item.color.replace("stroke-", "text-")}`}>
+                          <span className={`${classCategories.smallHeading.split(" ")[0]} font-black ${item.color.replace("stroke-", "text-")}`}>
                             {item.label}
                           </span>
+                          <BigOChart type={item.type} color={item.color} />
                         </div>
                         <div>
-                          <div className="text-[11px] font-black text-white uppercase tracking-[0.1em] mb-1">
+                          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-white uppercase tracking-[0.1em] mb-1`}>
                             {item.name}
                           </div>
-                          <p className="text-[10px] text-slate-500 font-medium leading-snug line-clamp-2">{item.desc}</p>
+                          <p className={`${classCategories.logicText.split(" ")[0]} text-slate-500 font-medium leading-snug line-clamp-2`}>
+                            {item.desc}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -182,23 +192,20 @@ export default function Home({ algorithms, categories, onSelect }) {
                   {/* Space Complexity Cards - 3 Columns */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {homeDefaults.spaceComplexities.map((item) => (
-                      <div
-                        key={item.label}
-                        className="p-4 rounded-2xl border border-slate-800/60 bg-indigo-500/5 space-y-3 group hover:border-slate-700 transition-colors shadow-xl"
-                      >
+                      <div key={item.label} className={localTheme.complexityCard}>
                         <div className="flex items-center justify-between">
-                          <span className="text-[16px] font-black text-indigo-400">{item.label}</span>
-                          <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">
+                          <span className={`${classCategories.cardDescription.split(" ")[0]} font-black text-indigo-400`}>{item.label}</span>
+                          <div className={`${classCategories.logicText.split(" ")[0]} font-black text-white/30 uppercase tracking-[0.2em]`}>
                             {item.name}
                           </div>
                         </div>
                         <div>
-                          <p className="text-[11px] text-slate-500 font-medium leading-relaxed mb-4">{item.desc}</p>
+                          <p className={`${classCategories.logicText.split(" ")[0]} text-slate-500 font-medium leading-relaxed mb-4`}>{item.desc}</p>
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-black text-indigo-500/50 uppercase">
-                              EX:
+                            <span className={`${classCategories.logicText.split(" ")[0]} font-black text-indigo-500/50 uppercase`}>EX:</span>
+                            <span className={`${classCategories.logicText.split(" ")[0]} text-slate-600 font-mono italic truncate`}>
+                              {item.examples}
                             </span>
-                            <span className="text-[10px] text-slate-600 font-mono italic truncate">{item.examples}</span>
                           </div>
                         </div>
                       </div>
@@ -216,137 +223,105 @@ export default function Home({ algorithms, categories, onSelect }) {
           if (categoryAlgorithms.length === 0) return null;
           const isCollapsed = collapsedCategories.has(category);
 
-            return (
-              <div key={category} className="space-y-0">
-                <button onClick={() => toggleCategory(category)} className={classCategories.sectionHeader.container}>
-                  <div className={classCategories.sectionHeader.border}>
-                    <div className={classCategories.sectionHeader.iconBox(!isCollapsed)}>
-                      {getCategoryIcon(category)}
-                    </div>
-                    <h2 className={classCategories.sectionHeader.title(!isCollapsed)}>
-                      {category}{" "}
-                      <span className="ml-6 text-[16px] text-slate-700 font-black tracking-[0.2em]">
-                        ({categoryAlgorithms.length})
-                      </span>
-                    </h2>
-                    <div className="flex-1" />
-                    <ChevronDown
-                      className={`w-10 h-10 text-slate-600 group-hover:text-indigo-500 transition-all duration-500 ${isCollapsed ? "-rotate-90 opacity-40" : "rotate-0 opacity-100"}`}
-                    />
-                  </div>
-                </button>
+          return (
+            <div key={category} className="space-y-0">
+              <button onClick={() => toggleCategory(category)} className={classCategories.sectionHeader.container}>
+                <div className={classCategories.sectionHeader.border}>
+                  <div className={classCategories.sectionHeader.iconBox(!isCollapsed)}>{getCategoryIcon(category)}</div>
+                  <h2 className={classCategories.sectionHeader.title(!isCollapsed)}>
+                    {category}{" "}
+                    <span className={`ml-6 ${classCategories.cardDescription.split(" ")[0]} text-slate-700 font-black tracking-[0.2em]`}>
+                      ({categoryAlgorithms.length})
+                    </span>
+                  </h2>
+                  <div className="flex-1" />
+                  <ChevronDown
+                    className={`w-10 h-10 text-slate-600 group-hover:text-indigo-500 transition-all duration-500 ${isCollapsed ? "-rotate-90 opacity-40" : "rotate-0 opacity-100"}`}
+                  />
+                </div>
+              </button>
 
-                <AnimatePresence initial={false}>
-                  {!isCollapsed && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
-                      className="overflow-hidden"
-                    >
-                      <div className={classCategories.grid}>
-                        {categoryAlgorithms.map((algo) => (
-                          <button
-                            key={algo.id}
-                            type="button"
-                            onClick={() => onSelect(algo.id)}
-                            className={classCategories.appCard}
-                          >
-                            <div className="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/5 rounded-full blur-[100px] group-hover:bg-indigo-500/10 transition-all duration-500" />
+              <AnimatePresence initial={false}>
+                {!isCollapsed && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
+                    className="overflow-hidden"
+                  >
+                    <div className={classCategories.grid}>
+                      {categoryAlgorithms.map((algo) => (
+                        <button
+                          key={algo.id}
+                          type="button"
+                          onClick={() => onSelect(algo.id)}
+                          className={classCategories.appCard}
+                        >
+                          <div className="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/5 rounded-full blur-[100px] group-hover:bg-indigo-500/10 transition-all duration-500" />
 
-                            <div className="space-y-6 relative z-10 flex-1">
-                              <div className="flex justify-between items-start">
-                                <h3 className={classCategories.cardHeading}>
-                                  {algo.name}
-                                </h3>
-                                <span
-                                  className={`${classCategories.badgeBase} ${getDifficultyColor(algo.difficulty)} py-1 px-3 text-[10px]`}
-                                >
-                                  {algo.difficulty}
-                                </span>
-                              </div>
+                          <div className="space-y-6 relative z-10 flex-1">
+                            <div className="flex justify-between items-start">
+                              <h3 className={classCategories.cardHeading}>{algo.name}</h3>
+                              <span
+                                className={`${classCategories.badgeBase} ${getDifficultyColor(algo.difficulty)} py-1 px-3 ${classCategories.logicText.split(" ")[0]}`}
+                              >
+                                {algo.difficulty}
+                              </span>
+                            </div>
 
-                              <p className={classCategories.cardDescription}>
-                                {algo.description}
-                              </p>
+                            <p className={classCategories.cardDescription}>{algo.description}</p>
 
-                              {algo.complexity && (
-                                <div className="pt-4 flex flex-col gap-3">
-                                  <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                                    <div
-                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
-                                      title="Best Case"
-                                    >
-                                      <span className="text-slate-600 uppercase tracking-widest">
-                                        B:
-                                      </span>
-                                      <span className={getComplexityColor(algo.complexity.timeBest)}>
-                                        {algo.complexity.timeBest}
-                                      </span>
-                                    </div>
-                                    <div
-                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
-                                      title="Average Case"
-                                    >
-                                      <span className="text-slate-600 uppercase tracking-widest">
-                                        A:
-                                      </span>
-                                      <span className={getComplexityColor(algo.complexity.timeAvg)}>
-                                        {algo.complexity.timeAvg}
-                                      </span>
-                                    </div>
-                                    <div
-                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
-                                      title="Worst Case"
-                                    >
-                                      <span className="text-slate-600 uppercase tracking-widest">
-                                        W:
-                                      </span>
-                                      <span className={getComplexityColor(algo.complexity.timeWorst)}>
-                                        {algo.complexity.timeWorst}
-                                      </span>
-                                    </div>
+                            {algo.complexity && (
+                              <div className="pt-4 flex flex-col gap-3">
+                                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                                  <div className={localTheme.complexityPill} title="Best Case">
+                                    <span className={localTheme.complexityLabel}>B:</span>
+                                    <span className={getComplexityColor(algo.complexity.timeBest)}>
+                                      {algo.complexity.timeBest}
+                                    </span>
                                   </div>
-
-                                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-                                    {algo.complexity.timePre && (
-                                      <div
-                                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
-                                        title="Preprocessing Time"
-                                      >
-                                        <span className="text-slate-600 uppercase tracking-widest">
-                                          PREP:
-                                        </span>
-                                        <span className="text-indigo-400">{algo.complexity.timePre}</span>
-                                      </div>
-                                    )}
-                                    <div
-                                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800/60 text-[10px] font-black shrink-0"
-                                      title="Space Complexity"
-                                    >
-                                      <span className="text-slate-600 uppercase tracking-widest">
-                                        SPACE:
-                                      </span>
-                                      <span className="text-indigo-400">{algo.complexity.space}</span>
-                                    </div>
+                                  <div className={localTheme.complexityPill} title="Average Case">
+                                    <span className={localTheme.complexityLabel}>A:</span>
+                                    <span className={getComplexityColor(algo.complexity.timeAvg)}>
+                                      {algo.complexity.timeAvg}
+                                    </span>
+                                  </div>
+                                  <div className={localTheme.complexityPill} title="Worst Case">
+                                    <span className={localTheme.complexityLabel}>W:</span>
+                                    <span className={getComplexityColor(algo.complexity.timeWorst)}>
+                                      {algo.complexity.timeWorst}
+                                    </span>
                                   </div>
                                 </div>
-                              )}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          },
-        )}
 
-        <div className="pt-24 border-t border-slate-900 text-center">
-          <p className="text-[14px] font-black text-slate-700 uppercase tracking-[0.5em]">
+                                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                                  {algo.complexity.timePre && (
+                                    <div className={localTheme.complexityPill} title="Preprocessing Time">
+                                      <span className={localTheme.complexityLabel}>PREP:</span>
+                                      <span className="text-indigo-400">{algo.complexity.timePre}</span>
+                                    </div>
+                                  )}
+                                  <div className={localTheme.complexityPill} title="Space Complexity">
+                                    <span className={localTheme.complexityLabel}>SPACE:</span>
+                                    <span className="text-indigo-400">{algo.complexity.space}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+
+        <div className={localTheme.footer}>
+          <p className={localTheme.copyright}>
             &copy; {homeDefaults.footer.copyright}
           </p>
         </div>

@@ -27,10 +27,9 @@ export const rabinkarp = createAlgorithmCard({
     },
     extendedDescription: 'Rabin-Karp uses a rolling hash to quickly filter through the text. Instead of checking every character, it calculates a hash for each window and only performs a character-by-character comparison if the hashes match.',
     legendItems: [
-      { label: 'Unvisited', color: 'bg-slate-800/40 border-slate-700/50' },
-      { label: 'Hashing', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-      { label: 'Hash Match', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
-      { label: 'Success', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+      { label: 'Unvisited', color: 'bg-slate-800 border-slate-700' },
+      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Match', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
       { label: 'Mismatch', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
     ],
   },

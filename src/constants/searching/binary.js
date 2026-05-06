@@ -35,7 +35,7 @@ export const binarysearch = createAlgorithmCard({
     extendedDescription:
       "Binary search is an efficient algorithm for finding an item from a sorted list of items. It works by repeatedly dividing in half the portion of the list that could contain the item, until you've narrowed down the possible locations to just one.",
       legendItems: [
-        { label: "Unsorted", color: "bg-slate-800/40 border-slate-700/50" },
+        { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
         { label: "Range Bounds", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
         { label: "Midpoint", color: "bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]" },
         { label: "Found", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },

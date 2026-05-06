@@ -30,10 +30,10 @@ export const kmp = createAlgorithmCard({
     },
     extendedDescription: 'The Knuth-Morris-Pratt (KMP) algorithm improves substring search by preprocessing the pattern to determine how much of it is a prefix of itself. When a mismatch occurs, the algorithm uses this "LPS" table to shift the pattern without re-comparing characters that are already known to match.',
     legendItems: [
-      { label: 'Unvisited', color: 'bg-slate-800/40 border-slate-700/50' },
+      { label: 'Unvisited', color: 'bg-slate-800 border-slate-700' },
       { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
       { label: 'Match', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
-      { label: 'Mismatch', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+      { label: 'Mismatch', color: 'bg-rose-500 shadow-[0_0_15_rgba(244,63,94,0.4)]' },
     ],
     visualSteps: {
       READY: {
@@ -140,7 +140,7 @@ export const kmp = createAlgorithmCard({
 
   nextStep: (state, target, pattern, _preprocessing) => {
     const { currentIndex, phase, compIdx } = state;
-    const { pi } = preprocessing;
+    const { pi } = _preprocessing;
     const m = pattern.length;
     const n = target.length;
     const newState = { ...state, activeIndices: [] };

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
+import { classCategories } from '@/styles/divClassCustom';
 
 const NODE_SIZE = 48;
 const LEVEL_HEIGHT = 80;
@@ -44,7 +45,7 @@ function TreeNode({ node, x, y, level, parentX, parentY }) {
           y={y}
           dy=".3em"
           textAnchor="middle"
-          className="fill-white font-mono font-black text-sm select-none"
+          className={`fill-white font-mono font-black ${classCategories.cardDescription.split(" ")[0]} select-none`}
         >
           {node.value}
         </text>
@@ -60,7 +61,7 @@ export default function TreeVisualizer({ root, title = "" }) {
   return (
     <div className="w-full flex flex-col items-center justify-center p-8 bg-slate-900/20 rounded-3xl border border-slate-800/40 min-h-[400px]">
       {title && (
-        <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-8">{title}</div>
+        <div className={`${classCategories.logicText.split(" ")[0]} font-black text-slate-500 uppercase tracking-[0.2em] mb-8`}>{title}</div>
       )}
       
       <svg className="w-full h-[300px] overflow-visible">
@@ -68,7 +69,7 @@ export default function TreeVisualizer({ root, title = "" }) {
       </svg>
 
       {!root && (
-        <div className="text-slate-500 italic text-sm">Tree is empty</div>
+        <div className={`text-slate-500 italic ${classCategories.cardDescription.split(" ")[0]}`}>Tree is empty</div>
       )}
     </div>
   );

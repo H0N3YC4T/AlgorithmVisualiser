@@ -34,10 +34,10 @@ export const interpolationsearch = createAlgorithmCard({
     },
     extendedDescription: 'Interpolation Search is an algorithm for searching for a key in an array that has been ordered by numerical values assigned to the keys. It parallels how humans search through a telephone book for a name: it estimates the position based on the value, rather than always checking the midpoint.',
       legendItems: [
-        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
-        { label: 'Bounds', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-        { label: 'Estimated Pos', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
-        { label: 'Found', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+        { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
+        { label: "Estimated Pos", color: "bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]" },
+        { label: "Range Bounds", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
+        { label: "Found", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
       ],
     visualSteps: {
       READY: {

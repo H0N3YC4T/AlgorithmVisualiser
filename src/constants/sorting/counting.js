@@ -32,8 +32,9 @@ export const counting = createAlgorithmCard({
     },
     extendedDescription: 'Counting Sort is a non-comparative sorting algorithm that works by counting the number of objects having distinct key values.',
     legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
+      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
       { label: 'Counting', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Calculating', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
       { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
   },

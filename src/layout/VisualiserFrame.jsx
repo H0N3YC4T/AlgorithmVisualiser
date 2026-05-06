@@ -5,12 +5,7 @@ import { InputPanel, Legend, CodePanel } from "@/components/UI";
 import { ArrayVisualizer } from "@/components/ArrayVisualiser";
 import { GridVisualizer } from "@/components/GridVisualiser";
 import { TextVisualizer, ZVisualizer } from "@/components/TextVisualiser";
-import {
-  ProcessLog,
-  MetricsBar,
-  AlgorithmSidebar,
-  AuxiliaryArrays,
-} from "@/components/Metrics";
+import { ProcessLog, MetricsBar, AlgorithmSidebar, AuxiliaryArrays } from "@/components/Metrics";
 import usePlayback from "@/hooks/usePlayback";
 import useVisualizerLabels from "@/hooks/useVisualizerLabels";
 import { classCategories } from "@/styles/divClassCustom";
@@ -114,6 +109,16 @@ export default function VisualizerFrame({
   gridSize,
   setGridSize,
 }) {
+  const localTheme = {
+    contentWrapper: "space-y-6 p-6",
+    vizArea: `relative ${classCategories.glassPanel} ${classCategories.cardRound} p-6 min-h-[300px] flex items-center justify-center`,
+    gridSection: "grid grid-cols-1 xl:grid-cols-10 gap-6 items-stretch",
+    inputWrapper: "xl:col-span-7 w-full min-w-0",
+    legendWrapper: "xl:col-span-3 w-full min-w-0",
+    bottomGrid: (hasSidebar) => `grid grid-cols-1 ${hasSidebar ? "xl:grid-cols-3" : "xl:grid-cols-2"} gap-8 items-stretch`,
+    footerIcon: "w-3 h-3 text-indigo-400",
+  };
+
   const lineHighlights = useMemo(() => {
     if (algorithm.lineHighlights && Object.keys(algorithm.lineHighlights).length > 0) {
       return algorithm.lineHighlights;
@@ -130,20 +135,15 @@ export default function VisualizerFrame({
   // Adjust speed based on playbackRate (inverse: higher rate means lower interval)
   const adjustedSpeed = (algorithm.uiConfig?.playbackSpeed || 500) / playbackRate;
 
-  const { isPlaying, togglePlay, stopPlay } = usePlayback(
-    nextStep,
-    softReset,
-    state.isFinished,
-    adjustedSpeed,
-  );
+  const { isPlaying, togglePlay, stopPlay } = usePlayback(nextStep, softReset, state.isFinished, adjustedSpeed);
   const texts = useVisualizerLabels(algorithm, state);
 
   const isEditingDisabled = isPlaying || state.phase > 0 || (state.iterations || 0) > 0;
   const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
 
   const renderInputsAndLegend = () => (
-    <div className="flex flex-col xl:flex-row gap-6 items-stretch">
-      <div className="flex-[0.7] w-full min-w-0">
+    <div className={localTheme.gridSection}>
+      <div className={localTheme.inputWrapper}>
         <InputPanel
           target={target}
           setTarget={setTarget}
@@ -166,7 +166,7 @@ export default function VisualizerFrame({
         />
       </div>
 
-      <div className="flex-[0.3] w-full min-w-0">
+      <div className={localTheme.legendWrapper}>
         <Legend items={algorithm.legendItems || []} />
       </div>
     </div>
@@ -215,23 +215,25 @@ export default function VisualizerFrame({
           isPlaying={isPlaying}
           buttonText={texts.button}
           state={state}
+          algorithm={algorithm}
         />
 
-        <div className="space-y-6 p-6">
+        <div className={localTheme.contentWrapper}>
           {/* Toolbar & Legend - Controls first */}
           {renderInputsAndLegend()}
 
           {/* Main Visualizer Area */}
-          <div className="relative glass-panel rounded-2xl p-6 min-h-[300px] flex items-center justify-center">
+          <div className={localTheme.vizArea}>
             {renderVisualizer()}
           </div>
 
           <AuxiliaryArrays state={state} />
 
-          {/* Bottom Info Section: 2-Column Split */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-            <div className="space-y-6">
-              <ProcessLog log={state.log} algorithm={algorithm} />
+          {/* Bottom Info Section: Dynamic Grid */}
+          <div className={localTheme.bottomGrid(!!algorithm.sidebarConfig)}>
+            <ProcessLog log={state.log} algorithm={algorithm} />
+
+            {algorithm.sidebarConfig && (
               <AlgorithmSidebar
                 algorithm={algorithm}
                 state={state}
@@ -241,26 +243,24 @@ export default function VisualizerFrame({
                 texts={texts}
                 isArrayBased={isArrayBased}
               />
-            </div>
+            )}
 
-            <div className="h-full">
-              {algorithm.codeSnippets && (
-                <CodePanel
-                  codeSnippets={algorithm.codeSnippets}
-                  lineHighlights={lineHighlights}
-                  activeStep={activeStep}
-                />
-              )}
-            </div>
+            {algorithm.codeSnippets && (
+              <CodePanel
+                codeSnippets={algorithm.codeSnippets}
+                lineHighlights={lineHighlights}
+                activeStep={activeStep}
+              />
+            )}
           </div>
         </div>
 
         {/* Footer */}
         <div className={classCategories.panelFooter}>
           <div className="flex items-center gap-2">
-            <LayoutGrid className="w-3 h-3 text-indigo-400" /> {algorithm.category}
+            <LayoutGrid className={localTheme.footerIcon} /> {algorithm.category}
           </div>
-          <div className="font-mono text-slate-500">Interactive Tool</div>
+          <div className={`font-mono ${classCategories.logicText.split(" ")[0]} text-slate-500`}>Interactive Tool</div>
         </div>
       </div>
     </div>

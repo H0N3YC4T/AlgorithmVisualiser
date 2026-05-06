@@ -34,10 +34,10 @@ export const jumpsearch = createAlgorithmCard({
     },
     extendedDescription: 'Jump Search works on sorted arrays. It checks elements at fixed intervals (jumps) of size √n. Once it finds a block where the target might be, it performs a linear search within that block to find the exact position.',
       legendItems: [
-        { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
-        { label: 'Jump Point', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-        { label: 'Linear Scan', color: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
-        { label: 'Found', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
+        { label: "Unsorted", color: "bg-slate-800 border-slate-700" },
+        { label: "Jump Bound", color: "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]" },
+        { label: "Linear Search", color: "bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]" },
+        { label: "Found", color: "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" },
       ],
     visualSteps: {
       READY: {

@@ -32,9 +32,9 @@ export const shellsort = createAlgorithmCard({
     },
     extendedDescription: 'Shell Sort is a generalization of insertion sort that allows the exchange of items that are far apart. The distance between elements decreases until it becomes 1 (standard insertion sort).',
     legendItems: [
-      { label: 'Unsorted', color: 'bg-slate-800/40 border-slate-700/50' },
-      { label: 'Checking', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
-      { label: 'Swap', color: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+      { label: 'Unsorted', color: 'bg-slate-800 border-slate-700' },
+      { label: 'Current', color: 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]' },
+      { label: 'Gap Compare', color: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' },
       { label: 'Sorted', color: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' },
     ],
     // --- Visual Steps ---

@@ -81,7 +81,7 @@ const ArrayVisualizer = memo(
             className="flex-1 flex flex-col items-center justify-end h-full"
           >
             <div className={`${barClass} ${colorClass} border-t border-x`} style={{ height: `${height}%` }}>
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-black text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-1 rounded-md border border-slate-700 whitespace-nowrap z-30">
+              <span className={`absolute -top-8 left-1/2 -translate-x-1/2 ${classCategories.logicText.split(" ")[0]} font-black text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-1 rounded-md border border-slate-700 whitespace-nowrap z-30`}>
                 {value}
               </span>
             </div>
@@ -97,7 +97,7 @@ const ArrayVisualizer = memo(
         return (
           <div key={slotId} className="flex-1 flex justify-center items-center">
             <span
-              className={`text-[10px] font-black font-mono transition-colors ${isA || isP ? "text-white" : "text-slate-600"}`}
+              className={`${classCategories.logicText.split(" ")[0]} font-black font-mono transition-colors ${isA || isP ? "text-white" : "text-slate-600"}`}
             >
               {i}
             </span>

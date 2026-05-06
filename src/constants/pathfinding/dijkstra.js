@@ -6,7 +6,7 @@ import { getGridConfig, generateMaze } from './grid-config';
  */
 export const dijkstra = createAlgorithmCard({
   id: 'dijkstra',
-  
+
   // --- Metadata ---
   metadata: {
     type: 'pathfinding',
@@ -121,7 +121,7 @@ export const dijkstra = createAlgorithmCard({
   // --- Logic ---
   getInitialState: (p, t, algo, existingState) => {
     const { rows, cols, startNode, endNode } = getGridConfig(existingState || algo);
-    
+
     let walls;
     if (existingState?.walls) {
       walls = existingState.walls instanceof Set ? existingState.walls : new Set(existingState.walls.map(w => `${w.r},${w.c}`));
@@ -129,23 +129,23 @@ export const dijkstra = createAlgorithmCard({
       const mazeWalls = generateMaze(rows, cols, startNode, endNode);
       walls = new Set(mazeWalls.map(w => `${w.r},${w.c}`));
     }
-    
-    const costs = existingState?.costs || new Array(rows).fill().map(() => 
+
+    const costs = existingState?.costs || new Array(rows).fill().map(() =>
       new Array(cols).fill().map(() => Math.floor(Math.random() * 9) + 1)
     );
-    
+
     const distances = {}; // Map key to distance
     const startKey = `${startNode.r},${startNode.c}`;
     distances[startKey] = 0;
-    
+
     return {
-      rows, cols, startNode, endNode, walls, costs, 
+      rows, cols, startNode, endNode, walls, costs,
       distances,
       visited: new Set(),
       previous: {}, // Map key to {r, c}
       queue: [startNode],
       path: [],
-      phase: 0, 
+      phase: 0,
       activeNode: null,
       isFinished: false,
       iterations: 0,
@@ -163,10 +163,10 @@ export const dijkstra = createAlgorithmCard({
 
     if (phase === 0) { // handleSearchPhase
       if (queue.length === 0) {
-        return { 
-          ...state, 
-          isFinished: true, 
-          log: { title: 'NO PATH', type: 'mismatch', messageKey: 'NO_PATH' } 
+        return {
+          ...state,
+          isFinished: true,
+          log: { title: 'NO PATH', type: 'mismatch', messageKey: 'NO_PATH' }
         };
       }
 
@@ -176,14 +176,14 @@ export const dijkstra = createAlgorithmCard({
         const dMin = distances[`${min.r},${min.c}`] ?? Infinity;
         return dNode < dMin ? node : min;
       }, queue[0]);
-      
+
       const restQueue = queue.filter(n => n !== current);
       const key = `${current.r},${current.c}`;
 
       if (visited.has(key)) {
         return { ...state, queue: restQueue };
       }
-      
+
       const newVisited = new Set(visited);
       newVisited.add(key);
 
@@ -231,11 +231,11 @@ export const dijkstra = createAlgorithmCard({
         queue: newQueue,
         iterations: state.iterations + 1,
         activeNode: current,
-        log: { 
-          title: 'EXPLORING', 
-          type: 'info', 
-          messageKey: 'EXPLORING', 
-          params: { r: current.r, c: current.c, dist: newDistances[key] } 
+        log: {
+          title: 'EXPLORING',
+          type: 'info',
+          messageKey: 'EXPLORING',
+          params: { r: current.r, c: current.c, dist: newDistances[key] }
         }
       };
     }
@@ -243,12 +243,12 @@ export const dijkstra = createAlgorithmCard({
     if (phase === 1) { // handleBacktrackPhase
       const lastKey = path.length === 0 ? `${endNode.r},${endNode.c}` : `${path[0].r},${path[0].c}`;
       const parent = previous[lastKey];
-      
+
       if (!parent) {
-        return { 
-          ...state, 
-          isFinished: true, 
-          log: { title: 'PATH COMPLETE ✓', type: 'success', messageKey: 'PATH_COMPLETE' } 
+        return {
+          ...state,
+          isFinished: true,
+          log: { title: 'PATH COMPLETE ✓', type: 'success', messageKey: 'PATH_COMPLETE' }
         };
       }
       return {
