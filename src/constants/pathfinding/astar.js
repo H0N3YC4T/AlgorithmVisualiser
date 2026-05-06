@@ -45,32 +45,32 @@ export const astar = createAlgorithmCard({
       READY: {
         title: 'Ready',
         message: "A* initialized. Using Manhattan distance heuristic to find the path to ({endNode.r}, {endNode.c}).",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        highlights: { pseudo: [1, 2, 3, 4], javascript: [1, 2, 3], python: [1, 2] }
       },
       SEARCHING: {
         title: 'Exploring',
         message: "Visiting node ({r}, {c}). g={gScore}, h={hScore}, f={fScore}.",
-        highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
+        highlights: { pseudo: [5, 6], javascript: [4, 5], python: [4, 5] }
       },
       TARGET_REACHED: {
         title: 'Target Found ✓',
         message: "A* reached the target! Optimal path found.",
-        highlights: { pseudo: [4], javascript: [7], python: [7] }
+        highlights: { pseudo: [7], javascript: [6], python: [6] }
       },
       BACKTRACKING: {
         title: 'Reconstructing Path',
         message: "Tracing back from target to start using parent pointers.",
-        highlights: { pseudo: [5], javascript: [9], python: [9] }
+        highlights: { pseudo: [7], javascript: [6], python: [6] }
       },
       DONE: {
         title: 'Path Complete ✓',
         message: "A* pathfinding completed successfully.",
-        highlights: { pseudo: [6], javascript: [11], python: [11] }
+        highlights: { pseudo: [7], javascript: [6], python: [6] }
       },
       NO_PATH: {
         title: 'No Path Found',
         message: "Open set exhausted. No path exists to the target.",
-        highlights: { pseudo: [7], javascript: [13], python: [13] }
+        highlights: { pseudo: [5], javascript: [4], python: [4] }
       }
     }
   },

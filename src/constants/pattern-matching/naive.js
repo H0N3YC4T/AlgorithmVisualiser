@@ -69,7 +69,39 @@ export const naive = createAlgorithmCard({
     }
   },
 
-  getInitialState: (_target, _pattern) => ({
+  codeSnippets: {
+    pseudo: `function naiveSearch(text, pattern):
+  n = text.length, m = pattern.length
+  for i from 0 to n - m:
+    for j from 0 to m - 1:
+      if text[i + j] != pattern[j]:
+        break
+    if j == m: return i
+  return -1`,
+    javascript: `function naiveSearch(text, pattern) {
+  const n = text.length;
+  const m = pattern.length;
+
+  for (let i = 0; i <= n - m; i++) {
+    let j;
+    for (j = 0; j < m; j++) {
+      if (text[i + j] !== pattern[j]) break;
+    }
+    if (j === m) return i;
+  }
+  return -1;
+}`,
+    python: `def naive_search(text, pattern):
+    n, m = len(text), len(pattern)
+    for i in range(n - m + 1):
+        match = True
+        for j in range(m):
+            if text[i + j] != pattern[j]:
+                match = False
+                break
+        if match: return i
+    return -1`
+  },
     currentIndex: 0,
     compIdx: 0,
     phase: 1,

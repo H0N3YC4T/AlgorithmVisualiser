@@ -69,6 +69,22 @@ export const cocktail = createAlgorithmCard({
   },
 
   codeSnippets: {
+    pseudo: `function cocktailSort(arr):
+  start = 0, end = arr.length - 1, swapped = true
+  while swapped:
+    swapped = false
+    for i from start to end - 1:
+      if arr[i] > arr[i + 1]:
+        swap(arr[i], arr[i + 1])
+        swapped = true
+    if not swapped: break
+    swapped = false
+    end = end - 1
+    for i from end - 1 down to start:
+      if arr[i] > arr[i + 1]:
+        swap(arr[i], arr[i + 1])
+        swapped = true
+    start = start + 1`,
     javascript: `function cocktailSort(arr) {
   let start = 0, end = arr.length - 1, swapped = true;
   while (swapped) {
@@ -90,7 +106,25 @@ export const cocktail = createAlgorithmCard({
     }
     start++;
   }
-}`
+}`,
+    python: `def cocktail_shaker_sort(arr):
+    start = 0
+    end = len(arr) - 1
+    swapped = True
+    while swapped:
+        swapped = False
+        for i in range(start, end):
+            if arr[i] > arr[i + 1]:
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+                swapped = True
+        if not swapped: break
+        swapped = False
+        end -= 1
+        for i in range(end - 1, start - 1, -1):
+            if arr[i] > arr[i + 1]:
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+                swapped = True
+        start += 1`
   },
 
   getInitialState: (p, t) => {

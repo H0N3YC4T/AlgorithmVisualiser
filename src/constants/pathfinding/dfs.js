@@ -45,32 +45,32 @@ export const dfs = createAlgorithmCard({
       READY: {
         title: 'Ready',
         message: "DFS initialized. Ready to explore from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        highlights: { pseudo: [1, 2], javascript: [1, 2, 3], python: [1, 2, 3] }
       },
       SEARCHING: {
         title: 'Exploring Branch',
         message: "Visiting node at ({r}, {c}). Exploring deeper into the current branch.",
-        highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
+        highlights: { pseudo: [3, 4], javascript: [4, 5, 6], python: [4, 5, 6] }
       },
       TARGET_REACHED: {
         title: 'Target Found ✓',
         message: "Reached the target node! Tracing the discovered path.",
-        highlights: { pseudo: [4], javascript: [7], python: [7] }
+        highlights: { pseudo: [5], javascript: [7], python: [7] }
       },
       BACKTRACKING: {
         title: 'Reconstructing Path',
         message: "Tracing back from target to start using parent pointers.",
-        highlights: { pseudo: [5], javascript: [9], python: [9] }
+        highlights: { pseudo: [5], javascript: [7], python: [7] }
       },
       DONE: {
         title: 'Path Complete ✓',
         message: "Path discovered and reconstructed.",
-        highlights: { pseudo: [6], javascript: [11], python: [11] }
+        highlights: { pseudo: [5], javascript: [7], python: [7] }
       },
       NO_PATH: {
         title: 'No Path Found',
         message: "Stack exhausted. No reachable path exists to the target.",
-        highlights: { pseudo: [7], javascript: [13], python: [13] }
+        highlights: { pseudo: [3], javascript: [4], python: [4] }
       }
     }
   },

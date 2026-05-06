@@ -31,7 +31,7 @@ export default function TextVisualizer({
             .map((item) => (
               <div
                 key={item.id}
-                className="w-10 flex-shrink-0 text-center text-[9px] font-black text-slate-700 font-mono"
+                className="w-10 flex-shrink-0 text-center text-[10px] font-bold text-slate-500 font-mono"
               >
                 {item.i}
               </div>
@@ -50,16 +50,16 @@ export default function TextVisualizer({
               const isAccessed = accessed.has(item.i);
               const isBehind = item.i < currentIndex;
 
-              let cellClass = `${classCategories.cellBase} bg-slate-800 border-slate-700 text-slate-100`;
+              let cellClass = `${classCategories.cellBase} w-10 h-10 bg-slate-800 border-slate-700 text-slate-100`;
 
               if (isExplicitActive) {
-                cellClass = `${classCategories.cellBase} bg-indigo-500/40 border-indigo-500 text-indigo-100 ring-4 ring-indigo-500/20 scale-105 z-10`;
+                cellClass = `${classCategories.cellBase} w-10 h-10 bg-indigo-500/40 border-indigo-500 text-indigo-100 ring-4 ring-indigo-500/20 scale-105 z-10`;
               } else if (isLookAhead) {
-                cellClass = `${classCategories.cellBase} bg-sky-400 border-sky-300 text-white shadow-xl shadow-sky-400/40 scale-110 z-10 animate-pulse`;
+                cellClass = `${classCategories.cellBase} w-10 h-10 bg-sky-400 border-sky-300 text-white shadow-xl shadow-sky-400/40 scale-110 z-10 animate-pulse`;
               } else if (isActiveChar) {
-                cellClass = `${classCategories.cellBase} bg-blue-900/40 border-blue-500 text-blue-200 ring-4 ring-blue-500/20 scale-105`;
+                cellClass = `${classCategories.cellBase} w-10 h-10 bg-blue-900/40 border-blue-500 text-blue-200 ring-4 ring-blue-500/20 scale-105`;
               } else if (isAccessed || isBehind) {
-                cellClass = `${classCategories.cellBase} bg-slate-800/40 border-slate-800 text-slate-600`;
+                cellClass = `${classCategories.cellBase} w-10 h-10 bg-slate-800/40 border-slate-800 text-slate-600`;
               }
 
               return (
@@ -85,14 +85,14 @@ export default function TextVisualizer({
               const isMatched =
                 (phase === 1 && !comparesRightToLeft && item.i < compIdx) ||
                 (phase === 1 && comparesRightToLeft && item.i > compIdx) ||
-                (isFinished && mismatchFound === false && item.i < pattern.length);
+                (isFinished && !mismatchFound && item.i < pattern.length);
               const isMismatched = phase >= 2 && item.i === compIdx && mismatchFound;
 
-              let cellClass = `${classCategories.cellBase} bg-slate-700 border-slate-600 text-slate-100`;
+              let cellClass = `${classCategories.cellBase} w-10 h-10 bg-slate-700 border-slate-600 text-slate-100 shadow-md`;
               if (isComparingIdx)
-                cellClass = `${classCategories.cellBase} bg-amber-400 border-amber-300 text-amber-950 ring-4 ring-amber-400/30 scale-110 z-20`;
-              if (isMismatched) cellClass = `${classCategories.cellBase} bg-rose-500 border-rose-400 text-white`;
-              if (isMatched) cellClass = `${classCategories.cellBase} bg-emerald-500 border-emerald-400 text-white`;
+                cellClass = `${classCategories.cellBase} w-10 h-10 bg-amber-400 border-amber-300 text-amber-950 ring-4 ring-amber-400/30 scale-110 z-20 shadow-xl`;
+              if (isMismatched) cellClass = `${classCategories.cellBase} w-10 h-10 bg-rose-500 border-rose-400 text-white shadow-lg shadow-rose-500/20`;
+              if (isMatched) cellClass = `${classCategories.cellBase} w-10 h-10 bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20`;
 
               return (
                 <div key={item.id} className={cellClass}>

@@ -56,6 +56,18 @@ export const bucket = createAlgorithmCard({
     }
   },
   codeSnippets: {
+    pseudo: `function bucketSort(arr):
+  min = findMin(arr), max = findMax(arr)
+  bucketCount = floor((max - min) / bucketSize) + 1
+  buckets = list of empty buckets
+  for x in arr:
+    buckets[floor((x - min) / bucketSize)].append(x)
+  
+  arr = []
+  for b in buckets:
+    sort(b)
+    arr.extend(b)
+  return arr`,
     javascript: `function bucketSort(arr, bucketSize = 5) {
   if (arr.length === 0) return arr;
   let min = Math.min(...arr), max = Math.max(...arr);
@@ -66,40 +78,103 @@ export const bucket = createAlgorithmCard({
   }
   arr.length = 0;
   for (let i = 0; i < buckets.length; i++) {
-    insertionSort(buckets[i]);
+    buckets[i].sort((a, b) => a - b);
     for (let j = 0; j < buckets[i].length; j++) {
       arr.push(buckets[i][j]);
     }
   }
   return arr;
-}`
+}`,
+    python: `def bucket_sort(arr):
+    if len(arr) == 0: return arr
+    min_val, max_val = min(arr), max(arr)
+    bucket_count = 5
+    buckets = [[] for _ in range(bucket_count)]
+    for x in arr:
+        idx = int((x - min_val) / (max_val - min_val + 1) * bucket_count)
+        buckets[idx].append(x)
+    arr.clear()
+    for b in buckets:
+        b.sort()
+        arr.extend(b)
+    return arr`
   },
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [42, 8, 76, 31, 95, 19, 58, 14];
     return {
-      phase: 0, i: 0, array,
-      buckets: [[], [], [], []], 
+      phase: 0, i: 0, array: [...array],
+      buckets: [[], [], [], [], []], 
+      minVal: Math.min(...array),
       maxVal: Math.max(...array),
-      activeIndices: [0], sortedIndices: [], swapIndices: [], comparisons: 0,
-      log: { title: 'READY', type: 'info', messageKey: 'READY' }
+      activeIndices: [], sortedIndices: [], swapIndices: [], comparisons: 0,
+      log: { title: 'Ready', type: 'info', messageKey: 'READY' }
     };
   },
   nextStep: (state) => {
-    const { array, i, phase, buckets, maxVal } = state;
-    if (phase === 0) { // Distribution phase
+    const { array, i, phase, buckets, minVal, maxVal } = state;
+    const newState = { ...state, activeIndices: [], swapIndices: [] };
+
+    if (phase === 0) { // Distributing
       if (i >= array.length) {
-        return { ...state, phase: 1, i: 0, activeIndices: [], log: { title: 'SORTING BUCKETS', type: 'info', messageKey: 'SORTING_BUCKETS' } };
+        return { 
+          ...newState, 
+          phase: 1, 
+          i: 0, 
+          log: { title: 'Sorting Buckets', type: 'info', messageKey: 'SORTING_BUCKETS' } 
+        };
       }
       const val = array[i];
-      const bucketIdx = Math.min(Math.floor((val / (maxVal + 1)) * 4), 3);
+      const bucketIdx = Math.min(Math.floor(((val - minVal) / (maxVal - minVal + 1)) * 5), 4);
       const newBuckets = [...buckets];
-      newBuckets[bucketIdx] = [...newBuckets[bucketIdx], val].sort((a, b) => a - b);
+      newBuckets[bucketIdx] = [...newBuckets[bucketIdx], val];
+      
       return { 
-        ...state, i: i + 1, buckets: newBuckets, activeIndices: [i],
-        log: { title: 'DISTRIBUTING', type: 'info', messageKey: 'DISTRIBUTING', params: { val, bucketIdx, i } }
+        ...newState, 
+        i: i + 1, 
+        buckets: newBuckets, 
+        activeIndices: [i],
+        log: { title: 'Distributing', type: 'info', messageKey: 'DISTRIBUTING', params: { val, bucketIdx, i } }
       };
     }
-    // Simple completion for the rest of the phases
-    return { ...state, isFinished: true, sortedIndices: [...new Array(array.length).keys()], log: { title: 'SORTED ✓', type: 'success', messageKey: 'SORTED' } };
+
+    if (phase === 1) { // Sorting
+      if (i >= buckets.length) {
+        return { 
+          ...newState, 
+          phase: 2, 
+          i: 0, 
+          array: [], 
+          log: { title: 'Concatenating', type: 'info', messageKey: 'CONCATENATING' } 
+        };
+      }
+      const newBuckets = [...buckets];
+      newBuckets[i] = [...newBuckets[i]].sort((a, b) => a - b);
+      return { 
+        ...newState, 
+        i: i + 1, 
+        buckets: newBuckets, 
+        log: { title: 'Sorting Buckets', type: 'info', messageKey: 'SORTING_BUCKETS' } 
+      };
+    }
+
+    if (phase === 2) { // Concatenating
+      if (i >= buckets.length) {
+        return { 
+          ...newState, 
+          isFinished: true, 
+          sortedIndices: [...new Array(array.length).keys()], 
+          log: { title: 'Sorted ✓', type: 'success', messageKey: 'SORTED' } 
+        };
+      }
+      const newArray = [...array, ...buckets[i]];
+      return { 
+        ...newState, 
+        i: i + 1, 
+        array: newArray, 
+        log: { title: 'Concatenating', type: 'info', messageKey: 'CONCATENATING' } 
+      };
+    }
+
+    return newState;
   }
 });

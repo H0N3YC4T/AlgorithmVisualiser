@@ -67,6 +67,73 @@ export const radix = createAlgorithmCard({
     }
   },
 
+  codeSnippets: {
+    pseudo: `function radixSort(arr):
+  max = findMax(arr)
+  exp = 1
+  while max / exp > 0:
+    countingSortByDigit(arr, exp)
+    exp *= 10
+
+function countingSortByDigit(arr, exp):
+  n = arr.length
+  output = array of size n
+  count = array of size 10 (zeros)
+  for x in arr:
+    digit = (x / exp) % 10
+    count[digit]++
+  for i from 1 to 9: count[i] += count[i-1]
+  for i from n-1 down to 0:
+    digit = (arr[i] / exp) % 10
+    output[count[digit] - 1] = arr[i]
+    count[digit]--
+  copy output to arr`,
+    javascript: `function radixSort(arr) {
+  const max = Math.max(...arr);
+  for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+    countingSortForRadix(arr, exp);
+  }
+  return arr;
+}
+
+function countingSortForRadix(arr, exp) {
+  let n = arr.length;
+  let output = new Array(n);
+  let count = new Array(10).fill(0);
+
+  for (let i = 0; i < n; i++) {
+    count[Math.floor(arr[i] / exp) % 10]++;
+  }
+  for (let i = 1; i < 10; i++) count[i] += count[i - 1];
+  for (let i = n - 1; i >= 0; i--) {
+    output[count[Math.floor(arr[i] / exp) % 10] - 1] = arr[i];
+    count[Math.floor(arr[i] / exp) % 10]--;
+  }
+  for (let i = 0; i < n; i++) arr[i] = output[i];
+}`,
+    python: `def radix_sort(arr):
+    max_val = max(arr)
+    exp = 1
+    while max_val // exp > 0:
+        counting_sort_for_radix(arr, exp)
+        exp *= 10
+    return arr
+
+def counting_sort_for_radix(arr, exp):
+    n = len(arr)
+    output = [0] * n
+    count = [0] * 10
+    for x in arr:
+        idx = (x // exp) % 10
+        count[idx] += 1
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+    for i in range(n - 1, -1, -1):
+        idx = (arr[i] // exp) % 10
+        output[count[idx] - 1] = arr[i]
+        count[idx] -= 1
+    for i in range(n):
+        arr[i] = output[i]`
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [53, 17, 82, 34, 91, 26, 45, 68];
     return {

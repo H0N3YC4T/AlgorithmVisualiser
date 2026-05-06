@@ -1,5 +1,5 @@
 import { LayoutGrid } from "lucide-react";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import PropTypes from "prop-types";
 import { InputPanel, Legend, CodePanel } from "@/components/UI";
 import { ArrayVisualizer } from "@/components/ArrayVisualiser";
@@ -114,6 +114,19 @@ export default function VisualizerFrame({
   gridSize,
   setGridSize,
 }) {
+  const lineHighlights = useMemo(() => {
+    if (algorithm.lineHighlights && Object.keys(algorithm.lineHighlights).length > 0) {
+      return algorithm.lineHighlights;
+    }
+    const extracted = {};
+    Object.entries(algorithm.visualSteps || {}).forEach(([key, step]) => {
+      if (step.highlights) extracted[key] = step.highlights;
+    });
+    return extracted;
+  }, [algorithm]);
+
+  const activeStep = state.log?.messageKey || state.log?.codeStep || state.log?.title;
+
   // Adjust speed based on playbackRate (inverse: higher rate means lower interval)
   const adjustedSpeed = (algorithm.uiConfig?.playbackSpeed || 500) / playbackRate;
 
@@ -234,8 +247,8 @@ export default function VisualizerFrame({
               {algorithm.codeSnippets && (
                 <CodePanel
                   codeSnippets={algorithm.codeSnippets}
-                  lineHighlights={algorithm.lineHighlights}
-                  activeStep={state.log?.codeStep || state.log?.title}
+                  lineHighlights={lineHighlights}
+                  activeStep={activeStep}
                 />
               )}
             </div>

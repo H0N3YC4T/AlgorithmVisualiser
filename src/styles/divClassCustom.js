@@ -69,28 +69,28 @@ export const classCategories = {
     ),
   },
 
-  // --- Visualizer UI ---
-  viz: {
-    heading: cx(
-      typography.semantics.viz.title,
-      `font-black text-${colors.textHigh}`,
-      typography.tracking.tighter
-    ),
-    badge: cx(
-      "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
-      "bg-indigo-500/10 border border-indigo-500/20 text-indigo-400"
-    ),
-  },
-
-  // --- Helper Components ---
+  // --- Visualizer Components ---
+  glassPanel: `bg-slate-900/40 border border-${colors.border} backdrop-blur-xl ${effects.roundness.xl} shadow-2xl`,
+  subPanel: `flex-1 flex flex-col bg-slate-950/40 border border-${colors.border} ${effects.roundness.xl} overflow-hidden shadow-xl backdrop-blur-sm`,
+  subPanelHeader: `px-10 py-8 border-b border-${colors.border} flex justify-between items-center bg-slate-900/40`,
+  smallHeading: `${typography.sizes.lg} font-black uppercase ${typography.tracking.wider} text-${colors.textMuted} flex items-center gap-2`,
+  controlGroup: `flex items-center gap-3 bg-slate-950/50 p-3 ${effects.roundness.lg} border border-${colors.border}`,
+  
+  // --- Typography & Inputs ---
+  buttonBase: `inline-flex items-center justify-center ${effects.roundness.base} px-10 py-4.5 ${typography.sizes.base} font-bold ${effects.transition} active:scale-95 disabled:opacity-50 disabled:pointer-events-none`,
+  labelBase: `block ${typography.sizes.base} font-black text-${colors.textMuted} uppercase ${typography.tracking.wider} mb-4 ml-3`,
+  inputBase: `w-full bg-slate-950/60 border border-${colors.border} ${effects.roundness.lg} px-8 py-5 ${typography.sizes.lg} text-${colors.textHigh} placeholder:text-slate-700 focus:outline-none focus:border-${colors.primary}/50 focus:ring-2 focus:ring-${colors.primary}/10 ${effects.transition}`,
+  
+  // --- Cells & Data Structures ---
+  cellBase: `w-10 h-14 flex-shrink-0 flex items-center justify-center border ${typography.fontMono} font-black ${typography.sizes.lg} ${effects.transition} ${effects.roundness.base} shadow-lg`,
+  cellValueBase: `w-10 h-16 flex-shrink-0 flex flex-col items-center justify-center border ${effects.transition} ${effects.roundness.base}`,
+  
+  // --- Helpers ---
+  metricPill: `flex items-center gap-3 px-4 py-3 ${effects.roundness.base} bg-slate-950/80 border border-${colors.border} ${typography.sizes.sm} font-black shrink-0`,
   infoCard: cx(
     "p-3 space-y-2 group transition-all",
     effects.roundness.base,
     `bg-${colors.surface} border border-slate-900/50 hover:border-slate-800`
-  ),
-  metricPill: cx(
-    `px-2 py-1 rounded-md bg-slate-950/40 border border-${colors.border} transition-colors`,
-    "hover:border-slate-700"
   ),
   cardFooter: cx(
     "p-4 flex justify-between items-center",

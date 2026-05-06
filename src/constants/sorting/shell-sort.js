@@ -68,7 +68,47 @@ export const shellsort = createAlgorithmCard({
     }
   },
 
-  getInitialState: (p, t) => {
+  codeSnippets: {
+    pseudo: `function shellSort(arr):
+  n = arr.length
+  gap = floor(n / 2)
+  while gap > 0:
+    for i from gap to n-1:
+      temp = arr[i], j = i
+      while j >= gap and arr[j - gap] > temp:
+        arr[j] = arr[j - gap]
+        j -= gap
+      arr[j] = temp
+    gap = floor(gap / 2)
+  return arr`,
+    javascript: `function shellSort(arr) {
+  let n = arr.length;
+  for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+    for (let i = gap; i < n; i++) {
+      let temp = arr[i];
+      let j;
+      for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+        arr[j] = arr[j - gap];
+      }
+      arr[j] = temp;
+    }
+  }
+  return arr;
+}`,
+    python: `def shell_sort(arr):
+    n = len(arr)
+    gap = n // 2
+    while gap > 0:
+        for i in range(gap, n):
+            temp = arr[i]
+            j = i
+            while j >= gap and arr[j - gap] > temp:
+                arr[j] = arr[j - gap]
+                j -= gap
+            arr[j] = temp
+        gap //= 2
+    return arr`
+  },
     const array = Array.isArray(t) ? t : [23, 29, 15, 19, 31, 7, 9, 5, 2];
     return {
       phase: 0, gap: Math.floor(array.length / 2), i: Math.floor(array.length / 2),

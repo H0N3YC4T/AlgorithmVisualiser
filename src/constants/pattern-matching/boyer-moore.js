@@ -69,7 +69,49 @@ export const boyermoore = createAlgorithmCard({
     }
   },
 
-  getPreprocessing: (pattern) => {
+  codeSnippets: {
+    pseudo: `function boyerMoore(text, pattern):
+  n = text.length, m = pattern.length
+  badCharTable = buildBadCharTable(pattern)
+  s = 0
+  while s <= n - m:
+    j = m - 1
+    while j >= 0 and pattern[j] == text[s + j]:
+      j = j - 1
+    if j < 0:
+      return s
+    else:
+      s = s + max(1, j - badCharTable[text[s + j]])`,
+    javascript: `function boyerMoore(text, pattern) {
+  const n = text.length, m = pattern.length;
+  const badCharTable = buildBadCharTable(pattern);
+  let s = 0;
+
+  while (s <= n - m) {
+    let j = m - 1;
+    while (j >= 0 && pattern[j] === text[s + j]) j--;
+    if (j < 0) {
+      return s;
+    } else {
+      s += Math.max(1, j - (badCharTable[text[s + j]] || -1));
+    }
+  }
+  return -1;
+}`,
+    python: `def boyer_moore(text, pattern):
+    n, m = len(text), len(pattern)
+    bad_char = build_bad_char(pattern)
+    s = 0
+    while s <= n - m:
+        j = m - 1
+        while j >= 0 and pattern[j] == text[s + j]:
+            j -= 1
+        if j < 0:
+            return s
+        else:
+            s += max(1, j - bad_char.get(text[s + j], -1))
+    return -1`
+  getPreprocessing: (pattern, target) => {
     const m = pattern.length;
     const table = {};
     for (let i = 0; i < m - 1; i++) {

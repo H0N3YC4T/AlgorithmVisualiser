@@ -45,32 +45,32 @@ export const dijkstra = createAlgorithmCard({
       READY: {
         title: 'Ready',
         message: "Dijkstra initialized. Ready to find the shortest path from ({startNode.r}, {startNode.c}) to ({endNode.r}, {endNode.c}).",
-        highlights: { pseudo: [1], javascript: [1], python: [1] }
+        highlights: { pseudo: [1, 2], javascript: [1, 2, 3, 4, 5], python: [1, 2, 3, 4] }
       },
       EXPLORING: {
         title: 'Exploring',
         message: "Visiting node at ({r}, {c}) with cumulative distance {dist}.",
-        highlights: { pseudo: [2, 3], javascript: [4, 5], python: [4, 5] }
+        highlights: { pseudo: [3, 4], javascript: [6, 7], python: [5, 6] }
       },
       TARGET_FOUND: {
         title: 'Target Found ✓',
         message: "Shortest path to target found! Reconstructing path.",
-        highlights: { pseudo: [4], javascript: [7], python: [7] }
+        highlights: { pseudo: [5], javascript: [8], python: [7] }
       },
       BACKTRACKING: {
         title: 'Reconstructing Path',
         message: "Tracing back from target to start using parent pointers.",
-        highlights: { pseudo: [5], javascript: [9], python: [9] }
+        highlights: { pseudo: [5], javascript: [8], python: [7] }
       },
       PATH_COMPLETE: {
         title: 'Path Complete ✓',
         message: "Absolute shortest path reconstructed successfully.",
-        highlights: { pseudo: [6], javascript: [11], python: [11] }
+        highlights: { pseudo: [5], javascript: [8], python: [7] }
       },
       NO_PATH: {
         title: 'No Path Found',
         message: "Queue exhausted. Target is unreachable.",
-        highlights: { pseudo: [7], javascript: [13], python: [13] }
+        highlights: { pseudo: [3], javascript: [6], python: [5] }
       }
     }
   },

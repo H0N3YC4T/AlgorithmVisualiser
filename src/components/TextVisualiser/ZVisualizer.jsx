@@ -19,7 +19,7 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
           {slots.map((slot) => (
             <div
               key={`idx-row-${slot.id}`}
-              className="w-10 flex-shrink-0 text-center text-[9px] font-black text-slate-700 font-mono"
+              className="w-10 flex-shrink-0 text-center text-[10px] font-bold text-slate-500 font-mono"
             >
               {slot.pos}
             </div>
@@ -51,7 +51,7 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
             }
 
             return (
-              <div key={`char-row-${slot.id}`} className={cellClass}>
+              <div key={`char-row-${slot.id}`} className={`${cellClass} w-10 h-10`}>
                 {slot.char}
               </div>
             );
@@ -94,10 +94,10 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
                   layout
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={cellClass}
+                  className={`${cellClass} w-10 h-14`}
                 >
                   <span className="text-[8px] font-black text-slate-600 mb-1">Z[{slot.pos}]</span>
-                  <span className={`text-sm font-bold ${valueColor}`}>{displayValue}</span>
+                  <span className={`text-[12px] font-bold ${valueColor}`}>{displayValue}</span>
                 </motion.div>
               );
             })}
@@ -114,8 +114,8 @@ export default function ZVisualizer({ concat, z, i, l, r, activeIndices, referen
                 exit={{ opacity: 0, y: 5 }}
                 className="absolute h-1 bg-indigo-500/50 rounded-full bottom-0 transition-all duration-500"
                 style={{
-                  left: `${l * 2.75}rem`,
-                  width: `${(r - l + 1) * 2.75 - 0.25}rem`,
+                  left: `${l * 2.125}rem`,
+                  width: `${(r - l + 1) * 2.125 - 0.125}rem`,
                 }}
               >
                 <div className="absolute inset-0 bg-indigo-500 blur-[2px] opacity-50" />

@@ -67,6 +67,44 @@ export const counting = createAlgorithmCard({
     }
   },
 
+  codeSnippets: {
+    pseudo: `function countingSort(arr):
+  max = findMax(arr)
+  count = array of zeros with size max + 1
+  for x in arr: count[x]++
+  for i from 1 to max: count[i] += count[i-1]
+  for i from n-1 down to 0:
+    output[count[arr[i]] - 1] = arr[i]
+    count[arr[i]]--
+  return output`,
+    javascript: `function countingSort(arr) {
+  let n = arr.length;
+  let max = Math.max(...arr);
+  let count = new Array(max + 1).fill(0);
+  let output = new Array(n);
+
+  for (let i = 0; i < n; i++) count[arr[i]]++;
+  for (let i = 1; i <= max; i++) count[i] += count[i - 1];
+  for (let i = n - 1; i >= 0; i--) {
+    output[count[arr[i]] - 1] = arr[i];
+    count[arr[i]]--;
+  }
+  return output;
+}`,
+    python: `def counting_sort(arr):
+    n = len(arr)
+    max_val = max(arr)
+    count = [0] * (max_val + 1)
+    output = [0] * n
+
+    for x in arr:
+        count[x] += 1
+    for i in range(1, max_val + 1):
+        count[i] += count[i - 1]
+    for i in range(n - 1, -1, -1):
+        output[count[arr[i]] - 1] = arr[i]
+        count[arr[i]] -= 1
+    return output`
   getInitialState: (p, t) => {
     const array = Array.isArray(t) ? t : [4, 2, 6, 1, 3, 2, 5, 1];
     const maxVal = array.length > 0 ? Math.max(...array) : 1;

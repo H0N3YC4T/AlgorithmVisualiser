@@ -74,7 +74,47 @@ export const kmp = createAlgorithmCard({
     }
   },
 
-  getPreprocessing: (pattern) => {
+  codeSnippets: {
+    pseudo: `function kmpSearch(text, pattern):
+  n = text.length, m = pattern.length
+  pi = computePrefix(pattern)
+  q = 0
+  for i from 0 to n-1:
+    while q > 0 and pattern[q] != text[i]:
+      q = pi[q-1]
+    if pattern[q] == text[i]:
+      q = q + 1
+    if q == m:
+      return i - m + 1
+  return -1`,
+    javascript: `function kmpSearch(text, pattern) {
+  const n = text.length;
+  const m = pattern.length;
+  const pi = computePrefixFunction(pattern);
+  let q = 0;
+
+  for (let i = 0; i < n; i++) {
+    while (q > 0 && pattern[q] !== text[i]) {
+      q = pi[q - 1];
+    }
+    if (pattern[q] === text[i]) q++;
+    if (q === m) return i - m + 1;
+  }
+  return -1;
+}`,
+    python: `def kmp_search(text, pattern):
+    n, m = len(text), len(pattern)
+    pi = compute_prefix_function(pattern)
+    q = 0
+    for i in range(n):
+        while q > 0 and pattern[q] != text[i]:
+            q = pi[q-1]
+        if pattern[q] == text[i]:
+            q += 1
+        if q == m:
+            return i - m + 1
+    return -1`
+  getPreprocessing: (pattern, target) => {
     const m = pattern.length;
     const pi = new Array(m).fill(0);
     let k = 0;

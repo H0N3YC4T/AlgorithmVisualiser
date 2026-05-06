@@ -57,6 +57,17 @@ export const rabinkarp = createAlgorithmCard({
     }
   },
   codeSnippets: {
+    pseudo: `function rabinKarp(text, pattern):
+  n = text.length, m = pattern.length
+  h_pattern = hash(pattern)
+  h_window = hash(text[0...m-1])
+  for i from 0 to n - m:
+    if h_pattern == h_window:
+      if text[i...i+m-1] == pattern:
+        return i
+    if i < n - m:
+      h_window = rollHash(h_window, text[i], text[i+m])
+  return -1`,
     javascript: `function rabinKarp(text, pattern) {
   const d = 256, q = 101;
   const n = text.length, m = pattern.length;
@@ -76,7 +87,24 @@ export const rabinkarp = createAlgorithmCard({
     }
   }
   return -1;
-}`
+}`,
+    python: `def rabin_karp(text, pattern):
+    d, q = 256, 101
+    n, m = len(text), len(pattern)
+    p, t, h = 0, 0, 1
+    for i in range(m - 1):
+        h = (h * d) % q
+    for i in range(m):
+        p = (d * p + ord(pattern[i])) % q
+        t = (d * t + ord(text[i])) % q
+    for i in range(n - m + 1):
+        if p == t:
+            if text[i : i + m] == pattern:
+                return i
+        if i < n - m:
+            t = (d * (t - ord(text[i]) * h) + ord(text[i + m])) % q
+            if t < 0: t += q
+    return -1`
   },
   getInitialState: (p) => {
     const prime = 101;
