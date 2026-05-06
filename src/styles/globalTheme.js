@@ -30,25 +30,25 @@ export const globalTheme = {
       mono: "'JetBrains Mono', monospace",
     },
     sizes: {
-      subtext: "text-[11px]",
+      subtext: "text-[12px]",
       baseSmall: "text-[13px]",
       baseLarge: "text-[16px]",
       header: "text-[18px]",
-      title: "text-[22px]",
+      title: "text-[20px]",
     },
     tracking: {
       tight: "tracking-tight",
       tighter: "tracking-tighter",
-      wider: "tracking-wider",
+      wider: "tracking-widest",
     },
     semantics: {
       home: {
-        title: "text-4xl md:text-5xl lg:text-6xl",
-        subtitle: "text-[13px] md:text-[16px]", // baseSmall md:baseLarge
-        section: "text-[13px]", // baseSmall
+        title: "text-[3rem] md:text-[3.75rem] lg:text-[4.5rem]",
+        subtitle: "text-[1rem] md:text-[1.5rem]", // baseSmall md:baseLarge
+        section: "text-[1rem] md:text-[1.2rem]", // baseSmall
       },
       viz: {
-        title: "text-[22px]", // title
+        title: "text-[20px]", // title
       },
     },
   },

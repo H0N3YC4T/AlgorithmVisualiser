@@ -1,13 +1,9 @@
 import PropTypes from "prop-types";
 import { Layers, Zap, MousePointer2 } from "lucide-react";
-import { globalTheme } from "@/styles/globalTheme";
-
-const localTheme = {
-  label: `${globalTheme.typography.sizes.subtext} font-black text-slate-500 uppercase tracking-widest leading-none mb-1`,
-  value: `${globalTheme.typography.semantics.home.title} font-mono font-black leading-none`,
-};
+import { algorithmMetricsTheme } from "@/styles/localThemes/algorithmMetricsTheme";
 
 export default function AlgorithmMetrics({ iterations, comparisons, accesses }) {
+  const localTheme = algorithmMetricsTheme;
   const items = [
     { label: "Passes", value: iterations, icon: Layers, color: "text-white", bg: "bg-white/5" },
     { label: "Comparisons", value: comparisons, icon: Zap, color: "text-blue-400", bg: "bg-blue-400/5" },

@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
  * useGridControls Hook
  * Handles grid-specific state including size, tools, and wall management.
  */
-export const useGridControls = (initialRows = 20, initialCols = 40) => {
+export const useGridControls = (initialRows = 15, initialCols = 45) => {
   const [gridSize, setGridSize] = useState({ rows: initialRows, cols: initialCols });
   const [gridTool, setGridTool] = useState("wall");
 

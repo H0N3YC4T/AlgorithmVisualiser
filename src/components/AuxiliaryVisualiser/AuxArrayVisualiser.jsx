@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { Layers } from "lucide-react";
 import { IntArrayVisualiser } from "@/components/IntArrayVisualiser";
 import { classCategories } from "@/styles/divClassCustom";
+import { algorithmPageTheme as apt } from "@/styles/localThemes/algorithmPageTheme";
 
 export default function AuxArrayVisualiser({ state }) {
   if (!state.countArray && !state.temp && !state.output && !state.buckets) return null;
@@ -12,7 +13,7 @@ export default function AuxArrayVisualiser({ state }) {
     >
       <div className="flex items-center gap-3 pb-2 border-b border-slate-800/60">
         <Layers className="w-4 h-4 text-indigo-400" />
-        <h3 className={`${classCategories.logicText.split(" ")[0]} font-black text-white uppercase tracking-[0.25em]`}>
+        <h3 className={`${apt.consoleTitle} text-white`}>
           Auxiliary Visualization
         </h3>
       </div>

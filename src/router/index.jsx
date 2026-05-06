@@ -35,7 +35,7 @@ const PageTransition = ({ children }) => (
  * AppRouter Component
  * Uses react-router-dom to manage navigation between algorithms.
  */
-export const AppRouter = ({ categories, algorithms, stateManager }) => {
+export const AppRouter = ({ algorithms, stateManager }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,7 +49,6 @@ export const AppRouter = ({ categories, algorithms, stateManager }) => {
             element={
               <PageTransition>
                 <Home
-                  categories={categories}
                   algorithms={algorithms}
                   onSelect={(id) => {
                     stateManager.setSelectedAlgoId(id);

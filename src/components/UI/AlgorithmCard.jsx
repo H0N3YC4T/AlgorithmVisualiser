@@ -1,14 +1,17 @@
 import PropTypes from "prop-types";
 import { globalTheme } from "@/styles/globalTheme";
+import { classCategories } from "@/styles/divClassCustom";
 import { homeDefaults } from "@/constants/home";
 
+
+
 const localTheme = {
-  appCard: `group relative flex flex-col p-4 h-full overflow-hidden bg-${globalTheme.colors.surface} border border-${globalTheme.colors.border} rounded-2xl hover:border-${globalTheme.colors.primary}/50 hover:bg-${globalTheme.colors.surfaceHover} hover:-translate-y-1 hover:shadow-lg hover:shadow-${globalTheme.colors.primary}/5 backdrop-blur-sm transition-all duration-500 text-left w-full`,
-  cardHeading: `${globalTheme.typography.sizes.header} font-black leading-tight text-${globalTheme.colors.textHigh} group-hover:text-${globalTheme.colors.primary} transition-colors`,
-  cardDescription: `${globalTheme.typography.sizes.baseSmall} font-medium leading-relaxed line-clamp-2 text-${globalTheme.colors.textMuted}`,
-  complexityPill: `flex items-center gap-2 px-2.5 py-1.5 rounded-2xl bg-slate-950/80 border border-slate-800/60 ${globalTheme.typography.sizes.subtext} font-black shrink-0`,
-  complexityLabel: `text-${globalTheme.colors.textDisabled} uppercase tracking-widest`,
-  badgeBase: "inline-flex items-center justify-center rounded-full font-black uppercase tracking-widest text-[10px]",
+  appCard: `group relative text-left p-8 bg-slate-900/40 border border-slate-800/60 hover:border-indigo-500/50 rounded-3xl transition-all duration-500 hover:shadow-[0_0_50px_rgba(99,102,241,0.15)] flex flex-col justify-between overflow-hidden`,
+  cardHeading: `text-2xl font-black text-white group-hover:text-indigo-400 transition-colors tracking-tight`,
+  cardDescription: classCategories.cardDescription,
+  badgeBase: `text-[10px] font-black uppercase tracking-widest rounded-lg border`,
+  complexityPill: `flex items-center gap-2 px-3 py-1.5 bg-slate-950/60 border border-slate-800/50 rounded-xl text-[11px] font-bold shadow-inner flex-shrink-0`,
+  complexityLabel: `text-slate-500 uppercase tracking-tighter`,
 };
 
 const getComplexityColor = (complexity) => {

@@ -8,16 +8,20 @@ import { globalTheme } from "@/styles/globalTheme";
 const localTheme = {
   sectionHeader: {
     container: "w-full group focus:outline-none",
-    border: `flex items-center gap-4 py-3 border-b border-${globalTheme.colors.borderStrong} transition-colors group-hover:border-${globalTheme.colors.border}`,
+    border: `flex items-center gap-6 py-4 border-b border-${globalTheme.colors.borderStrong} transition-colors group-hover:border-${globalTheme.colors.border}`,
     iconBox: (active) =>
-      `p-2 transition-all rounded-xl ${active ? `bg-${globalTheme.colors.primary} text-${globalTheme.colors.textHigh} shadow-[0_0_15px_rgba(99,102,241,0.3)]` : `bg-slate-900 text-${globalTheme.colors.textDisabled}`}`,
+      `p-3 transition-all rounded-2xl ${active ? `bg-${globalTheme.colors.primary} text-${globalTheme.colors.textHigh} shadow-[0_0_20px_rgba(99,102,241,0.4)]` : `bg-slate-900 text-${globalTheme.colors.textDisabled}`}`,
     title: (active) =>
       `${globalTheme.typography.semantics.home.section} font-black uppercase tracking-normal transition-colors ${active ? `text-${globalTheme.colors.textHigh}` : `text-${globalTheme.colors.textDisabled}`}`,
   },
 };
 
-const CategorySection = ({ category, algorithms, icon, isCollapsed, toggleCollapse, onSelect }) => {
+
+
+const CategorySection = ({ category, algorithms, icon, isCollapsed, toggleCollapse, onSelect, cols = 3 }) => {
   if (!algorithms || algorithms.length === 0) return null;
+
+  const gridClass = `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${cols} gap-4 pt-4 pb-6`;
 
   return (
     <div className="space-y-0">
@@ -48,7 +52,7 @@ const CategorySection = ({ category, algorithms, icon, isCollapsed, toggleCollap
             transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden"
           >
-            <div className={classCategories.grid}>
+            <div className={gridClass}>
               {algorithms.map((algo) => (
                 <AlgorithmCard key={algo.id} algo={algo} onSelect={onSelect} />
               ))}
@@ -67,6 +71,7 @@ CategorySection.propTypes = {
   isCollapsed: PropTypes.bool.isRequired,
   toggleCollapse: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
+  cols: PropTypes.number,
 };
 
 export default CategorySection;

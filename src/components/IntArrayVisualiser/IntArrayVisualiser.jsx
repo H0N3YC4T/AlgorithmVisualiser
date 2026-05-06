@@ -3,9 +3,10 @@ import { useMemo, memo } from "react";
 import PropTypes from "prop-types";
 import { classCategories } from "@/styles/divClassCustom";
 import { mapArrayToUniqueIds, calculateRelativeHeight } from "@/utils/visualiserHelpers";
+import { algorithmPageTheme as apt } from "@/styles/localThemes/algorithmPageTheme";
 
 const IntArrayVisualiser = memo(
-  ({ array = [], activeIndices = [], sortedIndices = [], pivotIndex = -1, swapIndices = [] }) => {
+  ({ array = [], activeIndices = [], sortedIndices = [], pivotIndex = -1, swapIndices = [], compact = false }) => {
     const safeArray = useMemo(() => (Array.isArray(array) ? array : []), [array]);
 
     const itemsWithIds = useMemo(() => mapArrayToUniqueIds(safeArray), [safeArray]);
@@ -66,7 +67,7 @@ const IntArrayVisualiser = memo(
           >
             <div className={`${barClass} ${colorClass} border-t border-x`} style={{ height: `${height}%` }}>
               <span
-                className={`absolute -top-8 left-1/2 -translate-x-1/2 ${classCategories.logicText.split(" ")[0]} font-black text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-1 rounded-md border border-slate-700 whitespace-nowrap z-30`}
+                className={`absolute -top-8 left-1/2 -translate-x-1/2 ${apt.visualiser} font-black text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-1 rounded-md border border-slate-700 whitespace-nowrap z-30`}
               >
                 {value}
               </span>
@@ -83,7 +84,7 @@ const IntArrayVisualiser = memo(
         return (
           <div key={slotId} className="flex-1 flex justify-center items-center">
             <span
-              className={`${classCategories.logicText.split(" ")[0]} font-black font-mono transition-colors ${isA || isP ? "text-white" : "text-slate-600"}`}
+              className={`${apt.visualiser} font-black font-mono transition-colors ${isA || isP ? "text-white" : "text-slate-600"}`}
             >
               {i}
             </span>
@@ -101,14 +102,15 @@ const IntArrayVisualiser = memo(
     }
 
     return (
-      <div className={`${classCategories.vizContainer} flex-col pt-8`}>
+      <div className={`${classCategories.vizContainer} pt-8`}>
         <div className="absolute top-8 bottom-8 left-0 right-0 flex flex-col justify-between px-4 pointer-events-none opacity-5">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="w-full h-px bg-white" />
           ))}
         </div>
-
-        <div className="flex-1 flex items-end justify-center gap-1 md:gap-2 px-4 relative z-10 border-b border-slate-700/50 pb-0">
+        
+        {/* Bars Container - Fixed height context */}
+        <div className="flex-1 min-h-0 flex items-end justify-center gap-1 md:gap-2 px-4 relative z-10 border-b border-slate-700/50 pb-0">
           {bars}
         </div>
 

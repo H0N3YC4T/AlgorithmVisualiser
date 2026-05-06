@@ -12,7 +12,8 @@ export const createAlgorithmPage = (config) => {
     category: config.category || metadata.category || homeCard.category,
     difficulty: config.difficulty || metadata.difficulty || homeCard.difficulty,
     description: config.description || metadata.description || homeCard.description,
-    extendedDescription: config.extendedDescription || metadata.extendedDescription || algorithmPage.extendedDescription,
+    extendedDescription:
+      config.extendedDescription || metadata.extendedDescription || algorithmPage.extendedDescription,
 
     // Logic
     getInitialState: config.getInitialState,
@@ -20,8 +21,16 @@ export const createAlgorithmPage = (config) => {
     getPreprocessing: config.getPreprocessing,
 
     // UI Metadata
-    VisualiserType: config.VisualiserType || metadata.VisualiserType || algorithmPage.VisualiserType,
-    defaultInputs: config.defaultInputs || metadata.defaultInputs || algorithmPage.defaultInputs || { target: "", pattern: "" },
+    visualiserType:
+      config.visualiserType ||
+      metadata.visualiserType ||
+      config.VisualiserType ||
+      metadata.VisualiserType ||
+      algorithmPage.VisualiserType ||
+      algorithmPage.visualiserType,
+    defaultInputs: config.defaultInputs ||
+      metadata.defaultInputs ||
+      algorithmPage.defaultInputs || { target: "", pattern: "" },
     complexity: config.complexity || metadata.complexity || homeCard.complexity,
     legendItems: config.legendItems || metadata.legendItems || algorithmPage.legendItems || [],
     visualSteps: config.visualSteps || metadata.visualSteps || algorithmPage.visualSteps || {},

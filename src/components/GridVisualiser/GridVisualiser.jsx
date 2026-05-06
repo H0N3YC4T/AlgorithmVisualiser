@@ -7,15 +7,9 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState(null); // 'adding' | 'removing' | null
 
-  const localTheme = {
-    container: `${classCategories.vizContainer} h-[450px] p-4 shadow-inner select-none bg-slate-900/20 ${classCategories.cardRound} border-slate-800/40`,
-    grid: "grid gap-1 outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl",
-    overlay: `absolute inset-0 flex items-center justify-center text-slate-500 font-black ${classCategories.logicText.split(" ")[0]} uppercase tracking-widest bg-slate-950/40 rounded-2xl`,
-  };
-
   const {
-    rows,
-    cols,
+    rows = 15,
+    cols = 45,
     startNode,
     endNode,
     visited,
@@ -28,14 +22,10 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
     openSet,
   } = state || {};
 
-  const legendItems = algorithm?.legendItems || [];
+  const legendItems = useMemo(() => algorithm?.legendItems || [], [algorithm?.legendItems]);
 
   const colorMapping = useMemo(
-    () =>
-      (legendItems || []).reduce((acc, item) => {
-        acc[item.label.toLowerCase()] = item.color;
-        return acc;
-      }, {}),
+    () => Object.fromEntries(legendItems.map((i) => [i.label.toLowerCase(), i.color])),
     [legendItems],
   );
 
@@ -136,17 +126,22 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
 
   const gridStyle = useMemo(
     () => ({
+      display: "grid",
       gridTemplateColumns: `repeat(${cols}, 1fr)`,
-      aspectRatio: `${cols} / ${rows}`,
+      gridTemplateRows: `repeat(${rows}, 1fr)`,
+      gap: "1px",
       width: "100%",
-      maxWidth: `calc((450px - 64px) * ${cols} / ${rows})`,
+      height: "auto",
+      maxWidth: `calc(450px * ${cols} / ${rows})`,
       maxHeight: "100%",
-      margin: "0 auto",
+      aspectRatio: `${cols} / ${rows}`,
+      margin: "auto",
     }),
     [cols, rows],
   );
 
   const totalCells = rows * cols;
+
   const nodes = useMemo(() => {
     return Array.from({ length: totalCells }).map((_, index) => {
       const r = Math.floor(index / cols);
@@ -197,18 +192,22 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
   ]);
 
   return (
-    <div className={localTheme.container}>
+    <div className="relative w-full h-[450px] flex flex-col justify-center items-center select-none overflow-visible transition-all duration-500">
       <div
         role="grid"
         tabIndex={0}
         aria-label="Pathfinding Grid"
-        className={localTheme.grid}
+        className="grid gap-1 outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl"
         onMouseLeave={handleMouseUp}
         onMouseUp={handleMouseUp}
         style={gridStyle}
       >
         {state?.rows === undefined ? (
-          <div className={localTheme.overlay}>
+          <div
+            className={`absolute inset-0 flex items-center justify-center text-slate-500 font-black ${
+              classCategories.logicText.split(" ")[0]
+            } uppercase tracking-widest bg-slate-950/20 rounded-2xl`}
+          >
             Initializing Grid...
           </div>
         ) : (
@@ -245,4 +244,3 @@ GridVisualiser.propTypes = {
   gridTool: PropTypes.string,
   isEditingDisabled: PropTypes.bool,
 };
-

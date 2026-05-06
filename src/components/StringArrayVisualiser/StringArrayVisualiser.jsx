@@ -45,7 +45,7 @@ export default function StringArrayVisualiser({
             .map((item) => {
               const isLookAhead = lookAheadIndex !== undefined && lookAheadIndex !== -1 && item.i === lookAheadIndex;
               const isExplicitActive = active.has(item.i);
-              const isActiveChar = phase === 1 && item.i === currentIndex + compIdx;
+              const isActiveChar = compIdx >= 0 && item.i === currentIndex + compIdx;
               const isAccessed = accessed.has(item.i);
               const isBehind = item.i < currentIndex;
 
@@ -80,12 +80,12 @@ export default function StringArrayVisualiser({
             .split("")
             .map((char, i) => ({ char, i, id: `pcell-slot-${i}` }))
             .map((item) => {
-              const isComparingIdx = phase === 1 && item.i === compIdx;
+              const isComparingIdx = compIdx !== -1 && item.i === compIdx;
               const isMatched =
-                (phase === 1 && !comparesRightToLeft && item.i < compIdx) ||
-                (phase === 1 && comparesRightToLeft && item.i > compIdx) ||
+                (compIdx !== -1 && !comparesRightToLeft && item.i < compIdx) ||
+                (compIdx !== -1 && comparesRightToLeft && item.i > compIdx) ||
                 (isFinished && !mismatchFound && item.i < pattern.length);
-              const isMismatched = phase >= 2 && item.i === compIdx && mismatchFound;
+              const isMismatched = mismatchFound && item.i === compIdx;
 
               let cellClass = `${classCategories.cellBase} w-10 h-10 bg-slate-700 border-slate-600 text-slate-100 shadow-md`;
               if (isComparingIdx)

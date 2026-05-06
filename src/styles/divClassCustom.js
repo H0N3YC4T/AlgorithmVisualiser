@@ -61,5 +61,6 @@ export const classCategories = {
 
   // --- Thematic Defaults ---
   cardRound: "rounded-2xl",
+  vizContainer: "relative w-full h-[450px] bg-slate-900/40 border border-slate-800/60 rounded-2xl overflow-hidden transition-all duration-500 shadow-2xl flex flex-col",
 };
 

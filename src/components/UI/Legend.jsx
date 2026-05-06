@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import { memo } from "react";
 import { classCategories } from "@/styles/divClassCustom";
-import { globalTheme } from "@/styles/globalTheme";
+import { algorithmPageTheme as apt } from "@/styles/localThemes/algorithmPageTheme";
 
 const localTheme = {
   container: `${classCategories.glassPanel} ${classCategories.cardRound} p-3 h-full flex items-center justify-center`,
-  itemLabel: `${globalTheme.typography.sizes.subtext} font-black text-slate-400 uppercase tracking-[0.2em]`,
+  itemLabel: apt.key,
 };
 
 /**

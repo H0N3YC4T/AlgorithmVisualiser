@@ -7,32 +7,34 @@ import PropTypes from "prop-types";
 import { Terminal, Copy, Check } from "lucide-react";
 import { uiDefaults } from "@/constants/ui";
 import { classCategories } from "@/styles/divClassCustom";
-import { globalTheme } from "@/styles/globalTheme";
+import { algorithmPageTheme as apt } from "@/styles/localThemes/algorithmPageTheme";
+
+const localTheme = {
+  tabBtn: (isActive) =>
+    `px-3 py-1.5 rounded-xl ${apt.button} transition-all ${
+      isActive
+        ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
+        : "text-slate-500 hover:text-slate-300 hover:bg-slate-800"
+    }`,
+  copyBtn: "p-2 hover:bg-slate-800 rounded-xl text-slate-500 hover:text-white transition-colors",
+  codeTitle: apt.codeTitle,
+  visualiserTitle: apt.visualiserTitle,
+  syntaxStyle: {
+    margin: 0,
+    padding: "1.25rem",
+    background: "transparent",
+    fontSize: apt.code.split(" ")[0].includes("text-[") ? apt.code.split(" ")[0].replace("text-[", "").replace("]", "") : "14px",
+    lineHeight: "1.6",
+  },
+};
 
 SyntaxHighlighter.registerLanguage("javascript", js);
 SyntaxHighlighter.registerLanguage("python", python);
-SyntaxHighlighter.registerLanguage("pseudo", js); //
+SyntaxHighlighter.registerLanguage("pseudo", js);
 
 const CodePanel = memo(({ codeSnippets, lineHighlights, activeStep }) => {
   const [activeTab, setActiveTab] = useState("javascript");
   const [copied, setCopied] = useState(false);
-
-  const localTheme = {
-    tabBtn: (isActive) =>
-      `px-3 py-1.5 rounded-xl ${globalTheme.typography.sizes.baseSmall} font-black uppercase tracking-widest transition-all ${
-        isActive
-          ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
-          : "text-slate-500 hover:text-slate-300 hover:bg-slate-800"
-      }`,
-    copyBtn: "p-2 hover:bg-slate-800 rounded-xl text-slate-500 hover:text-white transition-colors",
-    syntaxStyle: {
-      margin: 0,
-      padding: "1.25rem",
-      background: "transparent",
-      fontSize: "13px",
-      lineHeight: "1.6",
-    },
-  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(codeSnippets[activeTab]);
@@ -48,7 +50,7 @@ const CodePanel = memo(({ codeSnippets, lineHighlights, activeStep }) => {
   return (
     <div className={classCategories.subPanel}>
       <div className={classCategories.subPanelHeader}>
-        <h3 className={classCategories.smallHeading}>
+        <h3 className={`${localTheme.codeTitle} flex items-center gap-2`}>
           <Terminal className="w-4 h-4" /> {uiDefaults.codePanel.title}
         </h3>
         <div className="flex items-center gap-4">

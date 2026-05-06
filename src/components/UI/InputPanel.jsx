@@ -1,14 +1,15 @@
 import PropTypes from "prop-types";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import { GridEditor } from "@/components/GridVisualiser";
 import { classCategories } from "@/styles/divClassCustom";
 import { globalTheme } from "@/styles/globalTheme";
+import { algorithmPageTheme as apt } from "@/styles/localThemes/algorithmPageTheme";
 
 const localTheme = {
   panel: `w-full h-full bg-slate-900/40 backdrop-blur-md border border-slate-800/60 ${classCategories.cardRound} p-5 shadow-2xl`,
   configContainer:
     "flex items-center gap-6 bg-slate-950/50 border border-slate-800/60 rounded-2xl px-4 py-2 shadow-inner",
-  configTitle: `${globalTheme.typography.sizes.subtext} font-black uppercase tracking-[0.2em] text-slate-500`,
+  configTitle: apt.controlTitle,
   speedContainer: "bg-slate-950/50 border border-slate-800/60 rounded-2xl px-5 py-3 shadow-inner group",
   speedInput:
     "w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500 group-hover:bg-slate-700 transition-colors",
@@ -41,6 +42,26 @@ const InputPanel = memo(
   }) => {
     const isPathfinding = type === "pathfinding";
     const isArrayBased = type === "sorting" || type === "searching";
+
+    const [localRows, setLocalRows] = useState(gridSize.rows);
+    const [localCols, setLocalCols] = useState(gridSize.cols);
+
+    useEffect(() => {
+      setLocalRows(gridSize.rows);
+      setLocalCols(gridSize.cols);
+    }, [gridSize]);
+
+    const handleRowsUpdate = () => {
+      const val = Math.max(3, parseInt(localRows) || 3);
+      setLocalRows(val);
+      setGridSize(val, gridSize.cols);
+    };
+
+    const handleColsUpdate = () => {
+      const val = Math.max(3, parseInt(localCols) || 3);
+      setLocalCols(val);
+      setGridSize(gridSize.rows, val);
+    };
 
     return (
       <div className={localTheme.panel}>
@@ -78,8 +99,10 @@ const InputPanel = memo(
                   <span className={`${localTheme.sizeInput.label}`}>H</span>
                   <input
                     type="number"
-                    value={gridSize.rows}
-                    onChange={(e) => setGridSize(parseInt(e.target.value) || 5, gridSize.cols)}
+                    value={localRows}
+                    onChange={(e) => setLocalRows(e.target.value)}
+                    onBlur={handleRowsUpdate}
+                    onKeyDown={(e) => e.key === "Enter" && handleRowsUpdate()}
                     disabled={isEditingDisabled}
                     className={`${localTheme.sizeInput.container}`}
                   />
@@ -88,8 +111,10 @@ const InputPanel = memo(
                   <span className={`${localTheme.sizeInput.label}`}>W</span>
                   <input
                     type="number"
-                    value={gridSize.cols}
-                    onChange={(e) => setGridSize(gridSize.rows, parseInt(e.target.value) || 5)}
+                    value={localCols}
+                    onChange={(e) => setLocalCols(e.target.value)}
+                    onBlur={handleColsUpdate}
+                    onKeyDown={(e) => e.key === "Enter" && handleColsUpdate()}
                     disabled={isEditingDisabled}
                     className={`${localTheme.sizeInput.container}`}
                   />
@@ -147,12 +172,11 @@ const InputPanel = memo(
                 </div>
                 <input
                   type="text"
-                  value={isArrayBased ? (type === "sorting" ? target : pattern) : target}
+                  value={target}
                   onChange={(e) => {
                     const val = e.target.value;
                     if (isArrayBased) {
-                      if (type === "sorting") setTarget(val);
-                      else setPattern(val);
+                      setTarget(val);
                     } else {
                       setTarget(val.toUpperCase());
                     }
@@ -173,10 +197,10 @@ const InputPanel = memo(
                   </div>
                   <input
                     type="text"
-                    value={isArrayBased ? target : pattern}
+                    value={pattern}
                     onChange={(e) => {
                       const val = e.target.value;
-                      if (isArrayBased) setTarget(val);
+                      if (isArrayBased) setPattern(val);
                       else setPattern(val.toUpperCase());
                     }}
                     placeholder={type === "searching" ? "X" : "PATTERN"}

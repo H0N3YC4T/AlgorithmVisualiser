@@ -1,32 +1,25 @@
 import PropTypes from "prop-types";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, ChevronDown, Layers, Search, Map, Zap, HelpCircle } from "lucide-react";
+import { FileText, ChevronDown, Zap } from "lucide-react";
 import { BigOChart, CategorySection } from "@/components/UI";
 import { homeDefaults } from "@/constants/home";
-import { classCategories } from "@/styles/divClassCustom";
+import { HOME_CATEGORIES } from "@/algorithmConfigs/categories";
 import { globalTheme } from "@/styles/globalTheme";
+import { classCategories } from "@/styles/divClassCustom";
+import { cheatsheetConfig } from "@/algorithmConfigs/cheatsheetConfig";
 
-const ICON_MAP = {
-  Layers,
-  Search,
-  Map,
-  Zap,
-  HelpCircle,
-};
-
-const localTheme = {
-  container: `min-h-screen bg-transparent text-${globalTheme.colors.textHigh} p-8 md:p-12 font-sans relative`,
-  wrapper: "max-w-[1400px] mx-auto space-y-6 relative z-10",
-  header: "text-center space-y-6 pt-12",
-  badge: `inline-flex items-center gap-3 px-4 py-2 rounded-full bg-${globalTheme.colors.primary}/10 border border-${globalTheme.colors.primary}/20 text-${globalTheme.colors.primaryLight} ${globalTheme.typography.sizes.baseSmall} font-black uppercase tracking-[0.2em]`,
+const homeTheme = {
+  container: `bg-transparent text-${globalTheme.colors.textHigh} font-sans relative`,
+  wrapper: "min-h-screen max-w-[1200px] mx-auto z-10 grow",
+  header: "text-center space-y-4 pt-4",
+  homeTitle: `${globalTheme.typography.semantics.home.title} font-black text-${globalTheme.colors.textHigh} tracking-tight mb-2`,
   conceptCard: `p-5 bg-slate-900/40 border border-slate-800/60 ${classCategories.cardRound} space-y-4 hover:border-slate-700 transition-colors shadow-xl`,
   iconBox: "p-2 rounded-xl bg-slate-950 border border-slate-800",
   notationCard: `p-4 ${classCategories.cardRound} border border-slate-800/60 space-y-3 flex flex-col justify-between`,
   complexityCard: `p-4 ${classCategories.cardRound} border border-slate-800/60 bg-indigo-500/5 space-y-3 group hover:border-slate-700 transition-colors shadow-xl`,
-  footer: `pt-24 border-t border-${globalTheme.colors.borderStrong} text-center`,
-  copyright: `${globalTheme.typography.sizes.baseSmall} font-black text-${globalTheme.colors.textDisabled} uppercase tracking-[0.5em]`,
-  homeTitle: `${globalTheme.typography.semantics.home.title} font-black text-${globalTheme.colors.textHigh} tracking-tight mb-2`,
+  footer: `text-center border-t border-${globalTheme.colors.borderStrong}`,
+  copyright: `pt-2 pb-2 font-black ${globalTheme.typography.sizes.baseSmall} text-${globalTheme.colors.textDisabled} uppercase ${globalTheme.typography.tracking.wider}`,
   homeSubtitle: `${globalTheme.typography.semantics.home.subtitle} font-medium text-${globalTheme.colors.textMuted} max-w-2xl mx-auto mb-4`,
   sectionHeader: {
     container: "w-full group focus:outline-none",
@@ -38,8 +31,10 @@ const localTheme = {
   },
 };
 
-export default function Home({ algorithms, categories, onSelect }) {
-  const [collapsedCategories, setCollapsedCategories] = useState(new Set(["cheatsheet", ...(categories || [])]));
+export default function Home({ algorithms, onSelect }) {
+  const [collapsedCategories, setCollapsedCategories] = useState(
+    new Set(["cheatsheet", ...HOME_CATEGORIES.map((cat) => cat.id)]),
+  );
 
   const groupedAlgorithms = useMemo(() => {
     return (algorithms || []).reduce((acc, algo) => {
@@ -59,39 +54,30 @@ export default function Home({ algorithms, categories, onSelect }) {
     });
   };
 
-  const getCategoryIcon = (category) => {
-    const iconName = homeDefaults.categoryMeta[category] || homeDefaults.categoryMeta.default;
-    const Icon = ICON_MAP[iconName] || ICON_MAP.HelpCircle;
-    return <Icon className="w-5 h-5" />;
-  };
-
   return (
-    <div className={localTheme.container}>
-      <div className={localTheme.wrapper}>
+    <div className={homeTheme.container}>
+      <div className={homeTheme.wrapper}>
         {/* Header */}
-        <div className={localTheme.header}>
-          <div className={localTheme.badge}>
-            <Zap className="w-4 h-4" /> {homeDefaults.hero.badge}
-          </div>
-          <h1 className={localTheme.homeTitle}>
+        <div className={homeTheme.header}>
+          <h1 className={homeTheme.homeTitle}>
             {homeDefaults.hero.title} <span className="text-indigo-500">{homeDefaults.hero.titleAccent}</span>
           </h1>
-          <p className={localTheme.homeSubtitle}>{homeDefaults.hero.description}</p>
+          <p className={homeTheme.homeSubtitle}>{homeDefaults.hero.description}</p>
         </div>
 
         {/* Big O Reference */}
         <div className="space-y-0">
-          <button onClick={() => toggleCategory("cheatsheet")} className={localTheme.sectionHeader.container}>
-            <div className={localTheme.sectionHeader.border}>
-              <div className={localTheme.sectionHeader.iconBox(!collapsedCategories.has("cheatsheet"))}>
+          <button onClick={() => toggleCategory("cheatsheet")} className={homeTheme.sectionHeader.container}>
+            <div className={homeTheme.sectionHeader.border}>
+              <div className={homeTheme.sectionHeader.iconBox(!collapsedCategories.has("cheatsheet"))}>
                 <FileText className="w-5 h-5" />
               </div>
-              <h2 className={localTheme.sectionHeader.title(!collapsedCategories.has("cheatsheet"))}>
+              <h2 className={homeTheme.sectionHeader.title(!collapsedCategories.has("cheatsheet"))}>
                 Big O Cheatsheet{" "}
                 <span
                   className={`ml-4 ${globalTheme.typography.sizes.baseSmall} text-slate-700 font-black tracking-[0.1em]`}
                 >
-                  ({homeDefaults.caseCards.length})
+                  ({cheatsheetConfig.caseCards.length})
                 </span>
               </h2>
               <div className="flex-1" />
@@ -110,13 +96,13 @@ export default function Home({ algorithms, categories, onSelect }) {
                 transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
                 className="overflow-hidden"
               >
-                <div className="space-y-12 pt-8 pb-12">
+                <div className="space-y-4">
                   {/* Concept Cards - 3 Columns */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {homeDefaults.caseCards.map((card) => (
-                      <div key={card.label} className={localTheme.conceptCard}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
+                    {cheatsheetConfig.caseCards.map((card) => (
+                      <div key={card.label} className={homeTheme.conceptCard}>
                         <div className="flex items-center gap-4">
-                          <div className={`${localTheme.iconBox} ${card.color}`}>
+                          <div className={`${homeTheme.iconBox} ${card.color}`}>
                             <card.icon className="w-5 h-5" />
                           </div>
                           <h3
@@ -135,9 +121,9 @@ export default function Home({ algorithms, categories, onSelect }) {
                   </div>
 
                   {/* Big O Notation Cards - 6 Columns */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-                    {homeDefaults.bigONotations.map((item) => (
-                      <div key={item.label} className={`${localTheme.notationCard} ${item.bg}`}>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {cheatsheetConfig.bigONotations.map((item) => (
+                      <div key={item.label} className={`${homeTheme.notationCard} ${item.bg}`}>
                         <div className="flex items-center justify-between">
                           <span
                             className={`${globalTheme.typography.sizes.header} font-black ${item.color.replace("stroke-", "text-")}`}
@@ -146,14 +132,14 @@ export default function Home({ algorithms, categories, onSelect }) {
                           </span>
                           <BigOChart type={item.type} color={item.color} />
                         </div>
-                        <div>
+                        <div className="h-full">
                           <div
-                            className={`${globalTheme.typography.sizes.subtext} font-black text-white uppercase tracking-[0.1em] mb-1`}
+                            className={`${globalTheme.typography.sizes.baseLarge} font-black text-white uppercase tracking-[0.1em] mb-1`}
                           >
                             {item.name}
                           </div>
                           <p
-                            className={`${globalTheme.typography.sizes.subtext} text-slate-500 font-medium leading-snug line-clamp-2`}
+                            className={`${globalTheme.typography.sizes.subtext} text-slate-500 font-medium leading-snug items-center `}
                           >
                             {item.desc}
                           </p>
@@ -164,32 +150,32 @@ export default function Home({ algorithms, categories, onSelect }) {
 
                   {/* Space Complexity Cards - 3 Columns */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {homeDefaults.spaceComplexities.map((item) => (
-                      <div key={item.label} className={localTheme.complexityCard}>
+                    {cheatsheetConfig.spaceComplexities.map((item) => (
+                      <div key={item.label} className={homeTheme.complexityCard}>
                         <div className="flex items-center justify-between">
-                          <span className={`${globalTheme.typography.sizes.baseSmall} font-black text-indigo-400`}>
+                          <span className={`${globalTheme.typography.sizes.baseLarge} font-black text-indigo-400`}>
                             {item.label}
                           </span>
                           <div
-                            className={`${globalTheme.typography.sizes.subtext} font-black text-white/30 uppercase tracking-[0.2em]`}
+                            className={`${globalTheme.typography.sizes.baseLarge} font-black text-white/40 uppercase tracking-[0.2em]`}
                           >
                             {item.name}
                           </div>
                         </div>
                         <div>
                           <p
-                            className={`${globalTheme.typography.sizes.subtext} text-slate-500 font-medium leading-relaxed mb-4`}
+                            className={`${globalTheme.typography.sizes.baseSmall} text-slate-500 font-medium leading-relaxed mb-4`}
                           >
                             {item.desc}
                           </p>
                           <div className="flex items-center gap-2">
                             <span
-                              className={`${globalTheme.typography.sizes.subtext} font-black text-indigo-500/50 uppercase`}
+                              className={`${globalTheme.typography.sizes.baseSmall} font-black text-indigo-500/50 uppercase`}
                             >
                               EX:
                             </span>
                             <span
-                              className={`${globalTheme.typography.sizes.subtext} text-slate-600 font-mono italic truncate`}
+                              className={`${globalTheme.typography.sizes.baseSmall} text-slate-600 font-mono italic truncate`}
                             >
                               {item.examples}
                             </span>
@@ -206,23 +192,23 @@ export default function Home({ algorithms, categories, onSelect }) {
 
         {/* Algorithm Explorer */}
         <div className="space-y-0">
-          {Object.keys(groupedAlgorithms).map((category) => (
+          {HOME_CATEGORIES.map((cat) => (
             <CategorySection
-              key={category}
-              category={category}
-              algorithms={groupedAlgorithms[category]}
-              icon={getCategoryIcon(category)}
-              isCollapsed={collapsedCategories.has(category)}
-              toggleCollapse={() => toggleCategory(category)}
+              key={cat.id}
+              category={cat.name}
+              algorithms={groupedAlgorithms[cat.id]}
+              icon={cat.icon}
+              cols={cat.cols}
+              isCollapsed={collapsedCategories.has(cat.id)}
+              toggleCollapse={() => toggleCategory(cat.id)}
               onSelect={onSelect}
             />
           ))}
         </div>
-
-        <div className={localTheme.footer}>
-          <p className={localTheme.copyright}>&copy; {homeDefaults.footer.copyright}</p>
-        </div>
       </div>
+      <footer className={`${homeTheme.footer}`}>
+        <div className={`${homeTheme.copyright}`}>© 2026 Interactive Visualizer Platform</div>
+      </footer>
     </div>
   );
 }
@@ -243,6 +229,5 @@ Home.propTypes = {
       }),
     }),
   ).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSelect: PropTypes.func.isRequired,
 };

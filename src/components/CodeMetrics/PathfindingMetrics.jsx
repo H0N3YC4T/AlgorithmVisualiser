@@ -1,11 +1,8 @@
 import PropTypes from "prop-types";
 import { Target, Footprints, Grid } from "lucide-react";
-import { globalTheme } from "@/styles/globalTheme";
+import { pathfindingMetricsTheme } from "@/styles/localThemes/pathfindingMetricsTheme";
 
-const localTheme = {
-  label: `${globalTheme.typography.sizes.subtext} font-black text-slate-500 uppercase tracking-widest`,
-  value: `${globalTheme.typography.semantics.home.title} font-mono font-black text-white`,
-};
+const localTheme = pathfindingMetricsTheme;
 
 export default function PathfindingMetrics({ state }) {
   const { path, visited, rows, cols } = state;

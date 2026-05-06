@@ -34,9 +34,14 @@ export const useVisualizationManager = (algorithms) => {
       const customTarget = parseInput(t, algo.type || algo.category?.toLowerCase());
       const customPattern = parseInput(p, algo.type || algo.category?.toLowerCase());
 
+      // Priority: gridSize state (from hook) -> algo.gridConfig (from override) -> defaults
       const config = {
         ...algo,
-        gridConfig: { ...(algo.gridConfig || {}), ...gridSize },
+        gridConfig: { 
+          rows: gridSize.rows,
+          cols: gridSize.cols,
+          ...(algo.gridConfig || {}) // Overrides from passed algo take priority (fixes stale state)
+        },
       };
 
       const baseState = algo.getInitialState(customPattern, customTarget, config, existingState);
@@ -190,8 +195,22 @@ export const useVisualizationManager = (algorithms) => {
     setGridTool,
     gridSize,
     setGridSize: (r, c) => {
-      setGridSize({ rows: r, cols: c });
-      softReset(algorithm, pattern, target, false);
+      setGridSize(r, c); // Call the hook version with r, c
+      
+      const newSize = { rows: r, cols: c };
+      const algo = algorithm;
+      const p = pattern;
+      const t = target;
+      
+      setState((prevState) => ({
+        currentIndex: 0,
+        isFinished: false,
+        iterations: 0,
+        comparisons: 0,
+        accessedIndices: new Set(),
+        ...getUrlState({ ...algo, gridConfig: { ...(algo.gridConfig || {}), ...newSize } }, p, t, null),
+      }));
+      setHistory([]);
     },
     playbackRate,
     setPlaybackRate,
