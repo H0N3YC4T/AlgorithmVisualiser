@@ -18,7 +18,7 @@ const GridNode = memo(
     r,
     c,
   }) => {
-    let cellClass = `h-full w-full rounded-sm border-1 border-white/55 transition-all duration-300 flex items-center justify-center select-none cursor-pointer [container-type:inline-size]`;
+    let cellClass = `h-full w-full rounded-sm transition-all duration-300 flex items-center justify-center select-none cursor-pointer [container-type:inline-size]`;
     let colorClass = colors.unvisited || "";
 
     if (isWall) colorClass = colors.wall || "";
@@ -31,6 +31,10 @@ const GridNode = memo(
 
     if (isMuted && !isStart && !isEnd && !isPath) {
       colorClass = "bg-red-500/5 border-red-500/10";
+    }
+
+    if (isWall || isStart || isEnd ) {
+      cellClass += " border-1 border-white/55";
     }
 
     // Add functional classes (layering and scale)
