@@ -102,21 +102,37 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
     [isEditingDisabled, gridTool, startNode, endNode, handleWallTool, updateState],
   );
 
-  const handleMouseDown = useCallback(
-    (r, c) => {
-      setIsMouseDown(true);
-      const mode = handleCellAction(r, c);
-      if (gridTool === "wall") setDragMode(mode);
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!isMouseDown) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const r = Math.floor((y / rect.height) * rows);
+      const c = Math.floor((x / rect.width) * cols);
+
+      if (r >= 0 && r < rows && c >= 0 && c < cols) {
+        handleCellAction(r, c, dragMode);
+      }
     },
-    [handleCellAction, gridTool],
+    [isMouseDown, rows, cols, handleCellAction, dragMode],
   );
 
-  const handleMouseEnter = useCallback(
-    (r, c) => {
-      if (!isMouseDown) return;
-      handleCellAction(r, c, dragMode);
+  const handleInitialMouseDown = useCallback(
+    (e) => {
+      setIsMouseDown(true);
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const r = Math.floor((y / rect.height) * rows);
+      const c = Math.floor((x / rect.width) * cols);
+
+      if (r >= 0 && r < rows && c >= 0 && c < cols) {
+        const mode = handleCellAction(r, c);
+        if (gridTool === "wall") setDragMode(mode);
+      }
     },
-    [handleCellAction, isMouseDown, dragMode],
+    [rows, cols, handleCellAction, gridTool],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -129,24 +145,38 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
       display: "grid",
       gridTemplateColumns: `repeat(${cols}, 1fr)`,
       gridTemplateRows: `repeat(${rows}, 1fr)`,
-      gap: "1px",
       width: "100%",
       height: "auto",
       maxWidth: `calc(450px * ${cols} / ${rows})`,
       maxHeight: "100%",
       aspectRatio: `${cols} / ${rows}`,
       margin: "auto",
+      // Optimized background pattern for grid lines
+      backgroundImage: `linear-gradient(to right, rgba(30, 41, 59, 0.4) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(30, 41, 59, 0.4) 1px, transparent 1px)`,
+      backgroundSize: `calc(100% / ${cols}) calc(100% / ${rows})`,
+      backgroundColor: "rgba(15, 23, 42, 0.1)",
     }),
     [cols, rows],
   );
 
-  const totalCells = rows * cols;
-
+  // Identify all cells that actually need a component
   const nodes = useMemo(() => {
-    return Array.from({ length: totalCells }).map((_, index) => {
-      const r = Math.floor(index / cols);
-      const c = index % cols;
-      const coord = `${r},${c}`;
+    const activeCoords = new Set();
+    if (startNode) activeCoords.add(`${startNode.r},${startNode.c}`);
+    if (endNode) activeCoords.add(`${endNode.r},${endNode.c}`);
+    if (activeNode) activeCoords.add(`${activeNode.r},${activeNode.c}`);
+
+    wallsSet.forEach((c) => activeCoords.add(c));
+    visitedSet.forEach((c) => activeCoords.add(c));
+    queuedSet.forEach((c) => activeCoords.add(c));
+    pathSet.forEach((c) => activeCoords.add(c));
+
+    return Array.from(activeCoords).map((coord) => {
+      const [rStr, cStr] = coord.split(",");
+      const r = parseInt(rStr);
+      const c = parseInt(cStr);
+
       const isS = startNode?.r === r && startNode?.c === c;
       const isE = endNode?.r === r && endNode?.c === c;
       const isV = visitedSet.has(coord);
@@ -154,41 +184,44 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
       const isA = activeNode?.r === r && activeNode?.c === c;
 
       return (
-        <GridNode
+        <div
           key={coord}
-          r={r}
-          c={c}
-          isVisited={isV}
-          isPath={isP}
-          isActive={isA}
-          isMuted={state.activeBranch?.length > 0 && isV && !activeBranchSet.has(coord) && !isP && !isS && !isE}
-          isStart={isS}
-          isEnd={isE}
-          isWall={wallsSet.has(coord)}
-          isQueued={queuedSet.has(coord)}
-          cost={costs?.[r]?.[c]}
-          colors={colorMapping}
-          onMouseDown={handleMouseDown}
-          onMouseEnter={handleMouseEnter}
-        />
+          style={{
+            gridRow: r + 1,
+            gridColumn: c + 1,
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <GridNode
+            r={r}
+            c={c}
+            isVisited={isV}
+            isPath={isP}
+            isActive={isA}
+            isMuted={activeBranch?.length > 0 && isV && !activeBranchSet.has(coord) && !isP && !isS && !isE}
+            isStart={isS}
+            isEnd={isE}
+            isWall={wallsSet.has(coord)}
+            isQueued={queuedSet.has(coord)}
+            cost={costs?.[r]?.[c]}
+            colors={colorMapping}
+          />
+        </div>
       );
     });
   }, [
-    totalCells,
-    cols,
     startNode,
     endNode,
-    visitedSet,
-    pathSet,
     activeNode,
-    state.activeBranch,
-    activeBranchSet,
     wallsSet,
+    visitedSet,
     queuedSet,
+    pathSet,
+    activeBranch,
+    activeBranchSet,
     costs,
     colorMapping,
-    handleMouseDown,
-    handleMouseEnter,
   ]);
 
   return (
@@ -198,8 +231,10 @@ export default function GridVisualiser({ algorithm, state, updateState, toggleWa
         tabIndex={0}
         aria-label="Pathfinding Grid"
         className="grid gap-1 outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl"
-        onMouseLeave={handleMouseUp}
+        onMouseDown={handleInitialMouseDown}
+        onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
         style={gridStyle}
       >
         {state?.rows === undefined ? (

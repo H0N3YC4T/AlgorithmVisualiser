@@ -13,9 +13,9 @@ export const uiDefaults = {
   labels: {
     next: "Next",
     restart: "Restart",
-    startSort: "Start Sorting",
-    startSearch: "Start Search",
-    startOperation: "Start Operation",
+    startSort: "Start",
+    startSearch: "Start",
+    startOperation: "Start",
     arrayElements: "Array Elements",
     targetValue: "Target: {value}",
     sortingViz: "Sorting Visualization",

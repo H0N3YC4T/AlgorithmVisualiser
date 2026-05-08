@@ -33,7 +33,8 @@ const GridNode = memo(
       colorClass = "bg-red-500/5 border-red-500/10";
     }
 
-    if (isWall || isStart || isEnd ) {
+    // DO NOT CHANGE THE COLOR VALUES IT LOOKS DECENT
+    if (isWall || isStart || isEnd) {
       cellClass += " border-1 border-white/55";
     }
 
@@ -50,8 +51,6 @@ const GridNode = memo(
     return (
       <div
         className={`${cellClass} ${colorClass} hover:scale-[1.1] hover:brightness-[1.2] active:scale-[0.95]`}
-        onMouseDown={() => onMouseDown(r, c)}
-        onMouseEnter={() => onMouseEnter(r, c)}
         style={{
           opacity: costOpacity,
           borderRadius: isStart || isEnd ? "50%" : "4px",

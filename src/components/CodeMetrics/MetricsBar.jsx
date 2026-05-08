@@ -31,6 +31,7 @@ const localTheme = {
       ? "bg-cyan-500/15 text-cyan-400 border-cyan-500/40 hover:bg-cyan-500/25"
       : "bg-slate-800/80 border-slate-700/50 text-slate-300 hover:bg-slate-700 shadow-md",
   btnGhost: "bg-slate-800/30 border-slate-700/40 text-amber-400/80 hover:bg-slate-700/50",
+  btnStart: "bg-emerald-500/15 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/25",
   btnFinished:
     "bg-purple-500/15 text-purple-400 border-purple-500/30 hover:bg-purple-500/25 shadow-[0_0_15px_rgba(168,85,247,0.1)]",
 };
@@ -47,6 +48,7 @@ export default function MetricsBar({
   canNext,
   isPlaying,
   buttonText,
+  isStarted,
   state,
   algorithm,
 }) {
@@ -67,10 +69,10 @@ export default function MetricsBar({
           </button>
         )}
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 whitespace-nowrap">
           <span className={localTheme.category}>{algorithm.category}</span>
-          <span className="text-slate-800 font-thin select-none mb-1"> / </span>
-          <span className={`${localTheme.name} text-slate-800 font-thin select-none mb-1`}> {name}</span>
+          <span className="text-slate-800 font-thin select-none mb-1">/</span>
+          <h1 className={localTheme.name}>{name}</h1>
         </div>
       </div>
 
@@ -108,7 +110,7 @@ export default function MetricsBar({
 
         <button onClick={togglePlay} className={`${localTheme.btnBase} ${localTheme.btnPrimary(isPlaying)}`}>
           {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-          {isPlaying ? "Pause" : "Auto Play"}
+          {isPlaying ? "Pause" : "Auto"}
         </button>
 
         <button onClick={prevStep} disabled={!canPrev} className={`${localTheme.btnBase} ${localTheme.btnGhost} px-4`}>
@@ -118,7 +120,9 @@ export default function MetricsBar({
         <button
           onClick={nextStep}
           disabled={!canNext && !isFinished}
-          className={`${localTheme.btnBase} ${isFinished ? localTheme.btnFinished : localTheme.btnGhost} px-5`}
+          className={`${localTheme.btnBase} ${
+            isFinished ? localTheme.btnFinished : !isStarted ? localTheme.btnStart : localTheme.btnGhost
+          } px-5`}
         >
           {isFinished ? "Restart" : buttonText || "Next"}
           {isFinished ? <RotateCcw className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
@@ -140,6 +144,7 @@ MetricsBar.propTypes = {
   canNext: PropTypes.bool.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   buttonText: PropTypes.string,
+  isStarted: PropTypes.bool,
   state: PropTypes.object,
   algorithm: PropTypes.object,
 };

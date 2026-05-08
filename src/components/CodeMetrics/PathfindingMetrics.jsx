@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { Target, Footprints, Grid } from "lucide-react";
-import { pathfindingMetricsTheme } from "@/styles/localThemes/pathfindingMetricsTheme";
 
-const localTheme = pathfindingMetricsTheme;
+const localTheme = {
+  label: "text-[11px] font-black text-slate-500 uppercase tracking-widest leading-none mb-2",
+  value: "font-mono font-black text-2xl text-white leading-none",
+};
 
 export default function PathfindingMetrics({ state }) {
   const { path, visited, rows, cols } = state;

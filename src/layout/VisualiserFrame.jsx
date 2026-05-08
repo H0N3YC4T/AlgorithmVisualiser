@@ -143,7 +143,7 @@ export default function VisualiserFrame({
   const adjustedSpeed = (algorithm.uiConfig?.playbackSpeed || 500) / playbackRate;
 
   const { isPlaying, togglePlay, stopPlay } = usePlayback(nextStep, softReset, state.isFinished, adjustedSpeed);
-  const texts = useVisualiserLabels(algorithm, state);
+  const texts = useVisualiserLabels(algorithm, state, history.length);
 
   const isEditingDisabled = isPlaying || state.phase > 0 || (state.iterations || 0) > 0;
   const isArrayBased = algorithm.type === "sorting" || algorithm.type === "searching";
@@ -219,6 +219,7 @@ export default function VisualiserFrame({
           canNext={!isPlaying}
           isPlaying={isPlaying}
           buttonText={texts.button}
+          isStarted={texts.isStarted}
           state={state}
           algorithm={algorithm}
         />

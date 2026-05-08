@@ -2,7 +2,7 @@ import { useMemo, useCallback } from "react";
 import { uiDefaults } from "@/constants/ui";
 
 
-export default function useVisualiserLabels(algorithm, state) {
+export default function useVisualiserLabels(algorithm, state, historyLength = 0) {
   // Resolve properties with fallbacks for schema compatibility
   const metadata = useMemo(() => algorithm?.metadata || {}, [algorithm]);
   const uiConfig = useMemo(() => algorithm?.algorithmPage?.uiConfig || algorithm?.uiConfig || {}, [algorithm]);
@@ -12,14 +12,15 @@ export default function useVisualiserLabels(algorithm, state) {
   const getButtonText = useCallback(() => {
     if (!state) return uiDefaults.labels.next;
     if (state.isFinished) return uiDefaults.labels.restart;
-    if (state.phase > 0) return uiDefaults.labels.next;
+    
+    if (historyLength > 0) return uiDefaults.labels.next;
 
     if (uiConfig.startButton) return uiConfig.startButton;
 
     if (type === "data-structure") return uiDefaults.labels.startOperation;
     if (type === "sorting") return uiDefaults.labels.startSort;
     return uiDefaults.labels.startSearch;
-  }, [state, type, uiConfig.startButton]);
+  }, [state, historyLength, type, uiConfig.startButton]);
 
   const texts = useMemo(() => {
     if (!algorithm) return { button: uiDefaults.labels.next, label: "", vizTitle: "" };
@@ -62,6 +63,7 @@ export default function useVisualiserLabels(algorithm, state) {
 
     return {
       button: getButtonText(),
+      isStarted: historyLength > 0,
       label,
       vizTitle,
       inputLabel1,
@@ -69,7 +71,7 @@ export default function useVisualiserLabels(algorithm, state) {
       inputPlaceholder1,
       inputPlaceholder2,
     };
-  }, [algorithm, state, getButtonText, uiConfig, type, name]);
+  }, [algorithm, state, getButtonText, historyLength, uiConfig, type, name]);
 
   return texts;
 }

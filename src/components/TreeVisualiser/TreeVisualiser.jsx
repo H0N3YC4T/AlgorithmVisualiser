@@ -1,8 +1,11 @@
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
-import { treeVisualiserTheme } from "@/styles/localThemes/treeVisualiserTheme";
 
-const localTheme = treeVisualiserTheme;
+const localTheme = {
+  header: "text-slate-500 uppercase tracking-widest text-xs font-black mb-12",
+  nodeText: "fill-white font-mono text-sm font-black pointer-events-none select-none",
+  empty: "text-slate-700 font-black uppercase tracking-tighter italic",
+};
 
 const NODE_SIZE = 48;
 const LEVEL_HEIGHT = 80;
