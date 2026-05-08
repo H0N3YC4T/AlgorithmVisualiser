@@ -150,6 +150,23 @@ const AuxDataVisualiser = memo(({ algorithm, state, preprocessing, target, patte
         </div>
       )}
 
+      {/* List Type (e.g. l-gram dictionary) */}
+      {config?.type === "list" && preprocessing?.AuxData && (
+        <div className={localTheme.section}>
+          <div className="flex justify-between items-center mb-6">
+            <div className={localTheme.sectionTitle}>{config.header}</div>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {preprocessing.AuxData.map((item, idx) => (
+              <div key={`list-item-${idx}`} className={localTheme.dataBox}>
+                <span className="text-white font-mono font-black">{item}</span>
+              </div>
+            ))}
+          </div>
+          {config.description && <p className={localTheme.logicNote}>{config.description}</p>}
+        </div>
+      )}
+
       {/* Auxiliary Data */}
       {isArrayBased && (
         <div className="space-y-8">
