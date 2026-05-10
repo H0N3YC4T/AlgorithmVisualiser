@@ -140,7 +140,7 @@ export const kmp = createAlgorithmPage({
     return { pi };
   },
 
-  getInitialState: (_target, _pattern) => ({
+  getInitialState: (pattern, target) => ({
     currentIndex: 0,
     compIdx: 0,
     phase: 1,

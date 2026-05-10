@@ -1,4 +1,3 @@
-import React from "react";
 import { SortAsc, Search, Share2, Zap } from "lucide-react";
 
 export const HOME_CATEGORIES = [

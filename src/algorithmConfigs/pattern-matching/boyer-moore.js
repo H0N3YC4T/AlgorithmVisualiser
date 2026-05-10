@@ -134,7 +134,7 @@ export const boyermoore = createAlgorithmPage({
     };
   },
 
-  getInitialState: (_target, pattern) => ({
+  getInitialState: (pattern, target) => ({
     currentIndex: 0,
     compIdx: pattern.length - 1,
     phase: 1,

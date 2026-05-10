@@ -106,7 +106,7 @@ export const naive = createAlgorithmPage({
         if match: return i
     return -1`,
   },
-  getInitialState: (_target, _pattern) => ({
+  getInitialState: (pattern, target) => ({
     currentIndex: 0,
     compIdx: 0,
     phase: 1,

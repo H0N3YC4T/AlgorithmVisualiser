@@ -37,12 +37,30 @@ export default function Home({ algorithms, onSelect }) {
   );
 
   const groupedAlgorithms = useMemo(() => {
-    return (algorithms || []).reduce((acc, algo) => {
-      const cat = algo.category || "Other";
-      if (!acc[cat]) acc[cat] = [];
-      acc[cat].push(algo);
-      return acc;
-    }, {});
+    const difficultyOrder = { easy: 1, medium: 2, hard: 3 };
+
+    // Initialize groups to ensure sections appear even if empty (though we hide empty ones in CategorySection)
+    const grouped = {};
+    HOME_CATEGORIES.forEach((cat) => (grouped[cat.id] = []));
+
+    (algorithms || []).forEach((algo) => {
+      const catId = algo.metadata?.category || algo.category || "Other";
+      if (!grouped[catId]) grouped[catId] = [];
+      grouped[catId].push(algo);
+    });
+
+    // Sort each category by difficulty (primary) and name (secondary)
+    Object.keys(grouped).forEach((catId) => {
+      grouped[catId].sort((a, b) => {
+        const diffA = difficultyOrder[(a.homeCard?.difficulty || "Medium").toLowerCase()] || 2;
+        const diffB = difficultyOrder[(b.homeCard?.difficulty || "Medium").toLowerCase()] || 2;
+
+        if (diffA !== diffB) return diffA - diffB;
+        return (a.homeCard?.name || "").localeCompare(b.homeCard?.name || "");
+      });
+    });
+
+    return grouped;
   }, [algorithms]);
 
   const toggleCategory = (category) => {

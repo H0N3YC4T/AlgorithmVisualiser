@@ -165,7 +165,7 @@ function buildShiftTable(pattern) {
   },
 
   // --- Logic ---
-  getPreprocessing: (target, pattern) => {
+  getPreprocessing: (pattern, target) => {
     const table = {};
     const m = pattern.length;
     for (let i = 0; i < m; i++) {
@@ -174,7 +174,7 @@ function buildShiftTable(pattern) {
     return { AuxShiftTableVisualiser: table };
   },
 
-  getInitialState: (_target, _pattern) => {
+  getInitialState: (pattern, target) => {
     return {
       currentIndex: 0,
       compIdx: 0,
