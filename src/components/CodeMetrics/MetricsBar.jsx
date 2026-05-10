@@ -61,18 +61,20 @@ export default function MetricsBar({
   const totalChecked = visitedCount + frontierCount;
 
   return (
-    <div className={localTheme.bar}>
-      <div className="flex items-center gap-6">
+    <div className={`${localTheme.bar} px-3 sm:px-6 gap-3 sm:gap-6`}>
+      <div className="flex items-center gap-3 sm:gap-6 overflow-hidden">
         {onBack && (
           <button onClick={onBack} className={localTheme.backBtn} title="Back to Dashboard">
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           </button>
         )}
 
-        <div className="flex items-center gap-2 whitespace-nowrap">
-          <span className={localTheme.category}>{algorithm.category}</span>
-          <span className="text-slate-800 font-thin select-none mb-1">/</span>
-          <h1 className={localTheme.name}>{name}</h1>
+        <div className="flex items-center gap-2 min-w-0 overflow-hidden flex-1">
+          <span className={`${localTheme.category} hidden sm:block truncate flex-shrink min-w-0`}>
+            {algorithm.category}
+          </span>
+          <span className="hidden sm:block text-slate-800 font-thin select-none mb-1 flex-shrink-0">/</span>
+          <h1 className={`${localTheme.name} truncate min-w-0 flex-1`}>{name}</h1>
         </div>
       </div>
 
@@ -101,20 +103,36 @@ export default function MetricsBar({
       )}
 
       <div className={localTheme.controlGroup}>
-        <button onClick={reset} className={`${localTheme.btnBase} ${localTheme.btnReset}`} title="Hard Reset">
-          <RotateCcw className="w-3.5 h-3.5" />
-          Reset
+        <button
+          onClick={reset}
+          className={`${localTheme.btnBase} ${localTheme.btnReset} px-3 sm:px-4`}
+          title="Hard Reset"
+        >
+          <RotateCcw className="w-3.5 h-3.5 flex-shrink-0" />
+          <span className="hidden sm:inline">Reset</span>
         </button>
 
-        <div className="w-px h-6 bg-slate-800/50 mx-1" />
+        <div className="w-px h-6 bg-slate-800/50 mx-0.5 sm:mx-1" />
 
-        <button onClick={togglePlay} className={`${localTheme.btnBase} ${localTheme.btnPrimary(isPlaying)}`}>
-          {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-          {isPlaying ? "Pause" : "Auto"}
+        <button
+          onClick={togglePlay}
+          className={`${localTheme.btnBase} ${localTheme.btnPrimary(isPlaying)} px-3 sm:px-4`}
+        >
+          {isPlaying ? (
+            <Pause className="w-3.5 h-3.5 fill-current flex-shrink-0" />
+          ) : (
+            <Play className="w-3.5 h-3.5 fill-current flex-shrink-0" />
+          )}
+          <span className="hidden sm:inline">{isPlaying ? "Pause" : "Auto"}</span>
         </button>
 
-        <button onClick={prevStep} disabled={!canPrev} className={`${localTheme.btnBase} ${localTheme.btnGhost} px-4`}>
-          <ChevronLeft className="w-3.5 h-3.5" /> Prev
+        <button
+          onClick={prevStep}
+          disabled={!canPrev}
+          className={`${localTheme.btnBase} ${localTheme.btnGhost} px-3 sm:px-4`}
+        >
+          <ChevronLeft className="w-3.5 h-3.5 flex-shrink-0" />
+          <span className="hidden sm:inline">Prev</span>
         </button>
 
         <button
@@ -122,10 +140,14 @@ export default function MetricsBar({
           disabled={!canNext && !isFinished}
           className={`${localTheme.btnBase} ${
             isFinished ? localTheme.btnFinished : !isStarted ? localTheme.btnStart : localTheme.btnGhost
-          } px-5`}
+          } px-3 sm:px-5`}
         >
-          {isFinished ? "Restart" : buttonText || "Next"}
-          {isFinished ? <RotateCcw className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+          <span className="hidden sm:inline">{isFinished ? "Restart" : buttonText || "Next"}</span>
+          {isFinished ? (
+            <RotateCcw className="w-3.5 h-3.5 flex-shrink-0" />
+          ) : (
+            <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
+          )}
         </button>
       </div>
     </div>
