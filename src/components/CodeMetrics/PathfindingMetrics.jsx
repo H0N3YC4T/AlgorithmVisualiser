@@ -3,7 +3,7 @@ import { Target, Footprints, Grid } from "lucide-react";
 
 const localTheme = {
   label: "text-[11px] font-black text-slate-500 uppercase tracking-widest leading-none mb-2",
-  value: "font-mono font-black text-2xl text-white leading-none",
+  value: "font-mono font-black text-1xl text-white leading-none",
 };
 
 export default function PathfindingMetrics({ state }) {
@@ -15,10 +15,10 @@ export default function PathfindingMetrics({ state }) {
   const coverage = totalNodes > 0 ? ((visitedCount / totalNodes) * 100).toFixed(1) : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex">
       <div className="bg-slate-900/40 border border-slate-800/60 p-4 rounded-2xl flex items-center gap-4">
         <div className="p-3 bg-emerald-500/10 rounded-xl">
-          <Target className="w-5 h-5 text-emerald-400" />
+          <Target className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
         </div>
         <div>
           <div className={localTheme.label}>Path Length</div>

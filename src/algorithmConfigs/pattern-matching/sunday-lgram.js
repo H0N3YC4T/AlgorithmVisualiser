@@ -161,7 +161,7 @@ export const sundayLgram = createAlgorithmPage({
     type: "pattern-matching",
     VisualiserType: "pattern-matching",
     category: "Pattern Matching Algorithms",
-    defaultInputs: { target: "ACTCTGTATAGCTAGCTAGCGTACGTA", pattern: "GTACGTA" },
+    defaultInputs: { target: "ACTCTGTATAGCTAGCTAGCGTACGTA", pattern: "GTAGTA" },
   },
 
   homeCard: {
@@ -320,7 +320,7 @@ export const sundayLgram = createAlgorithmPage({
   },
 
   getInitialState: (pattern, _target) => {
-    const l = pattern ? Math.max(1, Math.floor(Math.log(pattern.length) / Math.log(4)) + 1) : 1;
+    const l = pattern ? Math.max(2, Math.round(-0.35 * Math.log(pattern.length) + 3.9)) : 1;
     return {
       phase: 1, // Scan
       currentIndex: 0,
